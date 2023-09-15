@@ -46,7 +46,11 @@ const Hero = () => {
 
             const newAuction = auction.map((item) => {
                 const found = filtered.find((bid) => bid.id === item.id);
+                if (item.auction != null) {
+                    if (item.auction.status === "IN PROGRESS" && found.status === "WON") return item
+                }
                 item.auction = found;
+
                 return item;
             });
 

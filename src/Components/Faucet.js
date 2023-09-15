@@ -77,9 +77,7 @@ useEffect(() => {
       setTimestamp(beaconData.timestamp);
       setSignedMessage(beaconData.signature);
       setData(beaconData.encodedValue);
-    } else {
-      console.log("No data found for the specified hashKey");
-    }
+    } 
 
   }, [beaconData]);
 
@@ -166,7 +164,7 @@ useEffect(() => {
               <NumberInputField borderWidth={"0px"} focusBorderColor={"red.200"} placeholder="0.0" fontSize={"4xl"} inputMode="numeric"/><NumberInputStepper></NumberInputStepper>
             </NumberInput>
       <Spacer />
-      <Image src={`https://market.api3.org/images/asset-logos/ETH.webp`} width={"50px"} height={"50px"} />
+      <Image src={`/coins/ETH.webp`} width={"50px"} height={"50px"} />
       </Flex>
 
       <Flex>
@@ -193,7 +191,7 @@ useEffect(() => {
           TestUSDC will be minted
           </Text>
         <Spacer />
-        <Image marginRight={"2"} src={'https://market.api3.org/images/asset-logos/USD.webp'} width={"24px"} height={"24px"} />
+        <Image marginRight={"2"} src={'/coins/USD.webp'} width={"24px"} height={"24px"} />
         <Text fontWeight={"bold"} fontSize={"lg"}>{parseFloat(calculateAmountValue())}</Text>
         </Flex>
 
@@ -211,7 +209,7 @@ useEffect(() => {
           Token Balance
           </Text>
         <Spacer />
-        <Image marginRight={"2"} src={'https://market.api3.org/images/asset-logos/USD.webp'} width={"24px"} height={"24px"} />
+        <Image marginRight={"2"} src={'/coins/USD.webp'} width={"24px"} height={"24px"} />
         <Text fontWeight={"bold"} fontSize={"lg"}>{tokenBalance}</Text>
         </Flex>
 

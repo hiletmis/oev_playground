@@ -78,8 +78,8 @@ const SelectDataFeed = ({stateChanger}) => {
                 <Stack direction="column" spacing={"2"} width={"100%"}>
                   <Stack direction="row" spacing={"2"}>
                     <Stack direction="row" spacing={"-2"}>
-                      <Image zIndex={2} src={`https://market.api3.org/images/asset-logos/${item.image1 == null ? item.p1 : item.image1}.webp`} width={"24px"} height={"24px"} />
-                      <Image zIndex={1} src={`https://market.api3.org/images/asset-logos/${item.image2 == null ? item.p2 : item.image2}.webp`} width={"24px"} height={"24px"} />
+                      <Image zIndex={2} src={`/coins/${item.image1 == null ? item.p1 : item.image1}.webp`} width={"24px"} height={"24px"} />
+                      <Image zIndex={1} src={`/coins/${item.image2 == null ? item.p2 : item.image2}.webp`} width={"24px"} height={"24px"} />
                     </Stack>
                     <Text fontSize="md" fontWeight="bold">{item.p1 + '/' + item.p2}</Text>
                     <Box visibility={"hidden"} paddingLeft={2} paddingRight={2} borderRadius={"10"} bgColor={COLORS.info} height={5} >

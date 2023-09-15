@@ -22,9 +22,7 @@ const Hero = ({dataFeed}) => {
         beaconData.encodedValue
       );
       setPrice("$ " + (decodedValue / 1e18).toFixed(3));
-    } else {
-      console.log("No data found for the specified hashKey");
-    }
+    } 
   }, [beaconData]);
 
   return (
@@ -35,8 +33,8 @@ const Hero = ({dataFeed}) => {
           <Stack direction="column" spacing={"2"} width={"100%"}>
               <Stack direction="row" spacing={"2"} >
               <Stack visibility={!dataFeed ? "hidden" : "visible"} direction="row" spacing={"-2"}>
-                  <Image zIndex={2} src={dataFeed === null ? "" : `https://market.api3.org/images/asset-logos/${dataFeed.p1}.webp`} width={"24px"} height={"24px"} />
-                  <Image zIndex={1} src={dataFeed === null ? "" : `https://market.api3.org/images/asset-logos/${dataFeed.p2}.webp`} width={"24px"} height={"24px"} />
+                  <Image zIndex={2} src={dataFeed === null ? "" : `/coins/${dataFeed.p1}.webp`} width={"24px"} height={"24px"} />
+                  <Image zIndex={1} src={dataFeed === null ? "" : `/coins/${dataFeed.p2}.webp`} width={"24px"} height={"24px"} />
               </Stack>
               <Text fontSize="md" fontWeight="bold">{dataFeed === null ? "" : dataFeed.p1 + '/' + dataFeed.p2}</Text>
               <Spacer />

@@ -10,10 +10,10 @@ import CustomHeading from "../Custom/Heading";
 import BidAmount from "../Custom/BidAmount";
 import BidConditions from "../Custom/BidConditions";
 import ExecuteButton from "../Custom/ExecuteButton";
-import CopyInfoRow from "../Custom/CopyInfoRow";
+import BidInfoRow from "../Custom/BidInfoRow";
 
 import {
-    VStack, Box, 
+    VStack, Box, Text, Flex, Spacer, Image
   } from "@chakra-ui/react";
 
   import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS } from "../../data/abi";
@@ -158,9 +158,23 @@ const Hero = () => {
 
             </Box>
 
-            <Box visibility={bid != null && showBidId ? "visible":"hidden"} width={"100%"}  bgColor={COLORS.main} borderRadius={"10"}>
-                { bid == null ? <Box></Box> : <CopyInfoRow header={"Bid Id"} margin={"1rem"} text={bid.id}></CopyInfoRow>}
-            </Box>
+            <VStack visibility={bid != null && showBidId ? "visible":"hidden"} p={4} shadow="md" borderWidth="px" flex="1" borderRadius={"10"} bgColor={COLORS.main} alignItems={"left"}>
+                
+            <Flex>
+                <Text fontWeight={"bold"} fontSize={"md"}>Bid</Text>
+                <Spacer />
+                </Flex>
+                
+                {
+                    bid != null && showBidId ?
+                    <Box p={3} width={"100%"} bgColor={COLORS.app} borderRadius={"10"}>
+                    <BidInfoRow item={bid}></BidInfoRow>
+                    </Box>
+                    :
+                    null
+                }
+
+            </VStack>
 
 </VStack>    
   );

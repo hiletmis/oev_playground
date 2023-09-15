@@ -171,7 +171,7 @@ const Deposit = () => {
               <NumberInputField borderWidth={"0px"} focusBorderColor={"red.200"} placeholder="0.0" fontSize={"4xl"} inputMode="numeric"/><NumberInputStepper></NumberInputStepper>
             </NumberInput>
       <Spacer />
-      <Image src={`https://market.api3.org/images/asset-logos/USD.webp`} width={"50px"} height={"50px"} />
+      <Image src={`/coins/USD.webp`} width={"50px"} height={"50px"} />
       </Flex>
 
         <Flex>
@@ -210,7 +210,7 @@ const Deposit = () => {
           Collateral
           </Text>
         <Spacer />
-        <Image marginRight={"2"} src={'https://market.api3.org/images/asset-logos/USD.webp'} width={"24px"} height={"24px"} />
+        <Image marginRight={"2"} src={'/coins/USD.webp'} width={"24px"} height={"24px"} />
         <Text fontWeight={"bold"} fontSize={"lg"}>{collateral}</Text>
         </Flex>
 

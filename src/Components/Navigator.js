@@ -16,7 +16,7 @@ return (
         <CustomButton isDisabled={context.contextProxyAddress === null } link="/multicall" caption="Deploy Update Executor" />
         <CustomButton isDisabled={context.contextProxyAddress === null || context.multicall === null} link="/bid" caption="Place a Bid" />
         <CustomButton isDisabled={context.auction === null } link="/auctions" caption="Check Auction Status" />
-        <CustomButton isDisabled={true} link="/" caption="Withdraw" />
+        <CustomButton isDisabled={context.auction === null } link="/" caption="Withdraw" />
     </VStack>
 
 );

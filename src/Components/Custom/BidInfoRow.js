@@ -18,6 +18,7 @@ const Hero = ({item}) => {
   const [encodedUpdateTransaction, setEncodedUpdateTransaction] = useState("");
   const [nativeCurrencyAmount, setNativeCurrencyAmount] = useState("");
   const [updateExecutorAddress, setUpdateExecutorAddress] = useState("");
+  const [bidId, setBidId] = useState("");
 
   const { auction, setAuction } = useContext(OevContext);
 
@@ -37,6 +38,8 @@ const Hero = ({item}) => {
         return "blue.500";
       case "FRONT-RUN":
         return "orange.500";
+      case "IN PROGRESS":
+        return "blue.500";
       default:
         return "blue.500";
     }
@@ -91,7 +94,6 @@ const postMessage = async ({ payload, endpoint }) => {
 
       switch (endpoint) {
         case "auctions/info":
-        console.log("info:", data)
         setEncodedUpdateTransaction(data.encodedUpdateTransaction)
         setNativeCurrencyAmount(data.nativeCurrencyAmount)
         setUpdateExecutorAddress(data.updateExecutorAddress)
@@ -108,7 +110,6 @@ const postMessage = async ({ payload, endpoint }) => {
           return item;
       });
       setAuction(newAuction)  
-
         break
 
         default:
@@ -121,7 +122,6 @@ const postMessage = async ({ payload, endpoint }) => {
   const updateDataFeed = (bid) => {
     const validUntil = new Date();
     validUntil.setMinutes(validUntil.getMinutes() + 5); 
-    console.log("bid:", bid)
 
     let payload = {
         id: bid.auctionId,
@@ -135,6 +135,7 @@ const postMessage = async ({ payload, endpoint }) => {
     setPayload(payload);
     const sorted = JSON.stringify(payload, Object.keys(payload).sort());
     setIsLoadingSign(true);
+    setBidId(bid.id)
     signMessage({ message: sorted });
   }
 
@@ -172,18 +173,20 @@ const postMessage = async ({ payload, endpoint }) => {
 }
 
 useEffect(() => {
+  if (auction == null) return
+  if (bidId == null) return
   if (isSuccess) {
-    console.log("isSuccess:", isSuccess)
-    console.log("data:", data)
+    const newAuction = auction.map((item) => {
+      if (item.id === bidId) {
+        item.auction.status = "IN PROGRESS"
+      }
+      return item;
+  });
+  setBidId(null)
+  setAuction(newAuction) 
   }
 
-}, [data, isSuccess]);
-
-useEffect(() => {
-  if (isLoading) {
-    console.log("isLoading:", isLoading)
-  }
-}, [isLoading]);
+}, [auction, bidId, data, isSuccess, setAuction]);
 
 useEffect(() => {
   if (bidAuction != null && write != null) {
@@ -198,8 +201,8 @@ useEffect(() => {
     <Stack direction="column"  spacing={"2"} width={"100%"}>
     <Stack direction="row" spacing={"2"}>
       <Stack direction="row" spacing={"-2"}>
-        <Image zIndex={2} src={`https://market.api3.org/images/asset-logos/${item.dataFeed.p1}.webp`} width={"24px"} height={"24px"} />
-        <Image zIndex={1} src={`https://market.api3.org/images/asset-logos/${item.dataFeed.p2}.webp`} width={"24px"} height={"24px"} />
+        <Image zIndex={2} src={`/coins/${item.dataFeed.p1}.webp`} width={"24px"} height={"24px"} />
+        <Image zIndex={1} src={`/coins/${item.dataFeed.p2}.webp`} width={"24px"} height={"24px"} />
       </Stack>
       <Text fontSize="md" fontWeight="bold">{item.dataFeed.p1 + '/' + item.dataFeed.p2}</Text>
         
