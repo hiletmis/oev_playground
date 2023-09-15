@@ -1,0 +1,251 @@
+import React, {useState, useContext, useEffect} from "react";
+import { useAccount, useSignMessage, useNetwork, usePrepareContractWrite, useWaitForTransaction, useContractWrite} from "wagmi";
+import { OevContext } from '../../OevContext';
+import { Grid } from 'react-loader-spinner'
+
+import { Text, Box, Image, Stack, Flex, Spacer } from '@chakra-ui/react';
+import { COLORS } from '../../data/colors';
+import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS, MULTICALLABI, API3SERVERV1 } from "../../data/abi";
+
+const Hero = ({item}) => { 
+  const { chain } = useNetwork()
+  const { address } = useAccount()
+
+  const [payload, setPayload] = useState(null);
+  const [isLoadingSign, setIsLoadingSign] = useState(false);
+
+  const [bidAuction, setBidAuction] = useState(null);
+  const [encodedUpdateTransaction, setEncodedUpdateTransaction] = useState("");
+  const [nativeCurrencyAmount, setNativeCurrencyAmount] = useState("");
+  const [updateExecutorAddress, setUpdateExecutorAddress] = useState("");
+
+  const { auction, setAuction } = useContext(OevContext);
+
+  const getColor = (status) => {
+    switch (status) {
+      case "PENDING":
+        return "yellow.500";
+      case "WON":
+        return "green.500";
+      case "CANCELLED":
+        return "gray.500";
+      case "EXECUTED":
+        return "black";
+      case "SLASHED":
+        return "red.500";
+      case "REFRESH":
+        return "blue.500";
+      case "FRONT-RUN":
+        return "orange.500";
+      default:
+        return "blue.500";
+    }
+  }
+
+  const { signMessage } = useSignMessage({
+    message: "1",
+    onError: (error) => {
+      setIsLoadingSign(false);
+    },
+    onSuccess: (signature) => {
+        payload.signature = signature;
+        setIsLoadingSign(false);
+        switch (payload.requestType) {
+          case "API3 OEV Relay, /bids/cancel":
+            postMessage({ payload: payload, endpoint: "bids/cancel" });
+            break;
+          case "API3 OEV Relay, /auctions/info":
+            postMessage({ payload: payload, endpoint: "auctions/info" });
+            break
+          default:
+            break;
+        }
+        
+    }
+})
+
+const { config } = usePrepareContractWrite({
+  address: updateExecutorAddress,
+  abi: MULTICALLABI,
+  functionName: 'externalMulticallWithValue',
+  enabled: bidAuction != null,
+  args: [[API3SERVERV1(chain.id)], [encodedUpdateTransaction], [nativeCurrencyAmount]],
+  value: nativeCurrencyAmount,
+})
+
+const { data, write } = useContractWrite(config)
+
+const { isLoading, isSuccess } = useWaitForTransaction({
+  hash: data?.hash,
+});
+
+const postMessage = async ({ payload, endpoint }) => {
+    const response = await fetch('https://oev.api3dev.com/api/' + endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    })
+    const data = await response.json()
+
+    if (data != null) {
+
+      switch (endpoint) {
+        case "auctions/info":
+        console.log("info:", data)
+        setEncodedUpdateTransaction(data.encodedUpdateTransaction)
+        setNativeCurrencyAmount(data.nativeCurrencyAmount)
+        setUpdateExecutorAddress(data.updateExecutorAddress)
+        setBidAuction(data)
+        break
+
+        case "bids/cancel":
+
+        const newAuction = auction.map((item) => {
+          let found = data.bids.find((bid) => bid === item.id);
+          if (found != null) {
+            item.auction.status = "SEARCHER_CANCELED"
+          }
+          return item;
+      });
+      setAuction(newAuction)  
+
+        break
+
+        default:
+          break;
+
+      } 
+    }
+}
+
+  const updateDataFeed = (bid) => {
+    const validUntil = new Date();
+    validUntil.setMinutes(validUntil.getMinutes() + 5); 
+    console.log("bid:", bid)
+
+    let payload = {
+        id: bid.auctionId,
+        searcherAddress: address,
+        validUntil: validUntil,
+        prepaymentDepositoryChainId: 11155111,
+        prepaymentDepositoryAddress: PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS,
+        requestType: 'API3 OEV Relay, /auctions/info',
+    }
+
+    setPayload(payload);
+    const sorted = JSON.stringify(payload, Object.keys(payload).sort());
+    setIsLoadingSign(true);
+    signMessage({ message: sorted });
+  }
+
+  const cancelBid = (bid) => {
+    const validUntil = new Date();
+    validUntil.setMinutes(validUntil.getMinutes() + 5); 
+
+    let payload = {
+        bids: [bid.id],
+        searcherAddress: address,
+        validUntil: validUntil,
+        prepaymentDepositoryChainId: 11155111,
+        prepaymentDepositoryAddress: PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS,
+        requestType: 'API3 OEV Relay, /bids/cancel',
+    }
+
+    setPayload(payload);
+    const sorted = JSON.stringify(payload, Object.keys(payload).sort());
+    signMessage({ message: sorted });
+  }
+
+  const execute = (auction) => {
+    if (auction == null) return;
+
+    switch (auction.status) {
+      case "PENDING":
+        cancelBid(auction);
+        break;
+      case "WON":
+        updateDataFeed(auction);
+        break;
+      default:
+        break;
+  }
+}
+
+useEffect(() => {
+  if (isSuccess) {
+    console.log("isSuccess:", isSuccess)
+    console.log("data:", data)
+  }
+
+}, [data, isSuccess]);
+
+useEffect(() => {
+  if (isLoading) {
+    console.log("isLoading:", isLoading)
+  }
+}, [isLoading]);
+
+useEffect(() => {
+  if (bidAuction != null && write != null) {
+    setBidAuction(null)
+    write?.()
+  }
+
+}, [bidAuction, write]);
+
+  return (
+
+    <Stack direction="column"  spacing={"2"} width={"100%"}>
+    <Stack direction="row" spacing={"2"}>
+      <Stack direction="row" spacing={"-2"}>
+        <Image zIndex={2} src={`https://market.api3.org/images/asset-logos/${item.dataFeed.p1}.webp`} width={"24px"} height={"24px"} />
+        <Image zIndex={1} src={`https://market.api3.org/images/asset-logos/${item.dataFeed.p2}.webp`} width={"24px"} height={"24px"} />
+      </Stack>
+      <Text fontSize="md" fontWeight="bold">{item.dataFeed.p1 + '/' + item.dataFeed.p2}</Text>
+        
+      <Box paddingLeft={2} paddingRight={2} borderRadius={"10"} bgColor={COLORS.info} height={5} alignItems={"center"} >
+      <Text fontSize="xs">{item.chain}</Text>
+      </Box>
+      <Spacer />
+      <Grid height="20" width="20" radius="9" color="green" ariaLabel="loading" visible={isLoading || isLoadingSign}/>
+
+      <Box onClick={() => {execute(item.auction)}} cursor={"pointer"} visibility={item.auction == null ? "" : (item.auction.status === "WON" || item.auction.status === "PENDING") ? "visible" : "hidden"} paddingLeft={2} paddingRight={2} borderRadius={"10"} bgColor={item.auction == null ? "" : item.auction.status === "WON" ? "green.500" : "black"} height={5} >
+      <Text fontWeight={"bold"} fontSize="xs">{item.auction == null ? "" : item.auction.status === "WON" ? "UPDATE DATA FEED" : "CANCEL"}</Text>
+      </Box>item.auction.status === "WON" ?
+
+      <Box paddingLeft={2} paddingRight={2} borderRadius={"10"} bgColor={item.auction == null ? "blue.500" : getColor(item.auction == null ? "" : item.auction.status)} height={5} >
+      <Text fontWeight={"bold"} fontSize="xs">{item.auction == null ? "NEED REFRESH" : item.auction.status}</Text>
+      </Box>
+
+    </Stack>
+
+    <Stack direction="row" spacing={"2"}>
+    <Text width={"100%"} fontWeight={"bold"} noOfLines={1} fontSize="xs">Bid Amount</Text>
+      <Spacer />
+      <Flex><Text width={"100%"} noOfLines={1} fontSize="xs">{item.bidAmount}</Text></Flex>
+    </Stack>
+
+      <Stack direction="row" spacing={"2"}>
+      <Text width={"100%"} fontWeight={"bold"} noOfLines={1} fontSize="xs">Condition</Text>
+      <Spacer />
+      <Flex><Text width={"100%"} noOfLines={1} fontSize="xs">{item.condition}</Text></Flex>
+      </Stack>
+
+      <Stack direction="row" spacing={"2"}>
+      <Text width={"100%"} fontWeight={"bold"} noOfLines={1} fontSize="xs">Fullfilment Value</Text>
+      <Spacer />
+      <Flex><Text width={"100%"} noOfLines={1} fontSize="xs">{item.fulfillValue}</Text></Flex>
+      </Stack>
+
+
+  </Stack>
+  
+  );
+};
+
+export default Hero;
+
+
+
+
+
