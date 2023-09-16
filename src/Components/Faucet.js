@@ -136,7 +136,9 @@ useEffect(() => {
 
 
   return (
-    <VStack bgColor={COLORS.app} spacing={4} p={8} borderRadius="lg" boxShadow="lg" width="600px" alignItems={"left"} >
+    <VStack bgColor={"black"} spacing={4} p={2} borderRadius="lg" boxShadow="lg" width="600px" alignItems={"left"} >
+
+    <VStack bgColor={COLORS.app} spacing={4} p={8} borderRadius="lg" boxShadow="lg" alignItems={"left"} >
       <Flex>
       <Heading size={"lg"}>TestUSDC Faucet</Heading>
         <Spacer />
@@ -232,6 +234,7 @@ useEffect(() => {
     </VStack>
 
 
+    </VStack>
     </VStack>
   );
 };

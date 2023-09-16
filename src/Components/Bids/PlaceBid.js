@@ -1,6 +1,6 @@
 import React, {useState, useContext, useEffect } from "react";
 import SignIn from '../SignIn';
-import StartOver from '../StartOver';
+import Welcome from '../Welcome';
 import { useNetwork, useAccount, useBalance, useSignMessage } from "wagmi";
 import { COLORS } from '../../data/colors';
 import { OevContext } from '../../OevContext';
@@ -140,7 +140,7 @@ const Hero = () => {
 
   return (
     chain == null ? <SignIn></SignIn> :
-    contextProxyAddress === null || multicall === null ? <StartOver></StartOver> : 
+    contextProxyAddress === null || multicall === null ? <Welcome></Welcome> : 
         <VStack overflowY={"scroll"} spacing={4} p={8} width="700px" alignItems={"left"} >
             <CustomHeading header={"Place a Bid"} description={"Places bids in anticipation of an OEV opportunity on a specific data feed."} isLoading={isLoading}></CustomHeading>
             <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>
@@ -165,14 +165,10 @@ const Hero = () => {
                 <Spacer />
                 </Flex>
                 
-                {
-                    bid != null && showBidId ?
-                    <Box p={3} width={"100%"} bgColor={COLORS.app} borderRadius={"10"}>
-                    <BidInfoRow item={bid}></BidInfoRow>
-                    </Box>
-                    :
-                    null
-                }
+                {bid == null && !showBidId ? null :
+                <Box p={3} width={"100%"} bgColor={COLORS.app} borderRadius={"10"}>
+                <BidInfoRow item={bid}></BidInfoRow>
+                </Box>}
 
             </VStack>
 

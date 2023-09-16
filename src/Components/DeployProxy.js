@@ -10,7 +10,7 @@ import { computeDataFeedProxyWithOevAddress } from '@api3/contracts';
 import { OevContext } from '../OevContext';
 import { COLORS } from '../data/colors';
 import SignIn from './SignIn';
-import StartOver from './StartOver';
+import Welcome from './Welcome';
 import CopyInfoRow from './Custom/CopyInfoRow';
 
 const Commit = () => {
@@ -182,7 +182,7 @@ const Commit = () => {
 
   return (
     chain == null ? <SignIn></SignIn> :
-    searcher === null ? <StartOver></StartOver> : 
+    searcher === null ? <Welcome></Welcome> : 
 <VStack spacing={4} p={8} width={"600px"} alignItems={"left"} >
       <Flex>
       <Heading size={"lg"}>Deploy Proxy</Heading>

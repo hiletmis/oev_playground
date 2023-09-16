@@ -5,6 +5,8 @@ import Popup from 'reactjs-popup';
 import { Grid } from 'react-loader-spinner'
 import { useNetwork, useBalance, useAccount, useContractRead, usePrepareContractWrite, useContractWrite, useSignTypedData, useWaitForTransaction } from 'wagmi';
 import { OevContext } from '../OevContext';
+import SignIn from './SignIn';
+import Welcome from './Welcome';
 
 import { Button, Heading, VStack, Box, Text } from "@chakra-ui/react";
 import {
@@ -27,7 +29,7 @@ const Deposit = () => {
   const [signErc2612PermitArgs, setSignErc2612PermitArgs] = useState({tokenAmount: 0, v: 0, r: "0x", s: "0x"});
   const [isSigned, setIsSigned] = useState(false);
 
-  const { setSearcher } = useContext(OevContext);
+  const { wallet } = useContext(OevContext);
 
   const { chain } = useNetwork()
 
@@ -76,12 +78,8 @@ const Deposit = () => {
   useEffect(() => {
     if (collateralBalance.data) {  
       setCollateral(parseInt(collateralBalance.data) / 1e6)
-
-      if (collateralBalance.data > 0) {
-        setSearcher(true)
-      }
     }
-  }, [collateralBalance, setSearcher]);
+  }, [collateralBalance]);
 
   const domain = {
     name: tokenName.data,
@@ -147,6 +145,8 @@ const Deposit = () => {
   }, [refreshBalance]);
 
   return (
+    chain == null ? <SignIn></SignIn> :
+    wallet === null ? <Welcome></Welcome> : 
 <VStack spacing={4} p={8} width={"600px"} alignItems={"left"} >
       <Flex>
         <Heading size={"lg"}>Add Collateral</Heading>

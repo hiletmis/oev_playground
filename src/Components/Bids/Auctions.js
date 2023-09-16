@@ -1,6 +1,6 @@
 import {useContext, useState} from "react";
 import SignIn from '../SignIn';
-import StartOver from '../StartOver';
+import Welcome from '../Welcome';
 import { useNetwork, useAccount, useSignMessage } from "wagmi";
 import { OevContext } from '../../OevContext';
 import { COLORS } from '../../data/colors';
@@ -92,7 +92,7 @@ const Hero = () => {
      
   return (
     chain == null ? <SignIn></SignIn> :
-    auction == null ? <StartOver></StartOver> : 
+    auction == null ? <Welcome></Welcome> : 
     <VStack overflowY={"scroll"} spacing={4} p={8} width="800px" alignItems={"left"} >
         <CustomHeading header={"Check Active Auctions"} description={"Returns information about a specific auction based on the auction's id. Consistently checking will keep you informed about the fulfillment or cancellation of your bid."} isLoading={isLoading || isBusy}></CustomHeading>
 

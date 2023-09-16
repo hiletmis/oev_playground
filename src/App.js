@@ -10,7 +10,7 @@ import Welcome from './Components/Welcome';
 import { COLORS } from './data/colors';
 import { OevContext } from './OevContext';
 import { useState, React, useEffect } from "react";
-import { useNetwork } from 'wagmi';
+import { useNetwork, useAccount } from 'wagmi';
 
 import {
   BrowserRouter as Router,
@@ -38,6 +38,7 @@ const modifiedTheme = extendTheme({
 
 function App() {
 const { chain } = useNetwork()
+const { address } = useAccount()
 
 const [wallet, setWallet] = useState(null);
 const [contextDataFeed, setContextDataFeed] = useState(null);
@@ -52,8 +53,21 @@ useEffect(() => {
   setMulticall(null)
   setBid(null)
   setAuctionStatus(null)
-  setWallet(null)
 }, [chain]);
+
+useEffect(() => {
+  setMulticall(null)
+  setBid(null)
+  setAuctionStatus(null)
+  setWallet(null)
+  setSearcher(null)
+  setContextDataFeed(null)
+  setAuction(null)
+  setContextProxyAddress(null)
+  setBid(null)
+
+
+}, [address]);
 
   return (
     <ChakraProvider theme={modifiedTheme}>
