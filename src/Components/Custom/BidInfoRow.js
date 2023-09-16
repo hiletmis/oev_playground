@@ -66,7 +66,6 @@ const Hero = ({item}) => {
           default:
             break;
         }
-        
     }
 })
 
@@ -132,12 +131,9 @@ const postMessage = async ({ payload, endpoint }) => {
         });
 
         setAuction(refreshedAuction)  
-
       break
-
         default:
           break;
-
       } 
     }
 }
@@ -279,7 +275,6 @@ useEffect(() => {
       <Box paddingLeft={2} paddingRight={2} borderRadius={"10"} bgColor={item.auction == null ? "blue.500" : getColor(item.auction == null ? "" : item.auction.status)} height={5} >
       <Text fontWeight={"bold"} fontSize="xs">{item.auction == null ? "..." : item.auction.status}</Text>
       </Box>
-
     </Stack>
 
     <Stack direction="row" spacing={"2"}>
@@ -287,7 +282,6 @@ useEffect(() => {
       <Spacer />
       <Flex><Text width={"100%"} noOfLines={1} fontSize="xs">{item.bidAmount}</Text></Flex>
     </Stack>
-
       <Stack direction="row" spacing={"2"}>
       <Text width={"100%"} fontWeight={"bold"} noOfLines={1} fontSize="xs">Condition</Text>
       <Spacer />
@@ -299,8 +293,6 @@ useEffect(() => {
       <Spacer />
       <Flex><Text width={"100%"} noOfLines={1} fontSize="xs">{item.fulfillValue}</Text></Flex>
       </Stack>
-
-
   </Stack>
   
   );
