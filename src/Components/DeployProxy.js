@@ -223,8 +223,8 @@ const Commit = () => {
         <Stack direction="column" spacing={"2"} width={"75%"}>
               <Stack direction="row" spacing={"2"} >
                 <Stack visibility={!dataFeed ? "hidden" : "visible"} direction="row" spacing={"-2"}>
-                  <Image zIndex={2} src={dataFeed === null ? "" : `/coins/${dataFeed.p1}.webp`} width={"24px"} height={"24px"} />
-                  <Image zIndex={1} src={dataFeed === null ? "" : `/coins/${dataFeed.p2}.webp`} width={"24px"} height={"24px"} />
+                  <Image zIndex={2} src={dataFeed === null ? "" : `/coins/${dataFeed.p1}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />
+                  <Image zIndex={1} src={dataFeed === null ? "" : `/coins/${dataFeed.p2}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />
                 </Stack>
                 <Text fontSize="md" fontWeight="bold">{dataFeed === null ? "" : dataFeed.p1 + '/' + dataFeed.p2}</Text>
             

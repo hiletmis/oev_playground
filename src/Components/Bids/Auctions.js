@@ -24,7 +24,6 @@ const Hero = () => {
     const { auction, setAuction } = useContext(OevContext);
 
     const { isLoading, signMessage } = useSignMessage({
-        message: "1",
         onSuccess: (signature) => {
             payload.signature = signature;
             setRequest(payload);

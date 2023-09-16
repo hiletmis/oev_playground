@@ -19,6 +19,7 @@ const Hero = ({item}) => {
   const [nativeCurrencyAmount, setNativeCurrencyAmount] = useState("");
   const [updateExecutorAddress, setUpdateExecutorAddress] = useState("");
   const [bidId, setBidId] = useState("");
+  const [request , setRequest] = useState(null);
 
   const { auction, setAuction } = useContext(OevContext);
 
@@ -46,7 +47,6 @@ const Hero = ({item}) => {
   }
 
   const { signMessage } = useSignMessage({
-    message: "1",
     onError: (error) => {
       setIsLoadingSign(false);
     },
@@ -59,6 +59,9 @@ const Hero = ({item}) => {
             break;
           case "API3 OEV Relay, /auctions/info":
             postMessage({ payload: payload, endpoint: "auctions/info" });
+            break
+          case "API3 OEV Relay, /bids/info":
+            postMessage({ payload: payload, endpoint: "bids/info" });
             break
           default:
             break;
@@ -88,6 +91,7 @@ const postMessage = async ({ payload, endpoint }) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
     })
+    setIsLoadingSign(false);
     const data = await response.json()
 
     if (data != null) {
@@ -112,6 +116,25 @@ const postMessage = async ({ payload, endpoint }) => {
       setAuction(newAuction)  
         break
 
+        case "bids/info":
+          setRequest(payload);
+        if (data == null) return
+        if (auction == null) setAuction([])
+        const refreshedAuction = auction.map((item) => {
+          if (data.id === item.id) {
+            if (item.auction != null && data.status === "WON") {
+              item.auction.status = "IN PROGRESS"
+              return item
+            } 
+            item.auction = data
+          }
+          return item;
+        });
+
+        setAuction(refreshedAuction)  
+
+      break
+
         default:
           break;
 
@@ -119,25 +142,55 @@ const postMessage = async ({ payload, endpoint }) => {
     }
 }
 
-  const updateDataFeed = (bid) => {
-    const validUntil = new Date();
-    validUntil.setMinutes(validUntil.getMinutes() + 5); 
+const refresh = () => {
+  const validUntil = new Date();
+  validUntil.setMinutes(validUntil.getMinutes() + 5);
 
-    let payload = {
-        id: bid.auctionId,
-        searcherAddress: address,
-        validUntil: validUntil,
-        prepaymentDepositoryChainId: 11155111,
-        prepaymentDepositoryAddress: PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS,
-        requestType: 'API3 OEV Relay, /auctions/info',
-    }
-
-    setPayload(payload);
-    const sorted = JSON.stringify(payload, Object.keys(payload).sort());
-    setIsLoadingSign(true);
-    setBidId(bid.id)
-    signMessage({ message: sorted });
+  let payload = {
+      id: item.id,
+      searcherAddress: address,
+      validUntil: validUntil,
+      prepaymentDepositoryChainId: 11155111,
+      prepaymentDepositoryAddress: PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS,
+      requestType: 'API3 OEV Relay, /bids/info',
   }
+
+  setPayload(payload);
+  const sorted = JSON.stringify(payload, Object.keys(payload).sort());
+  setIsLoadingSign(true);
+  
+  if (request == null) {
+    signMessage({ message: sorted });
+    return
+  }
+
+  if (request.validUntil > Date.now()) {
+      postMessage({ payload: request, endpoint: "bids/info" })
+  } else {
+      signMessage({ message: sorted });
+  }
+}
+
+
+const updateDataFeed = (bid) => {
+  const validUntil = new Date();
+  validUntil.setMinutes(validUntil.getMinutes() + 5); 
+
+  let payload = {
+      id: bid.auctionId,
+      searcherAddress: address,
+      validUntil: validUntil,
+      prepaymentDepositoryChainId: 11155111,
+      prepaymentDepositoryAddress: PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS,
+      requestType: 'API3 OEV Relay, /auctions/info',
+  }
+
+  setPayload(payload);
+  const sorted = JSON.stringify(payload, Object.keys(payload).sort());
+  setIsLoadingSign(true);
+  setBidId(bid.id)
+  signMessage({ message: sorted });
+}
 
   const cancelBid = (bid) => {
     const validUntil = new Date();
@@ -158,7 +211,10 @@ const postMessage = async ({ payload, endpoint }) => {
   }
 
   const execute = (auction) => {
-    if (auction == null) return;
+    if (auction == null) {
+      refresh();
+      return;
+    }
 
     switch (auction.status) {
       case "PENDING":
@@ -166,6 +222,10 @@ const postMessage = async ({ payload, endpoint }) => {
         break;
       case "WON":
         updateDataFeed(auction);
+        break;
+      case "IN PROGRESS":
+      case "NEED REFRESH":
+        refresh();
         break;
       default:
         break;
@@ -201,8 +261,8 @@ useEffect(() => {
     <Stack direction="column"  spacing={"2"} width={"100%"}>
     <Stack direction="row" spacing={"2"}>
       <Stack direction="row" spacing={"-2"}>
-        <Image zIndex={2} src={`/coins/${item.dataFeed.p1}.webp`} width={"24px"} height={"24px"} />
-        <Image zIndex={1} src={`/coins/${item.dataFeed.p2}.webp`} width={"24px"} height={"24px"} />
+        <Image zIndex={2} src={`/coins/${item.dataFeed.p1}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />
+        <Image zIndex={1} src={`/coins/${item.dataFeed.p2}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />
       </Stack>
       <Text fontSize="md" fontWeight="bold">{item.dataFeed.p1 + '/' + item.dataFeed.p2}</Text>
         
@@ -212,12 +272,12 @@ useEffect(() => {
       <Spacer />
       <Grid height="20" width="20" radius="9" color="green" ariaLabel="loading" visible={isLoading || isLoadingSign}/>
 
-      <Box onClick={() => {execute(item.auction)}} cursor={"pointer"} visibility={item.auction == null ? "" : (item.auction.status === "WON" || item.auction.status === "PENDING") ? "visible" : "hidden"} paddingLeft={2} paddingRight={2} borderRadius={"10"} bgColor={item.auction == null ? "" : item.auction.status === "WON" ? "green.500" : "black"} height={5} >
-      <Text fontWeight={"bold"} fontSize="xs">{item.auction == null ? "" : item.auction.status === "WON" ? "UPDATE DATA FEED" : "CANCEL"}</Text>
-      </Box>item.auction.status === "WON" ?
+      <Box onClick={() => {execute(item.auction)}} cursor={"pointer"} visibility={item.auction == null ? "visible" : (item.auction.status === "WON" || item.auction.status === "PENDING" || item.auction.status === "IN PROGRESS") ? "visible" : "hidden"} paddingLeft={2} paddingRight={2} borderRadius={"10"} bgColor={item.auction == null ? "black" : item.auction.status === "WON" ? "green.500" : "black"} height={5} >
+      <Text fontWeight={"bold"} fontSize="xs">{item.auction == null ? "CHECK" : item.auction.status === "WON" ? "UPDATE DATA FEED" : item.auction.status === "IN PROGRESS" ? "CHECK" : "CANCEL"}</Text>
+      </Box>
 
       <Box paddingLeft={2} paddingRight={2} borderRadius={"10"} bgColor={item.auction == null ? "blue.500" : getColor(item.auction == null ? "" : item.auction.status)} height={5} >
-      <Text fontWeight={"bold"} fontSize="xs">{item.auction == null ? "NEED REFRESH" : item.auction.status}</Text>
+      <Text fontWeight={"bold"} fontSize="xs">{item.auction == null ? "..." : item.auction.status}</Text>
       </Box>
 
     </Stack>

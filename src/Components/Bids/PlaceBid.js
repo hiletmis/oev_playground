@@ -13,7 +13,7 @@ import ExecuteButton from "../Custom/ExecuteButton";
 import BidInfoRow from "../Custom/BidInfoRow";
 
 import {
-    VStack, Box, Text, Flex, Spacer, Image
+    VStack, Box, Text, Flex, Spacer
   } from "@chakra-ui/react";
 
   import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS } from "../../data/abi";
@@ -141,7 +141,7 @@ const Hero = () => {
   return (
     chain == null ? <SignIn></SignIn> :
     contextProxyAddress === null || multicall === null ? <StartOver></StartOver> : 
-        <VStack overflowY={"scroll"} spacing={4} p={8} width="600px" alignItems={"left"} >
+        <VStack overflowY={"scroll"} spacing={4} p={8} width="700px" alignItems={"left"} >
             <CustomHeading header={"Place a Bid"} description={"Places bids in anticipation of an OEV opportunity on a specific data feed."} isLoading={isLoading}></CustomHeading>
             <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>
 
