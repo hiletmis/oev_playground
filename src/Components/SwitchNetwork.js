@@ -14,7 +14,7 @@ const Hero = () => {
     }
 
   return (
-<VStack spacing={4} p={8} width={"600px"} alignItems={"left"} >
+  <VStack spacing={4} p={8} width={"600px"} alignItems={"left"} >
     <Flex>
       <Heading size={"lg"}>Switch Network</Heading>
       <Spacer />

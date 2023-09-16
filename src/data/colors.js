@@ -4,4 +4,5 @@ export const COLORS = {
     table: "gray.300",
     info: "gray.500",
     main: "#131627",
+    caution: "yellow.700",
 };

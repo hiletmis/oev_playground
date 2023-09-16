@@ -28,7 +28,6 @@ const Header = () => {
           />
         </Flex>
       </Flex>
-      {/* <Divider /> */}
     </Flex>
   );
 };

@@ -53,6 +53,9 @@ useEffect(() => {
   setMulticall(null)
   setBid(null)
   setAuctionStatus(null)
+  setContextDataFeed(null)
+  setMulticall(null)
+  setContextProxyAddress(null)
 }, [chain]);
 
 useEffect(() => {
@@ -65,8 +68,6 @@ useEffect(() => {
   setAuction(null)
   setContextProxyAddress(null)
   setBid(null)
-
-
 }, [address]);
 
   return (

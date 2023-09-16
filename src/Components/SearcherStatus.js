@@ -5,6 +5,7 @@ import { OevContext } from '../OevContext';
 import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS } from "../data/abi";
 import { useAccount, useSignMessage } from "wagmi";
 import { Grid } from 'react-loader-spinner'
+import { COLORS } from '../data/colors';
 
 const Hero = () => {
     const {address} = useAccount()
@@ -29,7 +30,7 @@ const Hero = () => {
         if (response.status === 200) {
             setSearcher(data)
         } else {
-            setInfo("Please deposit funds to prepayment depository contract to register as a searcher. After depositing funds, click the refresh icon to get your status. Usually it takes 1-2 minutes to register as a searcher. You can use the testUSDC faucet to get test funds.")
+            setInfo("Appearently you are not registered as a searcher. Please deposit funds to prepayment depository contract to register as a searcher. After depositing funds, click the refresh icon to update your status. Usually it takes 1-2 minutes to register as a searcher. You can use the testUSDC faucet to get test funds.")
         }
     }
 
@@ -73,20 +74,22 @@ const Hero = () => {
 
     useEffect(() => {
         setRequest(null);
-        setInfo("Click the refresh icon to get your status");
+        setInfo("Click the refresh icon to check your status");
     }, [address]);
 
   return (
     <VStack spacing={2} p={1} alignItems={"left"} >
     <Flex>
-      <Heading size={"md"}>User Status</Heading>
+      <Heading size={"md"}>Searcher Status</Heading>
       <Spacer />
       <Grid height="20" width="20" radius="9" color="green" ariaLabel="loading" visible={isLoadingSign}/>
       <Image marginLeft={"2"} cursor={"pointer"} onClick={()=> {getStatus()}} src={'refresh.svg'} width={"20px"} height={"20px"} />
     </Flex>
     {
         searcher === null
-        ? <Text fontSize={"sm"}>{info}</Text>
+        ? <Box p= "2" width={"100%"} bgColor={COLORS.caution} borderRadius={"10"} alignItems={"center"}>
+                <Text fontSize={"sm"}>{info}</Text>
+            </Box> 
         : <Box>
                 <InfoRow header={"Available Funds"} text={formatFunds(searcher.availableFunds)}></InfoRow>
                 <InfoRow header={"Withdrawal Reserved Funds"} text={formatFunds(searcher.withdrawalReservedFunds)}></InfoRow>
@@ -94,7 +97,7 @@ const Hero = () => {
                 <InfoRow header={"API3 Fee Funds"} text={formatFunds(searcher.api3FeeFunds)}></InfoRow>
                 <InfoRow header={"Slashed Funds"} text={formatFunds(searcher.slashedFunds)}></InfoRow>
         </Box>
-    }
+}
     </VStack>
 
 
