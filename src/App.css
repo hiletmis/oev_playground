@@ -79,3 +79,22 @@ body{margin:0}
 
 .sidebar {width: 250px; float:left}
 .body {width: calc(100vw - 250px);; float:right}
+
+.rejt-name {
+  font-weight: bold;
+  color: aquamarine;
+}
+
+.rejt-value, .rejt-name, .rejt-not-collapsed-delimiter, .rejt-collapsed-text {
+  font-size: 0.6em;
+}
+
+.rejt-object-node{
+  font-size: 0.8em;
+}
+
+.rejt-value-node {
+  min-height: 0px;
+  line-height: 10px;
+
+}

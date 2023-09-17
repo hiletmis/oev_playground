@@ -7,6 +7,18 @@ import Multicall from './Components/Multicall';
 import PlaceBid from './Components/Bids/PlaceBid';
 import Auctions from './Components/Bids/Auctions';
 import Welcome from './Components/Welcome';
+
+import GetConfiguration from './Components/Endpoints/GetConfiguration'
+import WithdrawalsRequest from './Components/Endpoints/WithdrawalsRequest'
+import WithdrawalsList from './Components/Endpoints/WithdrawalsList'
+import Status from './Components/Endpoints/Status'
+import BidsInfo from './Components/Endpoints/BidsInfo'
+import BidsList from './Components/Endpoints/BidsList'
+import BidsPlace from './Components/Endpoints/BidsPlace'
+import BidsCancel from './Components/Endpoints/BidsCancel'
+import AuctionsInfo from './Components/Endpoints/AuctionsInfo'
+import AuctionsList from './Components/Endpoints/AuctionsList'
+
 import { COLORS } from './data/colors';
 import { OevContext } from './OevContext';
 import { useState, React, useEffect } from "react";
@@ -93,6 +105,16 @@ useEffect(() => {
               <Route path="multicall" element={<Multicall />} />
               <Route path="bid" element={<PlaceBid />} />
               <Route path="auctions" element={<Auctions />} />
+              <Route path="configuration" element={<GetConfiguration />} />
+              <Route path="withdrawals/request" element={<WithdrawalsRequest />} />
+              <Route path="withdrawals/list" element={<WithdrawalsList />} />
+              <Route path="status" element={<Status />} />
+              <Route path="bids/info" element={<BidsInfo />} />
+              <Route path="bids/list" element={<BidsList />} />
+              <Route path="bids/place" element={<BidsPlace />} />
+              <Route path="bids/cancel" element={<BidsCancel />} />
+              <Route path="auctions/info" element={<AuctionsInfo />} />
+              <Route path="auctions/list" element={<AuctionsList />} />
             </Routes>
           </VStack>
         </VStack>

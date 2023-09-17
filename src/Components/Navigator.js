@@ -41,16 +41,16 @@ return (
           <Stack>
           <CustomButton isDisabled={context.wallet === null} link="/searcher" caption="Deposit Collateral" />
           <Text fontWeight={"bold"} fontSize={"md"}>API Endpoints</Text>
-          <CustomButton bgColor={"blue.500"}  height="30px" isDisabled={context.searcher === null } link="/" caption="GET /configuration" />
-          <CustomButton bgColor={"green.500"} height="30px" isDisabled={context.searcher === null } link="/" caption="POST /withdrawals/request" />
-          <CustomButton bgColor={"green.500"} height="30px" isDisabled={context.searcher === null } link="/" caption="POST /withdrawals/list" />
-          <CustomButton bgColor={"green.500"} height="30px" isDisabled={context.searcher === null } link="/" caption="POST /status" />
-          <CustomButton bgColor={"green.500"} height="30px" isDisabled={context.searcher === null } link="/" caption="POST /bids/info" />
-          <CustomButton bgColor={"green.500"} height="30px" isDisabled={context.searcher === null } link="/" caption="POST /bids/list" />
-          <CustomButton bgColor={"green.500"} height="30px" isDisabled={context.searcher === null } link="/" caption="POST /bids/place" />
-          <CustomButton bgColor={"green.500"} height="30px" isDisabled={context.searcher === null } link="/" caption="POST /bids/cancel" />
-          <CustomButton bgColor={"green.500"} height="30px" isDisabled={context.searcher === null } link="/" caption="POST /auctions/info" />
-          <CustomButton bgColor={"green.500"} height="30px" isDisabled={context.searcher === null } link="/" caption="POST /auctions/list" />
+          <CustomButton bgColor={"blue.500"}  height="30px" isDisabled={context.searcher === null } link="/configuration" caption="GET /configuration" />
+          <CustomButton bgColor={"green.500"} height="30px" isDisabled={context.searcher === null } link="/withdrawals/request" caption="POST /withdrawals/request" />
+          <CustomButton bgColor={"green.500"} height="30px" isDisabled={context.searcher === null } link="/withdrawals/list" caption="POST /withdrawals/list" />
+          <CustomButton bgColor={"green.500"} height="30px" isDisabled={context.searcher === null } link="/status" caption="POST /status" />
+          <CustomButton bgColor={"green.500"} height="30px" isDisabled={context.searcher === null } link="/bids/info" caption="POST /bids/info" />
+          <CustomButton bgColor={"green.500"} height="30px" isDisabled={context.searcher === null } link="/bids/list" caption="POST /bids/list" />
+          <CustomButton bgColor={"green.500"} height="30px" isDisabled={context.searcher === null } link="/bids/place" caption="POST /bids/place" />
+          <CustomButton bgColor={"green.500"} height="30px" isDisabled={context.searcher === null } link="/bids/cancel" caption="POST /bids/cancel" />
+          <CustomButton bgColor={"green.500"} height="30px" isDisabled={context.searcher === null } link="/auctions/info" caption="POST /auctions/info" />
+          <CustomButton bgColor={"green.500"} height="30px" isDisabled={context.searcher === null } link="/auctions/list" caption="POST /auctions/list" />
           </Stack>
           : null
         }

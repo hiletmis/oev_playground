@@ -11,7 +11,7 @@ const Hero = ({isDisabled, onClick, text}) => {
         size="md"
         minWidth={"200px"}
         isDisabled={isDisabled}
-        onClick={onClick}
+        onClick={() => {onClick()}}
       >
       {text}
       </Button>
