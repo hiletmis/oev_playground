@@ -84,7 +84,7 @@ const Hero = () => {
       <Heading size={"md"}>Searcher Status</Heading>
       <Spacer />
       <Grid height="20" width="20" radius="9" color="green" ariaLabel="loading" visible={isLoadingSign}/>
-      <Image marginLeft={"2"} cursor={"pointer"} onClick={()=> {getStatus()}} src={'refresh.svg'} width={"20px"} height={"20px"} />
+      <Image marginLeft={"2"} cursor={"pointer"} onClick={()=> {getStatus()}} src={'./refresh.svg'} width={"20px"} height={"20px"} />
     </Flex>
     {
         searcher === null

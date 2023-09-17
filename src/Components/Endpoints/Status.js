@@ -39,7 +39,10 @@ const Hero = () => {
         setPayload(null);
         setMessage(null);
         handleClick(payload)
-    }
+    },
+    onError: (error) => {
+      setIsLoading(false);
+    },
   })
 
   const handleClick = (params) => {
@@ -76,7 +79,7 @@ const Hero = () => {
 
         <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>
           <VStack spacing={3} direction="row" align="left" m="1rem">
-              <InfoRow bgColor="green.500" header={"HTTP Request"} text={"POST https://oev.api3dev.com/api/status"} margin={"0.5rem"}></InfoRow>
+              <InfoRow bgColor="green.500" header={"HTTP Request"} text={"POST https://oev.api3dev.com/api/status"}></InfoRow>
               <ExecuteButton isDisabled={isLoading} onClick={() => getStatus()} text={"POST"} ></ExecuteButton>
           </VStack>
         </Box>

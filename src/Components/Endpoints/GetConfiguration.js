@@ -45,7 +45,7 @@ const Hero = () => {
 
         <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>
           <VStack spacing={3} direction="row" align="left" m="1rem">
-              <InfoRow bgColor="blue.500" header={"HTTP Request"} text={"GET https://oev.api3dev.com/api/configuration"} margin={"0.5rem"}></InfoRow>
+              <InfoRow bgColor="blue.500" header={"HTTP Request"} text={"GET https://oev.api3dev.com/api/configuration"}></InfoRow>
               <ExecuteButton onClick={handleClick} text={"GET"} ></ExecuteButton>
           </VStack>
         </Box>
