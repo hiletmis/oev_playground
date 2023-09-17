@@ -8,7 +8,7 @@ import { Grid } from 'react-loader-spinner'
 import { COLORS } from '../data/colors';
 
 const Hero = () => {
-    const {address} = useAccount()
+    const {address, isConnected} = useAccount()
     const [payload, setPayload] = useState(null);
     const [info, setInfo] = useState("Click the refresh icon to get your status");
     const [request , setRequest] = useState(null);
@@ -43,7 +43,7 @@ const Hero = () => {
 
     const getStatus = () => {
         const validUntil = new Date();
-        validUntil.setMinutes(validUntil.getMinutes() + 5);
+        validUntil.setMinutes(validUntil.getMinutes() + 15);
         setIsLoadingSign(true)
         let payload = {
             searcherAddress: address,
@@ -78,6 +78,7 @@ const Hero = () => {
     }, [address]);
 
   return (
+    isConnected === false ? null :
     <VStack spacing={2} p={1} alignItems={"left"} >
     <Flex>
       <Heading size={"md"}>Searcher Status</Heading>

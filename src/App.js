@@ -40,6 +40,7 @@ function App() {
 const { chain } = useNetwork()
 const { address } = useAccount()
 
+const [level, setLevel] = useState(0);
 const [wallet, setWallet] = useState(null);
 const [contextDataFeed, setContextDataFeed] = useState(null);
 const [auction, setAuction] = useState(null);
@@ -72,7 +73,7 @@ useEffect(() => {
 
   return (
     <ChakraProvider theme={modifiedTheme}>
-      <OevContext.Provider value={{ wallet, setWallet, searcher, setSearcher, multicall, setMulticall, bid, setBid, contextProxyAddress, setContextProxyAddress, auction, setAuction, contextDataFeed, setContextDataFeed, auctionStatus, setAuctionStatus}}>
+      <OevContext.Provider value={{ level, setLevel, wallet, setWallet, searcher, setSearcher, multicall, setMulticall, bid, setBid, contextProxyAddress, setContextProxyAddress, auction, setAuction, contextDataFeed, setContextDataFeed, auctionStatus, setAuctionStatus}}>
         <Router>
         <div class="container" >
         <div class="header"><Header /></div>

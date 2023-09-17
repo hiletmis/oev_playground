@@ -104,7 +104,7 @@ const Hero = () => {
                 <Image cursor={"pointer"}  onClick={signPayload} marginLeft={1} zIndex={1} src={`./refresh.svg`} width={"24px"} height={"24px"} />
                 </Flex>
 
-                <Box p="0" width={"100%"} minHeight={"1000px"} borderRadius={"10"} bgColor={COLORS.app}  alignItems={"left"}>
+                <Box p="0" width={"100%"} borderRadius={"10"} bgColor={COLORS.app}  alignItems={"left"}>
                     <ScrollableFeed forceScroll={false}>
                     {auction.map((item, i) => {
                     return (
