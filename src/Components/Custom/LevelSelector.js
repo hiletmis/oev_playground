@@ -47,10 +47,10 @@ const Hero = () => {
                 <Text fontSize={"sm"}>Select the level of the tutorial you want to experience</Text>
                         
                 <Flex align="center" justify={"space-evenly"} p={"2"} bgColor={COLORS.main} flexDirection={'row'}>
-                    <LevelRadioButton onClick={() => setCondition('0')} bgColor={condition === '0' ? bgColor() : "gray.700"} description={"Searcher"}></LevelRadioButton>
-                    <LevelRadioButton onClick={() => setCondition('1')} bgColor={condition === '1' ? bgColor() : "gray.700"} description={"DeFi App"}></LevelRadioButton>
-                    <LevelRadioButton onClick={() => setCondition('2')} bgColor={condition === '2' ? bgColor() : "gray.700"} description={"Combined"}></LevelRadioButton>
-                    <LevelRadioButton onClick={() => setCondition('3')} bgColor={condition === '3' ? bgColor() : "gray.700"} description={"Advanced"}></LevelRadioButton>
+                    <LevelRadioButton icon={'/searcher.svg'} onClick={() => setCondition('0')} bgColor={condition === '0' ? bgColor() : "gray.700"} description={"Searcher"}></LevelRadioButton>
+                    <LevelRadioButton icon={'/dapp.svg'} onClick={() => setCondition('1')} bgColor={condition === '1' ? bgColor() : "gray.700"} description={"DeFi App"}></LevelRadioButton>
+                    <LevelRadioButton icon={'/combined.svg'} onClick={() => setCondition('2')} bgColor={condition === '2' ? bgColor() : "gray.700"} description={"Combined"}></LevelRadioButton>
+                    <LevelRadioButton icon={'/advanced.svg'} onClick={() => setCondition('3')} bgColor={condition === '3' ? bgColor() : "gray.700"} description={"Advanced"}></LevelRadioButton>
                 </Flex>
 
                 <Text fontWeight={"bold"} fontSize={"md"}>Description</Text>
@@ -92,7 +92,6 @@ const Hero = () => {
                         <Text fontSize={"md"}>Combined mode is consist of both searcher and defi app functions. The whole flow can be experienced using this mode.</Text>
                         : condition === '3' ?
                         <VStack alignItems={"left"} spacing={"3"}>
-                            <Text fontSize={"md"}>Accessing API endpoints properly also requires a user to be registered as a searcher. Thus, start by clicking the "Deposit Collateral" button. You will be asked to sign a message to deposit collateral to the OEV Relay. After the transaction is confirmed, you will be able to utilize endpoints. Usually it takes 2-3 minutes before deposit is confirmed.</Text>
                             <Text fontSize={"md"}>There are 10 API endpoints that can be accessed. You can access them by clicking the buttons. You will be asked to sign a message to access an endpoint. After the transaction is confirmed, you will be able to see the response of the endpoint.</Text>
                             <Text fontSize={"md"}><b>GET /configuration</b> endpoint returns the configuration of the OEV Relay.</Text>
                             <Text fontSize={"md"}><b>POST /withdrawals/request</b> endpoint requests a withdrawal from the OEV Relay.</Text>

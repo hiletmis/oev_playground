@@ -23,6 +23,7 @@ return (
           : context.level === 1
           ?
           <Stack>
+          <CustomButton isDisabled={context.wallet === null} link="/searcher" caption="Deposit Collateral" />
           <CustomButton isDisabled={context.searcher === null} link="/proxy" caption="Deploy Data Feed Proxy" />
           <CustomButton isDisabled={context.searcher === null } link="/" caption="Withdraw" />
           </Stack>
@@ -39,7 +40,6 @@ return (
           : context.level === 3
           ?
           <Stack>
-          <CustomButton isDisabled={context.wallet === null} link="/searcher" caption="Deposit Collateral" />
           <Text fontWeight={"bold"} fontSize={"md"}>API Endpoints</Text>
           <CustomButton bgColor={"blue.500"}  height="30px" isDisabled={false } link="/configuration" caption="GET /configuration" />
           <CustomButton bgColor={"green.500"} height="30px" isDisabled={false } link="/withdrawals/request" caption="POST /withdrawals/request" />
