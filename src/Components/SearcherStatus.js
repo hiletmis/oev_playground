@@ -6,6 +6,7 @@ import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS } from "../data/abi";
 import { useAccount, useSignMessage } from "wagmi";
 import { Grid } from 'react-loader-spinner'
 import { COLORS } from '../data/colors';
+import SignIn from './SignIn';
 
 const Hero = () => {
     const {address, isConnected} = useAccount()
@@ -78,7 +79,7 @@ const Hero = () => {
     }, [address]);
 
   return (
-    isConnected === false ? null :
+    isConnected === false ? <SignIn></SignIn> :
     <VStack spacing={2} p={1} alignItems={"left"} >
     <Flex>
       <Heading size={"md"}>Searcher Status</Heading>
