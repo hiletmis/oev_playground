@@ -28,6 +28,7 @@ const Hero = () => {
     useEffect(() => {
         if (condition === null) return;
         setLevel(parseInt(condition));
+        localStorage.setItem('level', condition);
     }, [condition, level, setLevel]);
 
     useEffect(() => {
@@ -35,6 +36,13 @@ const Hero = () => {
             setCondition(String(level));
         }
     }, [condition, level]);
+
+    useEffect(() => {   
+        const level = localStorage.getItem('level');
+        if (!level) return
+        setCondition(level);
+    }, []);
+
 
   return (
     <VStack width="700px" alignItems={"left"} >

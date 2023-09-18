@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Grid } from 'react-loader-spinner'
 import { OevContext } from '../OevContext';
 import ExecuteButton from "./Custom/ExecuteButton";
 import CustomHeading from "./Custom/Heading";
@@ -15,29 +14,13 @@ import { COLORS } from '../data/colors';
 
 const DeployMulticall = () => {
     const { address } = useAccount()
+    const { chain } = useNetwork()
 
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [items, setItems] = useState([]);
     const { multicall, setMulticall } = useContext(OevContext);
-    const { chain } = useNetwork()
 
-    useEffect(() => { 
-        if (isSuccess) {
-          localStorage.setItem('multicall', JSON.stringify(items));
-        }
-        }, [isSuccess, items]);
-    
-    useEffect(() => {
-        const items = JSON.parse(localStorage.getItem('multicall'));
-        if (!items) return
-        const multicall = items.find(item => item.address === address && item.chain === chain.id) 
-        if (multicall) {setMulticall(multicall.multicall)} else setMulticall(null)
-
-        if (items) {
-        setItems(items);
-        }
-    }, [address, chain.id, setMulticall]);
 
 const deployMulticall = async () => { 
 

@@ -9,25 +9,26 @@ import { COLORS } from '../data/colors';
 
 const Hero = () => {
   const context = useContext(OevContext);
+  const level = parseInt(localStorage.getItem('level'));
 
 return (
       <VStack bgColor={COLORS.main} direction="row" borderRadius="lg" spacing={2} p={2} width={'100%'} height={"100%"} alignItems={"left"} >
         <CustomButton isDisabled={false} link="/" caption="Home" />
         {
-         context.level === 0 
+         level === 0 
          ? 
          <Stack>
          <CustomButton isDisabled={context.wallet === null} link="/searcher" caption="Deposit Collateral" />
          <CustomButton isDisabled={context.contextProxyAddress === null || context.multicall === null} link="/bid" caption="Place a Bid" />
          </Stack>
-          : context.level === 1
+          : level === 1
           ?
           <Stack>
           <CustomButton isDisabled={context.wallet === null} link="/searcher" caption="Deposit Collateral" />
           <CustomButton isDisabled={context.searcher === null} link="/proxy" caption="Deploy Data Feed Proxy" />
           <CustomButton isDisabled={context.searcher === null } link="/" caption="Withdraw" />
           </Stack>
-          : context.level === 2
+          : level === 2
           ?
           <Stack>
           <CustomButton isDisabled={context.wallet === null} link="/searcher" caption="Deposit Collateral" />
@@ -37,7 +38,7 @@ return (
           <CustomButton isDisabled={context.auction === null } link="/auctions" caption="Check Auction Status" />
           <CustomButton isDisabled={context.auction === null } link="/withdraw" caption="Withdraw" />
           </Stack>
-          : context.level === 3
+          : level === 3
           ?
           <Stack>
           <Text fontWeight={"bold"} fontSize={"md"}>API Endpoints</Text>
