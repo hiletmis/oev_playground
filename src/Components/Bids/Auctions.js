@@ -101,7 +101,7 @@ const Hero = () => {
                 <Flex>
                 <Text fontWeight={"bold"} fontSize={"md"}>Auctions</Text>
                 <Spacer />
-                <Image cursor={"pointer"}  onClick={signPayload} marginLeft={1} zIndex={1} src={`./refresh.svg`} width={"24px"} height={"24px"} />
+                <Image cursor={"pointer"}  onClick={signPayload} marginLeft={1} zIndex={1} src={`/refresh.svg`} width={"24px"} height={"24px"} />
                 </Flex>
 
                 <Box p="0" width={"100%"} borderRadius={"10"} bgColor={COLORS.app}  alignItems={"left"}>

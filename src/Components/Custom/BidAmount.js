@@ -8,18 +8,18 @@ import {
     NumberInputStepper
   } from '@chakra-ui/react'
   
-const Hero = ({ethAmount, ethBalance, chain, setEthAmount}) => { 
+const Hero = ({ethAmount, ethBalance, chain, setEthAmount, bgColor=COLORS.app}) => { 
   return (
     <VStack alignItems={"left"} >
         <Text fontWeight={"bold"} fontSize={"md"}>Bid Amount</Text>
-        <Box width={"100%"} height="120px" bgColor={COLORS.app} borderRadius={"10"}>
+        <Box width={"100%"} height="120px" bgColor={bgColor} borderRadius={"10"}>
             <VStack spacing={3} direction="row" align="left" m="1rem">
                 <Flex>
                     <NumberInput value={ethAmount} step={1} min={0} size={"lg"} onChange={(valueString) => setEthAmount(valueString)}>
                     <NumberInputField borderWidth={"0px"} focusBorderColor={"red.200"} placeholder="0.0" fontSize={"4xl"} inputMode="numeric"/><NumberInputStepper></NumberInputStepper>
                     </NumberInput>
                     <Spacer />
-                    <Image marginRight={2} src={'./chainIcons/' + chain.id + '.svg'} width={"40px"} height={"40px"} />
+                    <Image marginRight={2} src={'/chainIcons/' + chain.id + '.svg'} width={"40px"} height={"40px"} />
                 </Flex>
                 <Flex>
                     <Text 

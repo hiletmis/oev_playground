@@ -25,6 +25,12 @@ const defaultParams = ({address, endpoint}) => {
     }
 }
 
+const sortObject = (payload, setPayload, setMessage) => {
+    setPayload(payload);
+    const sorted = JSON.stringify(payload, Object.keys(payload).sort());
+    setMessage(sorted);
+}
+
 export const POST = ({setResponse, setError, endpoint, payload}) => {
     fetch("https://oev.api3dev.com/api/" + endpoint, {
         method: 'POST',
@@ -45,10 +51,7 @@ export const POST = ({setResponse, setError, endpoint, payload}) => {
 export const PostStatus = ({address, setPayload, setMessage}) => {
     const endpoint = "status"
     let payload = defaultParams({address, endpoint})
-
-    setPayload(payload);
-    const sorted = JSON.stringify(payload, Object.keys(payload).sort());
-    setMessage(sorted);
+    sortObject(payload, setPayload, setMessage);
 }
 
 export const PostBidsInfo = ({address, bidId, setPayload, setMessage}) => {
@@ -56,9 +59,7 @@ export const PostBidsInfo = ({address, bidId, setPayload, setMessage}) => {
     let payload = defaultParams({address, endpoint})
 
     payload.id = bidId;
-    setPayload(payload);
-    const sorted = JSON.stringify(payload, Object.keys(payload).sort());
-    setMessage(sorted);
+    sortObject(payload, setPayload, setMessage);
 }
 
 export const PostBidsList = ({address, cursor="", sortDirection="asc", setPayload, setMessage}) => {
@@ -68,9 +69,7 @@ export const PostBidsList = ({address, cursor="", sortDirection="asc", setPayloa
     payload.cursor = cursor;
     payload.sortDirection = sortDirection;
 
-    setPayload(payload);
-    const sorted = JSON.stringify(payload, Object.keys(payload).sort());
-    setMessage(sorted);
+    sortObject(payload, setPayload, setMessage);
 }
 
 export const PostBidsCancel = ({address, bid, setPayload, setMessage}) => {
@@ -89,14 +88,27 @@ export const PostBidsCancel = ({address, bid, setPayload, setMessage}) => {
     setMessage(merged);
 }
 
+export const PostBidsPlace = ({address, bid, setPayload, setMessage}) => {
+    const endpoint = "/bids/place"
+    let payload = defaultParams({address, endpoint})
+
+    const bids=[bid]
+    const sortedBids = JSON.stringify(Object.values(bids).sort());
+
+    payload.bids = bids;
+    setPayload(payload);
+
+    const sorted = JSON.stringify(payload, Object.keys(payload).sort());
+    const merged = sorted.replace('[{}]', sortedBids);
+    setMessage(merged);
+}
+
 export const PostAuctionsInfo = ({address, bidId, setPayload, setMessage}) => {
     const endpoint = "/auctions/info"
     let payload = defaultParams({address, endpoint})
 
     payload.id = bidId;
-    setPayload(payload);
-    const sorted = JSON.stringify(payload, Object.keys(payload).sort());
-    setMessage(sorted);
+    sortObject(payload, setPayload, setMessage);
 }
 
 export const PostAuctionsList = ({address, cursor="", sortDirection="asc", setPayload, setMessage}) => {
@@ -106,25 +118,17 @@ export const PostAuctionsList = ({address, cursor="", sortDirection="asc", setPa
     payload.cursor = cursor;
     payload.sortDirection = sortDirection;
 
-    setPayload(payload);
-    const sorted = JSON.stringify(payload, Object.keys(payload).sort());
-    setMessage(sorted);
+    sortObject(payload, setPayload, setMessage);
 }
 
 export const PostWithdrawalsList = ({address, setPayload, setMessage}) => {
     const endpoint = "/withdrawals/list"
     let payload = defaultParams({address, endpoint})
-
-    setPayload(payload);
-    const sorted = JSON.stringify(payload, Object.keys(payload).sort());
-    setMessage(sorted);
+    sortObject(payload, setPayload, setMessage);
 }
 
 export const PostWithdrawalsRequest = ({address, setPayload, setMessage}) => {
     const endpoint = "/withdrawals/request"
     let payload = defaultParams({address, endpoint})
-
-    setPayload(payload);
-    const sorted = JSON.stringify(payload, Object.keys(payload).sort());
-    setMessage(sorted);
+    sortObject(payload, setPayload, setMessage);
 }

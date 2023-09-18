@@ -1,5 +1,5 @@
 import React from "react";
-import { VStack, Heading, Flex, Spacer, Text, Image } from '@chakra-ui/react';
+import { VStack, Heading, Flex, Spacer, Text } from '@chakra-ui/react';
 import LevelSelector from './Custom/LevelSelector';       
 
 

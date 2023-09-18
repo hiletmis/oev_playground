@@ -1,8 +1,6 @@
-import {useContext, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import SignIn from '../SignIn';
-import Welcome from '../Welcome';
 import { useNetwork, useSignMessage, useAccount } from "wagmi";
-import { OevContext } from '../../OevContext';
 import { COLORS } from '../../data/colors';
 import InfoRow from "../Custom/InfoRow";
 import ExecuteButton from "../Custom/ExecuteButton";
@@ -24,7 +22,6 @@ const Hero = () => {
   const {address} = useAccount()
 
   const { chain } = useNetwork()
-  const { searcher } = useContext(OevContext);
 
   const [request , setRequest] = useState(null);
   const [payload, setPayload] = useState(null);
@@ -84,7 +81,6 @@ const Hero = () => {
 
   return (
     chain == null ? <SignIn></SignIn> :
-    searcher == null ? <Welcome></Welcome> : 
     <VStack overflowY={"scroll"} spacing={4} p={8} width="600px" alignItems={"left"} >
         <CustomHeading header={"POST /auctions/info"} description={"Returns information about a specific auction based on the auction's id. Consistently polling this endpoint will keep you informed about the fulfillment or cancellation of your bid."} isLoading={isLoading}></CustomHeading>
 
