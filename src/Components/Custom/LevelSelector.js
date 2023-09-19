@@ -59,7 +59,7 @@ const Hero = () => {
 
 
   return (
-    <VStack width="700px" alignItems={"left"} >
+    <VStack width="600px" alignItems={"left"} >
         <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>
             <VStack spacing={3} direction="row" align="left" m="1rem">
                 <Flex>

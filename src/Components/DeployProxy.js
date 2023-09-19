@@ -28,7 +28,7 @@ const Commit = () => {
   const [contractRegisteredAddress, setContractRegisteredAddress] = useState(false);
   const [dataFeed, setDataFeed] = useState(null);
   const [chainId, setChainId] = useState(chain != null ? chain.id : 0);
-  const [isAddressValid, setIsAddressValid] = useState(false);
+  const [isAddressValid, setIsAddressValid] = useState(true);
 
   const { setContextProxyAddress } = useContext(OevContext);
   const { contextDataFeed, setContextDataFeed, searcher } = useContext(OevContext);

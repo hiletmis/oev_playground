@@ -8,7 +8,7 @@ import { Grid } from 'react-loader-spinner'
 import { COLORS } from '../data/colors';
 import SignIn from './SignIn';
 
-const Hero = () => {
+const Hero = ({isCollapsed}) => {
     const {address, isConnected} = useAccount()
     const [payload, setPayload] = useState(null);
     const [info, setInfo] = useState("Click the refresh icon to get your status");
@@ -80,6 +80,12 @@ const Hero = () => {
 
   return (
     isConnected === false ? <SignIn></SignIn> :
+    isCollapsed ?
+    <Flex>
+    <Grid height="20" width="20" radius="9" color="green" ariaLabel="loading" visible={isLoadingSign}/>
+    <Image marginLeft={"2"} cursor={"pointer"} onClick={()=> {getStatus()}} src={'/refresh.svg'} fallback={'/caution.svg'} width={"20px"} height={"20px"} />
+    </Flex>
+    :
     <VStack spacing={2} p={1} alignItems={"left"} >
     <Flex>
       <Heading size={"md"}>Searcher Status</Heading>
@@ -99,7 +105,7 @@ const Hero = () => {
                 <InfoRow header={"API3 Fee Funds"} text={formatFunds(searcher.api3FeeFunds)}></InfoRow>
                 <InfoRow header={"Slashed Funds"} text={formatFunds(searcher.slashedFunds)}></InfoRow>
         </Box>
-}
+    }
     </VStack>
 
 

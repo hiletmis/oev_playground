@@ -77,8 +77,7 @@ body{margin:0}
   overflow-y: scroll;
 }
 
-.sidebar {width: 250px; float:left}
-.body {width: calc(100vw - 250px);; float:right}
+.body {width: calc(100vw);; float:right}
 
 .rejt-name {
   font-weight: bold;
