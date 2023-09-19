@@ -136,7 +136,7 @@ useEffect(() => {
 
 
   return (
-    <VStack bgColor={"black"} spacing={4} p={2} borderRadius="lg" boxShadow="lg" width="600px" alignItems={"left"} >
+    <VStack bgColor={"black"} spacing={4} p={2} borderRadius="lg" boxShadow="lg" minWidth={"600px"} maxWidth={"700px"}  alignItems={"left"} >
 
     <VStack bgColor={COLORS.app} spacing={4} p={8} borderRadius="lg" boxShadow="lg" alignItems={"left"} >
       <Flex>

@@ -69,7 +69,7 @@ const Hero = () => {
 
   return (
     chain == null ? <SignIn></SignIn> :
-    <VStack overflowY={"scroll"} spacing={4} p={8} width="600px" alignItems={"left"} >
+    <VStack overflowY={"scroll"} spacing={4} p={8} minWidth={"600px"} maxWidth={"700px"}  alignItems={"left"} >
         <CustomHeading header={"POST /withdrawals/request"} description={"Initiates a withdrawal from a designated prepayment depository contract and its associated chain ID. Be aware that the provided signature for withdrawal will only remain valid for a limited period."} isLoading={isLoading}></CustomHeading>
 
         <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>

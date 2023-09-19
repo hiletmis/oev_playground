@@ -83,7 +83,7 @@ const Hero = () => {
 
   return (
     chain == null ? <SignIn></SignIn> :
-    <VStack overflowY={"scroll"} spacing={4} p={8} width="600px" alignItems={"left"} >
+    <VStack overflowY={"scroll"} spacing={4} p={8} minWidth={"600px"} maxWidth={"700px"}  alignItems={"left"} >
         <CustomHeading header={"POST /bids/list"} description={"Returns a list of searcher's bids and their data. Consistently polling this endpoint will keep you informed about the fulfillment or cancellation of your bids."} isLoading={isLoading}></CustomHeading>
 
         <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>

@@ -69,7 +69,7 @@ const Hero = () => {
 
   return (
     chain == null ? <SignIn></SignIn> :
-    <VStack overflowY={"scroll"} spacing={4} p={8} width="600px" alignItems={"left"} >
+    <VStack overflowY={"scroll"} spacing={4} p={8} minWidth={"600px"} maxWidth={"700px"}  alignItems={"left"} >
         <CustomHeading header={"POST /status"} description={"Returns the present values of settings that are determined by relay operators for every distinct OEV proxy. It is essential for searchers to frequently observe these values to ensure compliance with the OEV relay guidelines."} isLoading={isLoading}></CustomHeading>
 
         <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>

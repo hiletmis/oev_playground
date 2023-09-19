@@ -28,7 +28,7 @@ const deployMulticall = async () => {
 }
     
   return (
-    <VStack spacing={4} p={8} width="600px" alignItems={"left"} >
+    <VStack spacing={4} p={8} minWidth={"600px"} maxWidth={"700px"}  alignItems={"left"} >
         <CustomHeading header={"Withdrawal Request"} description={"Initiates a withdrawal from a designated prepayment depository contract and its associated chain ID. Be aware that the provided signature for withdrawal will only remain valid for a limited period."} isLoading={isLoading}></CustomHeading>
         <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>
             <VStack spacing={3} direction="row" align="left" m="1rem">
