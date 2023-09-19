@@ -6,7 +6,6 @@ import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS } from "../data/abi";
 import { useAccount, useSignMessage } from "wagmi";
 import { Grid } from 'react-loader-spinner'
 import { COLORS } from '../data/colors';
-import SignIn from './SignIn';
 
 const Hero = ({isCollapsed}) => {
     const {address, isConnected} = useAccount()
