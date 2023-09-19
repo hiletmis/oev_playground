@@ -94,7 +94,7 @@ useEffect(() => {
         <div class="header"><Header /></div>
         <Flex>
         <div class="body">
-        <Flex spacing={0} p={2} overflow={"scroll"} boxShadow="lg" width={"100%"} height={"100%"} alignItems={"left"} >
+        <Flex spacing={0} p={2} boxShadow="lg" width={"100%"} height={"100%"} alignItems={"left"} >
           <Navigator/>
           <VStack bgColor={COLORS.app} borderRadius="lg" boxShadow="lg" height={"100%"} width={"100%"} alignItems={"left"} >
             <Routes>

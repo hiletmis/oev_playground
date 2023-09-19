@@ -21,7 +21,7 @@ const Hero = () => {
   
 
 return (
-      <VStack bgColor={COLORS.main} overflow={"scroll"} direction="row" borderRadius="lg" spacing={2} p={2} width={context.collapsed ? "70px" : "270px"} height={"100%"} alignItems={"left"} >
+      <VStack bgColor={COLORS.main} overflowY={"scroll"} direction="row" borderRadius="lg" spacing={2} p={2} minWidth={"70px"} width={context.collapsed ? "70px" : "270px"} height={"100%"} alignItems={"left"} >
         <CustomButton isCollapsed={context.collapsed} isDisabled={false} link="/" caption="Home" />
         {
          level === 0 
