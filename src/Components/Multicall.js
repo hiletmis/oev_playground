@@ -11,7 +11,7 @@ const Hero = () => {
 
   return (
     chain == null ? <SignIn></SignIn> :
-    contextDataFeed === null ? <Welcome></Welcome> : 
+    contextDataFeed.length === 0 ? <Welcome></Welcome> : 
     <DeployMulticall></DeployMulticall> 
   );
 };

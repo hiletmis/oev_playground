@@ -23,7 +23,7 @@ const Hero = () => {
     const { address } = useAccount()
 
     const [dataFeed, setDataFeed] = useState(null);
-    const [mullticallContract, setMulticallContract] = useState('');
+    const [mullticallContract, setMulticallContract] = useState(address);
     const [ethAmount, setEthAmount] = useState("");
     const [ethBalance, setEthBalance] = useState(0);
     const [fulfillValue, setFulfillValue] = useState("");
@@ -32,11 +32,11 @@ const Hero = () => {
 
     const [payload, setPayload] = useState(null);
 
-    const { contextDataFeed, contextProxyAddress, multicall, auction, setAuction, bid, setBid } = useContext(OevContext);
+    const { level, searcher, contextDataFeed, contextProxyAddress, multicall, auction, setAuction, bid, setBid } = useContext(OevContext);
 
     useEffect(() => {
-        if (contextDataFeed !== null) {
-          setDataFeed(contextDataFeed);
+        if (contextDataFeed.length > 0) {
+          setDataFeed(contextDataFeed[0]);
         }        
         if (multicall !== null) {
           setMulticallContract(multicall);
@@ -78,6 +78,7 @@ const Hero = () => {
         const data = await response.json()
 
         if (data != null) {
+            if (data.bids == null) return
             if (data.bids.length === 0) {
                 console.log("Bid was not placed");
                 return;
@@ -140,7 +141,7 @@ const Hero = () => {
 
   return (
     chain == null ? <SignIn></SignIn> :
-    contextProxyAddress === null || multicall === null ? <Welcome></Welcome> : 
+    ((contextProxyAddress === null || multicall === null) && (level === 2)) || (contextDataFeed.length === 0 && level===0) || searcher === null ? <Welcome></Welcome> : 
         <VStack overflowY={"scroll"} spacing={4} p={8} width="700px" alignItems={"left"} >
             <CustomHeading header={"Place a Bid"} description={"Places bids in anticipation of an OEV opportunity on a specific data feed."} isLoading={isLoading}></CustomHeading>
             <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>

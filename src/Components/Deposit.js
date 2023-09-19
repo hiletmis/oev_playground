@@ -29,7 +29,7 @@ const Deposit = () => {
   const [signErc2612PermitArgs, setSignErc2612PermitArgs] = useState({tokenAmount: 0, v: 0, r: "0x", s: "0x"});
   const [isSigned, setIsSigned] = useState(false);
 
-  const { wallet } = useContext(OevContext);
+  const { searcher, wallet } = useContext(OevContext);
 
   const { chain } = useNetwork()
 
@@ -146,8 +146,8 @@ const Deposit = () => {
 
   return (
     chain == null ? <SignIn></SignIn> :
-    wallet === null ? <Welcome></Welcome> : 
-<VStack spacing={4} p={8} width={"600px"} alignItems={"left"} >
+    wallet === null || searcher == null ? <Welcome></Welcome> : 
+    <VStack spacing={4} p={8} width={"600px"} alignItems={"left"} >
       <Flex>
         <Heading size={"lg"}>Add Collateral</Heading>
         <Spacer />

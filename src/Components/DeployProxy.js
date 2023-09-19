@@ -54,7 +54,7 @@ const Commit = () => {
   const removeDataFeed = () => {
     setContractRegistered(false);
     setContractRegisteredAddress(true);
-    setContextDataFeed(null);
+    setContextDataFeed([]);
     setContextProxyAddress(null);
     setDataFeed(null);
     setDataFeedId('');
@@ -134,10 +134,10 @@ const Commit = () => {
           setContractRegistered(data.proxyRegisted);
 
           if (data.proxyRegisted) {
-            setContextDataFeed(dataFeed);
+            setContextDataFeed([dataFeed]);
             setContextProxyAddress(proxyAddress);
           } else {
-            setContextDataFeed(null);
+            setContextDataFeed([]);
             setContextProxyAddress(null);
           }
         })
@@ -165,7 +165,7 @@ const Commit = () => {
         .then((data) => {
           setContractRegisteredAddress(false);
           setContractRegistered(data.proxyRegisted);
-          setContextDataFeed(dataFeed);
+          setContextDataFeed([dataFeed]);
           setContextProxyAddress(proxyAddress);
         })
     }
@@ -173,9 +173,9 @@ const Commit = () => {
 
 
   useEffect(() => {
-    if (contextDataFeed !== null) {
-      setDataFeed(contextDataFeed);
-      setDataFeedId(contextDataFeed?.beaconId);
+    if (contextDataFeed.length > 0) {
+      setDataFeed(contextDataFeed[0]);
+      setDataFeedId(contextDataFeed[0]?.beaconId);
     }
     
   }, [contextDataFeed, dataFeed]);

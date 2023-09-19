@@ -5,7 +5,8 @@ import { Grid } from 'react-loader-spinner'
 
 import { Text, Box, Image, Stack, Flex, Spacer } from '@chakra-ui/react';
 import { COLORS } from '../../data/colors';
-import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS, MULTICALLABI, API3SERVERV1 } from "../../data/abi";
+import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS, MULTICALLABI, API3SERVERV1, API3SERVERV1_ABI, UpdatedOevProxyBeaconSetWithSignedData } from "../../data/abi";
+import { ethers } from "ethers";
 
 const Hero = ({item}) => { 
   const { chain } = useNetwork()
@@ -21,7 +22,9 @@ const Hero = ({item}) => {
   const [bidId, setBidId] = useState("");
   const [request , setRequest] = useState(null);
 
-  const { auction, setAuction } = useContext(OevContext);
+  const [manuelUpdateParams, setManuelUpdateParams] = useState([]);
+
+  const { auction, setAuction, level } = useContext(OevContext);
 
   const getColor = (status) => {
     switch (status) {
@@ -73,7 +76,7 @@ const { config } = usePrepareContractWrite({
   address: updateExecutorAddress,
   abi: MULTICALLABI,
   functionName: 'externalMulticallWithValue',
-  enabled: bidAuction != null,
+  enabled: bidAuction != null && level > 1,
   args: [[API3SERVERV1(chain.id)], [encodedUpdateTransaction], [nativeCurrencyAmount]],
   value: nativeCurrencyAmount,
 })
@@ -83,6 +86,23 @@ const { data, write } = useContractWrite(config)
 const { isLoading, isSuccess } = useWaitForTransaction({
   hash: data?.hash,
 });
+
+
+const { config: config2 } = usePrepareContractWrite({
+  address: API3SERVERV1(chain.id),
+  abi: API3SERVERV1_ABI,
+  functionName: 'updateOevProxyDataFeedWithSignedData',
+  enabled: bidAuction != null && manuelUpdateParams.length === 6 && level === 0,
+  args: manuelUpdateParams,
+  value: nativeCurrencyAmount,
+})
+
+const { data: data2, write: write2 } = useContractWrite(config2)
+
+const { isLoading: isLoading2, isSuccess: isSuccess2 } = useWaitForTransaction({
+  hash: data2?.hash,
+});
+
 
 const postMessage = async ({ payload, endpoint }) => {
     const response = await fetch('https://oev.api3dev.com/api/' + endpoint, {
@@ -188,18 +208,18 @@ const updateDataFeed = (bid) => {
   signMessage({ message: sorted });
 }
 
-  const cancelBid = (bid) => {
-    const validUntil = new Date();
-    validUntil.setMinutes(validUntil.getMinutes() + 5); 
+const cancelBid = (bid) => {
+  const validUntil = new Date();
+  validUntil.setMinutes(validUntil.getMinutes() + 5); 
 
-    let payload = {
-        bids: [bid.id],
-        searcherAddress: address,
-        validUntil: validUntil,
-        prepaymentDepositoryChainId: 11155111,
-        prepaymentDepositoryAddress: PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS,
-        requestType: 'API3 OEV Relay, /bids/cancel',
-    }
+  let payload = {
+      bids: [bid.id],
+      searcherAddress: address,
+      validUntil: validUntil,
+      prepaymentDepositoryChainId: 11155111,
+      prepaymentDepositoryAddress: PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS,
+      requestType: 'API3 OEV Relay, /bids/cancel',
+  }
 
     setPayload(payload);
     const sorted = JSON.stringify(payload, Object.keys(payload).sort());
@@ -231,7 +251,7 @@ const updateDataFeed = (bid) => {
 useEffect(() => {
   if (auction == null) return
   if (bidId == null) return
-  if (isSuccess) {
+  if (isSuccess || isSuccess2) {
     const newAuction = auction.map((item) => {
       if (item.id === bidId) {
         item.auction.status = "IN PROGRESS"
@@ -242,18 +262,35 @@ useEffect(() => {
   setAuction(newAuction) 
   }
 
-}, [auction, bidId, data, isSuccess, setAuction]);
+}, [auction, bidId, data, isSuccess, isSuccess2, setAuction]);
 
 useEffect(() => {
-  if (bidAuction != null && write != null) {
-    setBidAuction(null)
-    write?.()
+  if (manuelUpdateParams.length === 0) return
+  if (bidAuction == null) return
+  if (write2 == null) return
+  write2?.()
+  setBidAuction(null)
+  setManuelUpdateParams([])
+}, [bidAuction, manuelUpdateParams, write2]);
+
+useEffect(() => {
+  if (bidAuction != null) {
+    if (bidAuction.updateExecutorAddress === address) { 
+      const values = ethers.utils.defaultAbiCoder.decode(UpdatedOevProxyBeaconSetWithSignedData,
+        ethers.utils.hexDataSlice(encodedUpdateTransaction, 4)
+      )
+      setManuelUpdateParams([values.oevProxy, values.dataFeedId, values.updateId, values.timestamp, values.data, values.packedOevUpdateSignatures])
+    } else {
+      if (write == null) return
+      write?.()
+      setBidAuction(null)
+    }
   }
 
-}, [bidAuction, write]);
+}, [address, bidAuction, encodedUpdateTransaction, write, write2]);
 
   return (
-
+    item == null ? <></> :
     <Stack direction="column"  spacing={"2"} width={"100%"}>
     <Stack direction="row" spacing={"2"}>
       <Stack direction="row" spacing={"-2"}>
@@ -266,7 +303,7 @@ useEffect(() => {
       <Text fontSize="xs">{item.chain}</Text>
       </Box>
       <Spacer />
-      <Grid height="20" width="20" radius="9" color="green" ariaLabel="loading" visible={isLoading || isLoadingSign}/>
+      <Grid height="20" width="20" radius="9" color="green" ariaLabel="loading" visible={isLoading || isLoading2 || isLoadingSign}/>
 
       <Box onClick={() => {execute(item.auction)}} cursor={"pointer"} visibility={item.auction == null ? "visible" : (item.auction.status === "WON" || item.auction.status === "PENDING" || item.auction.status === "IN PROGRESS") ? "visible" : "hidden"} paddingLeft={2} paddingRight={2} borderRadius={"10"} bgColor={item.auction == null ? "black" : item.auction.status === "WON" ? "green.500" : "black"} height={5} >
       <Text fontWeight={"bold"} fontSize="xs">{item.auction == null ? "CHECK" : item.auction.status === "WON" ? "UPDATE DATA FEED" : item.auction.status === "IN PROGRESS" ? "CHECK" : "CANCEL"}</Text>

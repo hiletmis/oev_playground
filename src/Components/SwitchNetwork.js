@@ -1,19 +1,26 @@
-import React from "react";
+import {useContext} from "react";
 import { VStack, Heading, Flex, Spacer, Text, Box, Image, Stack, Button} from '@chakra-ui/react';
 import { COLORS } from '../data/colors';
+import { OevContext } from '../OevContext';
 import { useNetwork, useSwitchNetwork } from "wagmi";
+import SignIn from './SignIn';
+import Welcome from './Welcome';
 
 const Hero = () => {
 
     const { chain } = useNetwork()
     const { switchNetwork, isLoading } = useSwitchNetwork()
     
+    const { searcher, wallet } = useContext(OevContext);
+
     const switchChain = () => {
       if (isLoading) return
       switchNetwork?.(11155111)
     }
 
   return (
+    chain == null ? <SignIn></SignIn> :
+    wallet === null || searcher == null ? <Welcome></Welcome> : 
   <VStack spacing={4} p={8} width={"600px"} alignItems={"left"} >
     <Flex>
       <Heading size={"lg"}>Switch Network</Heading>

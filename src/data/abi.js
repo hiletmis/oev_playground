@@ -6,6 +6,781 @@ export const API3SERVERV1 = (chainId) => {
 	return chainId === 280 ? '0xAC26e0F627569c04DAe1B1E039B62bb5d6760Fe8' : '0x3dEC619dc529363767dEe9E71d8dD1A5bc270D76';
 };	
 
+export const API3SERVERV1_ABI = [
+	{
+		"inputs": [
+			{
+				"internalType": "bytes[]",
+				"name": "data",
+				"type": "bytes[]"
+			}
+		],
+		"name": "multicall",
+		"outputs": [
+			{
+				"internalType": "bytes[]",
+				"name": "returndata",
+				"type": "bytes[]"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "dapiName",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "dataFeedId",
+				"type": "bytes32"
+			}
+		],
+		"name": "setDapiName",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_accessControlRegistry",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_adminRoleDescription",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "_manager",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "dataFeedId",
+				"type": "bytes32"
+			},
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "dapiName",
+				"type": "bytes32"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "sender",
+				"type": "address"
+			}
+		],
+		"name": "SetDapiName",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes[]",
+				"name": "data",
+				"type": "bytes[]"
+			}
+		],
+		"name": "tryMulticall",
+		"outputs": [
+			{
+				"internalType": "bool[]",
+				"name": "successes",
+				"type": "bool[]"
+			},
+			{
+				"internalType": "bytes[]",
+				"name": "returndata",
+				"type": "bytes[]"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32[]",
+				"name": "beaconIds",
+				"type": "bytes32[]"
+			}
+		],
+		"name": "updateBeaconSetWithBeacons",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "beaconSetId",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "airnode",
+				"type": "address"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "templateId",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes",
+				"name": "data",
+				"type": "bytes"
+			},
+			{
+				"internalType": "bytes",
+				"name": "signature",
+				"type": "bytes"
+			}
+		],
+		"name": "updateBeaconWithSignedData",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "beaconId",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "beaconSetId",
+				"type": "bytes32"
+			},
+			{
+				"indexed": false,
+				"internalType": "int224",
+				"name": "value",
+				"type": "int224"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint32",
+				"name": "timestamp",
+				"type": "uint32"
+			}
+		],
+		"name": "UpdatedBeaconSetWithBeacons",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "beaconId",
+				"type": "bytes32"
+			},
+			{
+				"indexed": false,
+				"internalType": "int224",
+				"name": "value",
+				"type": "int224"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint32",
+				"name": "timestamp",
+				"type": "uint32"
+			}
+		],
+		"name": "UpdatedBeaconWithSignedData",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "beaconSetId",
+				"type": "bytes32"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "proxy",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "updateId",
+				"type": "bytes32"
+			},
+			{
+				"indexed": false,
+				"internalType": "int224",
+				"name": "value",
+				"type": "int224"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint32",
+				"name": "timestamp",
+				"type": "uint32"
+			}
+		],
+		"name": "UpdatedOevProxyBeaconSetWithSignedData",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "beaconId",
+				"type": "bytes32"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "proxy",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "updateId",
+				"type": "bytes32"
+			},
+			{
+				"indexed": false,
+				"internalType": "int224",
+				"name": "value",
+				"type": "int224"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint32",
+				"name": "timestamp",
+				"type": "uint32"
+			}
+		],
+		"name": "UpdatedOevProxyBeaconWithSignedData",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "oevProxy",
+				"type": "address"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "dataFeedId",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "updateId",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes",
+				"name": "data",
+				"type": "bytes"
+			},
+			{
+				"internalType": "bytes[]",
+				"name": "packedOevUpdateSignatures",
+				"type": "bytes[]"
+			}
+		],
+		"name": "updateOevProxyDataFeedWithSignedData",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "oevProxy",
+				"type": "address"
+			}
+		],
+		"name": "withdraw",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "oevProxy",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "oevBeneficiary",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "Withdrew",
+		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "accessControlRegistry",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "adminRole",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "adminRoleDescription",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "containsBytecode",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "DAPI_NAME_SETTER_ROLE_DESCRIPTION",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"name": "dapiNameHashToDataFeedId",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "dapiNameSetterRole",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "dapiName",
+				"type": "bytes32"
+			}
+		],
+		"name": "dapiNameToDataFeedId",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "dataFeedId",
+				"type": "bytes32"
+			}
+		],
+		"name": "dataFeeds",
+		"outputs": [
+			{
+				"internalType": "int224",
+				"name": "value",
+				"type": "int224"
+			},
+			{
+				"internalType": "uint32",
+				"name": "timestamp",
+				"type": "uint32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "getBalance",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getBlockBasefee",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getBlockNumber",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getBlockTimestamp",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getChainId",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "manager",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "oevProxyToBalance",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "proxy",
+				"type": "address"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "dataFeedId",
+				"type": "bytes32"
+			}
+		],
+		"name": "oevProxyToIdToDataFeed",
+		"outputs": [
+			{
+				"internalType": "int224",
+				"name": "value",
+				"type": "int224"
+			},
+			{
+				"internalType": "uint32",
+				"name": "timestamp",
+				"type": "uint32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "dapiNameHash",
+				"type": "bytes32"
+			}
+		],
+		"name": "readDataFeedWithDapiNameHash",
+		"outputs": [
+			{
+				"internalType": "int224",
+				"name": "value",
+				"type": "int224"
+			},
+			{
+				"internalType": "uint32",
+				"name": "timestamp",
+				"type": "uint32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "dapiNameHash",
+				"type": "bytes32"
+			}
+		],
+		"name": "readDataFeedWithDapiNameHashAsOevProxy",
+		"outputs": [
+			{
+				"internalType": "int224",
+				"name": "value",
+				"type": "int224"
+			},
+			{
+				"internalType": "uint32",
+				"name": "timestamp",
+				"type": "uint32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "dataFeedId",
+				"type": "bytes32"
+			}
+		],
+		"name": "readDataFeedWithId",
+		"outputs": [
+			{
+				"internalType": "int224",
+				"name": "value",
+				"type": "int224"
+			},
+			{
+				"internalType": "uint32",
+				"name": "timestamp",
+				"type": "uint32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "dataFeedId",
+				"type": "bytes32"
+			}
+		],
+		"name": "readDataFeedWithIdAsOevProxy",
+		"outputs": [
+			{
+				"internalType": "int224",
+				"name": "value",
+				"type": "int224"
+			},
+			{
+				"internalType": "uint32",
+				"name": "timestamp",
+				"type": "uint32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
+
+export const UpdatedOevProxyBeaconSetWithSignedData = [
+	{
+	  "internalType": "address",
+	  "name": "oevProxy",
+	  "type": "address"
+	},
+	{
+	  "internalType": "bytes32",
+	  "name": "dataFeedId",
+	  "type": "bytes32"
+	},
+	{
+	  "internalType": "bytes32",
+	  "name": "updateId",
+	  "type": "bytes32"
+	},
+	{
+	  "internalType": "uint256",
+	  "name": "timestamp",
+	  "type": "uint256"
+	},
+	{
+	  "internalType": "bytes",
+	  "name": "data",
+	  "type": "bytes"
+	},
+	{
+	  "internalType": "bytes[]",
+	  "name": "packedOevUpdateSignatures",
+	  "type": "bytes[]"
+	}
+  ]
+
 export const ABI = [
 	{
 		inputs: [

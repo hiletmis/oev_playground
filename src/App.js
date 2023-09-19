@@ -55,7 +55,7 @@ const { address } = useAccount()
 
 const [level, setLevel] = useState(0);
 const [wallet, setWallet] = useState(null);
-const [contextDataFeed, setContextDataFeed] = useState(null);
+const [contextDataFeed, setContextDataFeed] = useState([]);
 const [auction, setAuction] = useState(null);
 const [searcher, setSearcher] = useState(null);
 const [contextProxyAddress, setContextProxyAddress] = useState(null);
@@ -67,7 +67,7 @@ useEffect(() => {
   setMulticall(null)
   setBid(null)
   setAuctionStatus(null)
-  setContextDataFeed(null)
+  setContextDataFeed([])
   setMulticall(null)
   setContextProxyAddress(null)
 }, [chain]);
@@ -78,7 +78,7 @@ useEffect(() => {
   setAuctionStatus(null)
   setWallet(null)
   setSearcher(null)
-  setContextDataFeed(null)
+  setContextDataFeed([])
   setAuction(null)
   setContextProxyAddress(null)
   setBid(null)
