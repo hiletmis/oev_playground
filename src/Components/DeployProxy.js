@@ -12,6 +12,7 @@ import { COLORS } from '../data/colors';
 import SignIn from './SignIn';
 import Welcome from './Welcome';
 import CopyInfoRow from './Custom/CopyInfoRow';
+import PasteRow from './Custom/PasteRow';
 
 const Commit = () => {
   const { address, isConnected } = useAccount()
@@ -27,6 +28,7 @@ const Commit = () => {
   const [contractRegisteredAddress, setContractRegisteredAddress] = useState(false);
   const [dataFeed, setDataFeed] = useState(null);
   const [chainId, setChainId] = useState(chain != null ? chain.id : 0);
+  const [isAddressValid, setIsAddressValid] = useState(false);
 
   const { setContextProxyAddress } = useContext(OevContext);
   const { contextDataFeed, setContextDataFeed, searcher } = useContext(OevContext);
@@ -109,6 +111,10 @@ const Commit = () => {
     }
     
   }, [beneficiaryAddress, dataFeedId, chainId])
+
+  useEffect(() => {
+    setIsAddressValid(validateAddress(beneficiaryAddress));
+  }, [beneficiaryAddress])
 
   useEffect(() => {
     setDataFeed(dataFeed);
@@ -200,22 +206,7 @@ const Commit = () => {
       <Box width={"100%"} height={contractExists || contractDeployed ? "410px" : "250px"} bgColor={COLORS.main} borderRadius={"10"}>
 
       <VStack spacing={3} direction="row" align="left" m="1rem">
-        <Text fontWeight={"bold"} fontSize={"md"}>Beneficiary Address</Text>
-        <Box p= "2" width={"100%"}  borderRadius={"10"} bgColor={COLORS.app}  alignItems={"center"}>
-        <Flex className='box'>
-          <Text fontSize={"md"}>{beneficiaryAddress}</Text>
-          <Spacer />
-          <Button 
-            isDisabled={!isConnected}
-            onClick={() => {
-              navigator.clipboard.readText()
-              .then(text => {
-                setBeneficiaryAddress(validateAddress(text) ? text : beneficiaryAddress);
-              })
-            }}
-          >Paste</Button>
-        </Flex>
-        </Box>
+        <PasteRow title={"Beneficiary Address"} text={beneficiaryAddress} color={isAddressValid ? "white" : "red.500"} bgColor={COLORS.app} setText={setBeneficiaryAddress}></PasteRow>
         <Text fontWeight={"bold"} fontSize={"md"}>Data Feed</Text>
         <Box p= "3" width={"100%"} height={"70px"} borderRadius={"10"} bgColor={COLORS.app}  alignItems={"center"}>
         <Flex className='box'>

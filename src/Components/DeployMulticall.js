@@ -14,8 +14,6 @@ import { useAccount, useNetwork } from 'wagmi';
 import { COLORS } from '../data/colors';
 import OevSearcherMulticallV1 from "../Contracts/OevSearcherMulticallV1.json";
 
-let provider = ((window.ethereum != null) ? new ethers.providers.Web3Provider(window.ethereum) : ethers.providers.getDefaultProvider());
-
 const DeployMulticall = () => {
     const { address, isConnected } = useAccount()
 
@@ -24,10 +22,6 @@ const DeployMulticall = () => {
     const [items, setItems] = useState([]);
     const { multicall, setMulticall } = useContext(OevContext);
     const { chain } = useNetwork()
-
-    useEffect(() => {
-      provider = new ethers.providers.Web3Provider(window.ethereum);
-    }, [chain]);
 
     useEffect(() => { 
         if (isSuccess) {
@@ -48,6 +42,8 @@ const DeployMulticall = () => {
 
 const deployMulticall = async () => { 
     if (!isConnected) return
+    let provider = ((window.ethereum != null) ? new ethers.providers.Web3Provider(window.ethereum) : ethers.providers.getDefaultProvider());
+    if (provider.getSigner == null) return
     setIsLoading(true)
     const factory = new ContractFactory(OevSearcherMulticallV1.abi, OevSearcherMulticallV1.bytecode, provider.getSigner())
 

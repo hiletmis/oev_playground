@@ -47,10 +47,7 @@ const Hero = () => {
             }
             setContextDataFeed([ETH_USD]);
             setContextProxyAddress(ETH_USD.proxyAddress);
-        } else {
-            setContextDataFeed([]);
-        }
-
+        } 
 
     }, [condition, level, setContextDataFeed, setContextProxyAddress]);
 

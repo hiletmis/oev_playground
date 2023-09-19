@@ -7,11 +7,11 @@ import { OevContext } from '../OevContext';
 
 const Hero = () => {
     const { chain } = useNetwork()
-    const { contextDataFeed } = useContext(OevContext);
+    const { contextDataFeed, searcher } = useContext(OevContext);
 
   return (
     chain == null ? <SignIn></SignIn> :
-    contextDataFeed.length === 0 ? <Welcome></Welcome> : 
+    contextDataFeed.length === 0 || searcher === null ? <Welcome></Welcome> : 
     <DeployMulticall></DeployMulticall> 
   );
 };
