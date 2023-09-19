@@ -6,7 +6,7 @@ import LevelSelector from './Custom/LevelSelector';
 const Hero = () => {
 
   return (
-    <VStack overflowY={"scroll"} spacing={4} p={8} alignItems={"left"} >
+    <VStack spacing={4} p={8} alignItems={"left"} >
       <Flex>
         <Heading size={"lg"}>Welcome</Heading>
         <Spacer />

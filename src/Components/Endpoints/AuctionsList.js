@@ -83,7 +83,7 @@ const Hero = () => {
 
   return (
     chain == null ? <SignIn></SignIn> :
-    <VStack overflowY={"scroll"} spacing={4} p={8} minWidth={"600px"} maxWidth={"700px"}  alignItems={"left"} >
+    <VStack spacing={4} p={8} minWidth={"600px"} maxWidth={"700px"}  alignItems={"left"} >
         <CustomHeading header={"POST /auctions/list"} description={"Returns a list of the searcher's auctions. The category parameter determines the type of auctions to be queried. The cursor parameter is used for pagination."} isLoading={isLoading}></CustomHeading>
 
         <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>

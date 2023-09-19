@@ -142,7 +142,7 @@ const Hero = () => {
   return (
     chain == null ? <SignIn></SignIn> :
     ((contextProxyAddress === null || multicall === null) && (level === 2)) || (contextDataFeed.length === 0 && level===0) || searcher === null ? <Welcome></Welcome> : 
-        <VStack overflowY={"scroll"} spacing={4} p={8} minWidth={"600px"} maxWidth={"700px"}  alignItems={"left"} >
+        <VStack spacing={4} p={8} minWidth={"600px"} maxWidth={"700px"}  alignItems={"left"} >
             <CustomHeading header={"Place a Bid"} description={"Places bids in anticipation of an OEV opportunity on a specific data feed."} isLoading={isLoading}></CustomHeading>
             <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>
 
