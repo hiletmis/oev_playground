@@ -47,14 +47,14 @@ const SelectDataFeed = ({stateChanger}) => {
     modal
   >
     {close => (
-    <VStack bgColor={"black"} spacing={4} p={2} borderRadius="lg" boxShadow="lg" width="600px" alignItems={"left"} >
+    <VStack bgColor={"black"} spacing={4} p={2} borderRadius="lg" boxShadow="lg" alignItems={"left"} >
       <VStack bgColor={COLORS.app} alignItems={"center"} spacing={6} borderRadius="lg" boxShadow="lg">
-        <VStack spacing={3} p={7} borderRadius="lg" minWidth={"600px"} alignItems={"left"}>
+        <VStack spacing={3} p={7} borderRadius="lg" alignItems={"left"}>
           
           <Heading size={"lg"}>Data Feeds</Heading>
           <VStack spacing={4} direction="row" align="center" m="1rem">
             <SearchBar stateChanger={setState}/>
-            <Box width={"100%"} bgColor={COLORS.bg} height={"400px"} borderRadius={"3.3"}>
+            <Box bgColor={COLORS.bg} height={"400px"} borderRadius={"3.3"}>
               <ScrollableFeed forceScroll={false} onScrollComplete={() => {ref.current.scrollIntoView();}}>
                 {items.map((item, i) => {
                   return (
@@ -64,7 +64,7 @@ const SelectDataFeed = ({stateChanger}) => {
                       stateChanger(item)
                       close()
                     }}>
-                        <Stack direction="column" spacing={"2"} width={"100%"}>
+                        <Stack direction="column" spacing={"2"}>
                           <Stack direction="row" spacing={"2"}>
                             <Stack direction="row" spacing={"-2"}>
                               <Image zIndex={2} src={`/coins/${item.image1 == null ? item.p1 : item.image1}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />

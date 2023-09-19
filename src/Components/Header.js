@@ -14,11 +14,8 @@ const Header = () => {
       <Flex as="header" align="center" justify="space-between" p={4}>
         <Link href="/" _hover={{ textDecoration: 'none' }}>
           <Flex align="flex-start" cursor="pointer" gap={'12px'}>
-            <Image src={`/logo.svg`} width={"25px"} height={"25px"} />
-            {
-              collapsed ? null : <Heading size="md">Nodary OEV Relay Testnet Playground</Heading>
-            }
-            
+            { collapsed ? <Image src={`/menu_w.svg`} width={"25px"} height={"25px"} /> : <Image src={`/logo.svg`} width={"25px"} height={"25px"} /> }
+            { collapsed ? null : <Heading size="md">Nodary OEV Relay Testnet Playground</Heading>}
           </Flex>
         </Link>
         <Flex align="flex-end" gap={'12px'}>

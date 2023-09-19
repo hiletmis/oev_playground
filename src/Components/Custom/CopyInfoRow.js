@@ -8,7 +8,7 @@ const Hero = ({header, text, margin=0}) => {
         <Text fontWeight={"bold"} fontSize={"md"}>{header}</Text>                
         <Box p= "2" width={"100%"} bgColor={COLORS.app} borderRadius={"10"} alignItems={"center"}>
             <Flex className='box'>
-                <Text fontSize={"md"}>{text}</Text>
+                <Text noOfLines={1} fontSize={"md"}>{text}</Text>
                 <Spacer />
                 <Button 
                     onClick={() => {

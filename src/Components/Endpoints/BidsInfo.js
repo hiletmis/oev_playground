@@ -80,7 +80,7 @@ const Hero = () => {
 
   return (
     chain == null ? <SignIn></SignIn> :
-    <VStack spacing={4} p={8} minWidth={"600px"} maxWidth={"700px"}  alignItems={"left"} >
+    <VStack spacing={4} p={8} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
         <CustomHeading header={"POST /bids/info"} description={"Returns a list of searcher's bids and their data. Consistently polling this endpoint will keep you informed about the fulfillment or cancellation of your bids."} isLoading={isLoading}></CustomHeading>
 
         <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>

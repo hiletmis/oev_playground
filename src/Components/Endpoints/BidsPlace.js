@@ -139,7 +139,7 @@ const Hero = () => {
 
   return (
     chain == null ? <SignIn></SignIn> :
-    <VStack spacing={4} p={8} minWidth={"600px"} maxWidth={"700px"}  alignItems={"left"} >
+    <VStack spacing={4} p={8} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
         <CustomHeading header={"POST /bids/place"} description={"Places bids in anticipation of an OEV opportunity on a specific data feed/chain. dAppProxyAddress is the data feed that the searcher wants to place a bid on. dAppProxyChainId is the chain ID of the data feed. bidAmount is the amount of collateral that will be reserved for the bid. condition is the condition that will be used to determine if the bid is fulfilled. fulfillmentValue is the value that will be used to determine if the condition is met. updateExecutorAddress is the address of the update executor contract that will be used to fulfill the bid."} isLoading={isLoading}></CustomHeading>
 
         <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>

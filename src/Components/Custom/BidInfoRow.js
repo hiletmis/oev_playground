@@ -234,7 +234,7 @@ const cancelBid = (bid) => {
 
     switch (auction.status) {
       case "PENDING":
-        cancelBid(auction);
+        refresh();
         break;
       case "WON":
         updateDataFeed(auction);

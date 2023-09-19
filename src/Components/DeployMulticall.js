@@ -63,7 +63,7 @@ const deployMulticall = async () => {
 }
     
   return (
-    <VStack spacing={4} p={8} minWidth={"600px"} maxWidth={"700px"}  alignItems={"left"} >
+    <VStack spacing={4} p={8} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
 
       <Flex>
       <Heading size={"lg"}>Deploy Multicall Contract</Heading>

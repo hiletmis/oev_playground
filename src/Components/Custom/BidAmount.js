@@ -1,6 +1,8 @@
 import React from "react";
 import { Text, Box, Image, Flex, Spacer, VStack } from '@chakra-ui/react';
 import { COLORS } from '../../data/colors';
+import { OevContext } from '../../OevContext';
+import { useContext } from "react";
 
 import {
     NumberInput,
@@ -8,7 +10,10 @@ import {
     NumberInputStepper
   } from '@chakra-ui/react'
   
-const Hero = ({ethAmount, ethBalance, chain, setEthAmount, bgColor=COLORS.app}) => { 
+const Hero = ({ethAmount, ethBalance, chain, setEthAmount, bgColor=COLORS.app}) => {
+
+  const { collapsed } = useContext(OevContext);
+
   return (
     <VStack alignItems={"left"} >
         <Text fontWeight={"bold"} fontSize={"md"}>Bid Amount</Text>
@@ -22,12 +27,16 @@ const Hero = ({ethAmount, ethBalance, chain, setEthAmount, bgColor=COLORS.app}) 
                     <Image marginRight={2} src={'/chainIcons/' + chain.id + '.svg'} width={"40px"} height={"40px"} />
                 </Flex>
                 <Flex>
+                  {
+                    collapsed ? null :
                     <Text 
                     color={parseFloat(ethBalance) < parseFloat(ethAmount) ? "red.500" : "white"}
                     fontWeight={"bold"} 
                     fontSize={"md"}>
                     {parseFloat(ethBalance) < parseFloat(ethAmount)  ? "Insufficient Balance" : chain.nativeCurrency.name + " Balance"}
                     </Text>
+                  }
+
                     <Spacer />
                     <Image src={'/wallet.svg'} width={"40px"} height={"24px"} />
                     <Text fontWeight={"bold"} fontSize={"md"}>{ethBalance}</Text>

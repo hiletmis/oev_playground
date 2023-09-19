@@ -59,7 +59,7 @@ const Hero = () => {
 
 
   return (
-    <VStack minWidth={"600px"} maxWidth={"700px"}  alignItems={"left"} >
+    <VStack minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
         <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>
             <VStack spacing={3} direction="row" align="left" m="1rem">
                 <Flex>
@@ -68,7 +68,7 @@ const Hero = () => {
                 </Flex>
                 <Text fontSize={"sm"}>Select the level of the tutorial you want to experience</Text>
                         
-                <Flex align="center" justify={"space-evenly"} p={"2"} bgColor={COLORS.main} flexDirection={'row'}>
+                <Flex align="center" overflowX={"scroll"} p={"2"} bgColor={COLORS.main} flexDirection={'row'}>
                     <LevelRadioButton icon={'/searcher.svg'} onClick={() => setCondition('0')} bgColor={condition === '0' ? bgColor() : "gray.700"} description={"Searcher"}></LevelRadioButton>
                     <LevelRadioButton icon={'/dapp.svg'} onClick={() => setCondition('1')} bgColor={condition === '1' ? bgColor() : "gray.700"} description={"DeFi App"}></LevelRadioButton>
                     <LevelRadioButton icon={'/combined.svg'} onClick={() => setCondition('2')} bgColor={condition === '2' ? bgColor() : "gray.700"} description={"Combined"}></LevelRadioButton>
