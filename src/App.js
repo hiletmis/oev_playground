@@ -96,7 +96,7 @@ useEffect(() => {
         <div class="body">
         <Flex spacing={0} p={2} boxShadow="lg" width={"100%"} height={"100%"} alignItems={"left"} >
           <Navigator/>
-          <VStack bgColor={COLORS.app} borderRadius="lg" boxShadow="lg" height={"100%"} width={"100%"} alignItems={"left"} >
+          <VStack bgColor={COLORS.app} overflow={"scroll"} borderRadius="lg" boxShadow="lg" height={"100%"} width={"100%"} alignItems={"left"} >
             <Routes>
               <Route path="/" element={<Welcome />} />
               <Route path="proxy" element={<DeployProxy />} />
