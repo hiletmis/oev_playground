@@ -79,7 +79,7 @@ const Hero = ({isCollapsed}) => {
     }, [address]);
 
   return (
-    isConnected === false ? <SignIn></SignIn> :
+    isConnected === false ? null :
     isCollapsed ?
     <Flex>
     <Grid height="20" width="20" radius="9" color="green" ariaLabel="loading" visible={isLoadingSign}/>
