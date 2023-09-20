@@ -94,38 +94,31 @@ useEffect(() => {
     <ChakraProvider theme={modifiedTheme}>
       <OevContext.Provider value={{ collapsed, setCollapsed, level, setLevel, wallet, setWallet, searcher, setSearcher, multicall, setMulticall, bid, setBid, contextProxyAddress, setContextProxyAddress, auction, setAuction, contextDataFeed, setContextDataFeed, auctionStatus, setAuctionStatus}}>
         <Router>
-        <div class="container" >
-        <div class="header"><Header /></div>
-        <Flex>
-        <div class="body">
-        <Flex spacing={0} p={2} boxShadow="lg" width={"100%"} height={"100%"} alignItems={"left"} >
-          <Navigator />
-          <VStack bgColor={COLORS.app} overflow={"scroll"} borderRadius="lg" boxShadow="lg" height={"100%"} width={"100%"} alignItems={"left"} >
-            <Routes>
-              <Route path="/" element={<Welcome />} />
-              <Route path="proxy" element={<DeployProxy />} />
-              <Route path="searcher" element={<Prepayment />} />
-              <Route path="multicall" element={<Multicall />} />
-              <Route path="bid" element={<PlaceBid />} />
-              <Route path="auctions" element={<Auctions />} />
-              <Route path="withdraw" element={<Withdraw />} />
-              <Route path="configuration" element={<GetConfiguration />} />
-              <Route path="withdrawals/request" element={<WithdrawalsRequest />} />
-              <Route path="withdrawals/list" element={<WithdrawalsList />} />
-              <Route path="status" element={<Status />} />
-              <Route path="bids/info" element={<BidsInfo />} />
-              <Route path="bids/list" element={<BidsList />} />
-              <Route path="bids/place" element={<BidsPlace />} />
-              <Route path="bids/cancel" element={<BidsCancel />} />
-              <Route path="auctions/info" element={<AuctionsInfo />} />
-              <Route path="auctions/list" element={<AuctionsList />} />
-            </Routes>
-          </VStack>
-        </Flex>
-        </div>
-        </Flex>  
-        </div>
- 
+            <Header/>
+            <Flex h='calc(100vh - 80px)' spacing={0} p={2} boxShadow="lg" alignItems={"stretch"} flexDirection={'row'} >
+            <Navigator />
+              <VStack bgColor={COLORS.app} overflow={"scroll"} borderRadius="lg" boxShadow="lg" width={"100%"} alignItems={"left"} >
+                <Routes>
+                  <Route path="/" element={<Welcome />} />
+                  <Route path="proxy" element={<DeployProxy />} />
+                  <Route path="searcher" element={<Prepayment />} />
+                  <Route path="multicall" element={<Multicall />} />
+                  <Route path="bid" element={<PlaceBid />} />
+                  <Route path="auctions" element={<Auctions />} />
+                  <Route path="withdraw" element={<Withdraw />} />
+                  <Route path="configuration" element={<GetConfiguration />} />
+                  <Route path="withdrawals/request" element={<WithdrawalsRequest />} />
+                  <Route path="withdrawals/list" element={<WithdrawalsList />} />
+                  <Route path="status" element={<Status />} />
+                  <Route path="bids/info" element={<BidsInfo />} />
+                  <Route path="bids/list" element={<BidsList />} />
+                  <Route path="bids/place" element={<BidsPlace />} />
+                  <Route path="bids/cancel" element={<BidsCancel />} />
+                  <Route path="auctions/info" element={<AuctionsInfo />} />
+                  <Route path="auctions/list" element={<AuctionsList />} />
+                </Routes>
+              </VStack>
+            </Flex>
         </Router>
       </OevContext.Provider>
     </ChakraProvider>

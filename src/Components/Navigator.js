@@ -7,7 +7,7 @@ import SearcherStatus from './SearcherStatus';
 
 import { COLORS } from '../data/colors';
 
-const Hero = () => {
+const Hero = ({override = false}) => {
   const context = useContext(OevContext);
   const level = parseInt(localStorage.getItem('level'));
 
@@ -21,7 +21,7 @@ const Hero = () => {
   
 
 return (
-       context.collapsed ? null :
+       context.collapsed && !override ? null :
       <VStack bgColor={COLORS.main} marginRight={2} overflowY={"scroll"} direction="row" borderRadius="lg" spacing={2} p={2} minWidth={"270px"} width={"270px"} height={"100%"} alignItems={"left"} >
         <CustomButton isDisabled={false} link="/" caption="Home" />
         {
@@ -34,7 +34,6 @@ return (
           : level === 1
           ?
           <Stack>
-          <CustomButton isDisabled={context.wallet === null} link="/searcher" caption="Deposit Collateral" />
           <CustomButton isDisabled={context.searcher === null} link="/proxy" caption="Deploy Data Feed Proxy" />
           <CustomButton isDisabled={context.searcher === null } link="/withdraw" caption="Withdraw" />
           </Stack>

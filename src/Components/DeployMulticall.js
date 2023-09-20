@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Grid } from 'react-loader-spinner'
 import { OevContext } from '../OevContext';
+import CopyInfoRow from './Custom/CopyInfoRow';
+import ExecuteButton from './Custom/ExecuteButton';
+import Heading from './Custom/Heading';
 
 import {
-  Button, Heading,
-  VStack, Text, Box, Flex, Spacer, Link
+  VStack, Box, Link
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 
@@ -64,60 +65,16 @@ const deployMulticall = async () => {
     
   return (
     <VStack spacing={4} p={8} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
-
-      <Flex>
-      <Heading size={"lg"}>Deploy Multicall Contract</Heading>
-      
-        <Spacer />
-        <Grid
-        height="40"
-        width="40"
-        radius="9"
-        color="green"
-        ariaLabel="loading"
-        visible={isLoading}/>
-      </Flex>
-      <Text fontSize={"sm"}>Deploy a multicall contract to update data feeds. Multicall contract address will be saved to your browser.</Text>
-   
+      <Heading isLoading={isLoading} header={"Deploy Multicall Contract"} description={"Deploy a multicall contract to update data feeds. Multicall contract address will be saved to your browser"}></Heading>
       <Box width={"100%"} height={"160px"} bgColor={COLORS.main} borderRadius={"10"}>
-
-      <VStack spacing={3} direction="row" align="left" m="1rem">
-        <Text fontWeight={"bold"} fontSize={"md"}>Multicall Contract</Text>
-        <Box p= "2" width={"100%"} borderRadius={"10"} bgColor={COLORS.app}  alignItems={"center"}>
-        <Flex className='box'>
-        <Text marginLeft={3} fontSize={"md"}>{multicall}</Text>
-        <Spacer />
-        <Button 
-            isDisabled={!multicall}
-            onClick={() => {
-              navigator.clipboard.writeText(multicall)
-            }}
-          >Copy</Button>
-        </Flex>
-        </Box>
-        <Link visibility={!multicall ? 'hidden': 'visible'} href={chain.blockExplorers.default.url + '/address/' + multicall} isExternal>
-  Show in explorer <ExternalLinkIcon mx='2px' />
-</Link>
+        <VStack spacing={3} direction="row" align="left" m="1rem">
+          <CopyInfoRow header={"Multicall Contract"} text={multicall} />
+          <Link visibility={!multicall ? 'hidden': 'visible'} href={chain.blockExplorers.default.url + '/address/' + multicall} isExternal>
+            Show in explorer <ExternalLinkIcon mx='2px' />
+          </Link>
         </VStack>
-        </Box> 
-
-      <VStack spacing={4} w="100%">
-      <Button
-        borderColor="gray.500"
-        borderWidth="1px"
-        color="white"
-        size="md"
-        minWidth={"200px"}
-        isDisabled={isLoading}
-        onClick={
-            () => deployMulticall()
-        }
-      >
-      { isLoading ? 'Deploying...' : 'Deploy'}
-      </Button>
-    </VStack>
-
-
+      </Box>  
+      <ExecuteButton isDisabled={isLoading} onClick={() => deployMulticall()} text={ isLoading ? "Deploying" : "Deploy Multicall"}></ExecuteButton>
     </VStack>
   );
 };

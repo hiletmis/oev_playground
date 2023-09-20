@@ -44,10 +44,11 @@ const SelectDataFeed = ({stateChanger}) => {
     { "Select" }
     </Button>
     }
+    position={"center center"}
     modal
   >
     {close => (
-    <VStack bgColor={"black"} spacing={4} p={2} borderRadius="lg" boxShadow="lg" alignItems={"left"} >
+    <VStack bgColor={"black"} width={"600px"} spacing={4} p={2} borderRadius="lg" boxShadow="lg" alignItems={"left"} >
       <VStack bgColor={COLORS.app} alignItems={"center"} spacing={6} borderRadius="lg" boxShadow="lg">
         <VStack spacing={3} p={7} borderRadius="lg" alignItems={"left"}>
           
