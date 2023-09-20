@@ -2,13 +2,13 @@ import React, { useState, useEffect, useContext } from "react";
 import { COLORS } from '../data/colors';
 import Faucet from './Faucet';
 import Popup from 'reactjs-popup';
-import { Grid } from 'react-loader-spinner'
 import { useNetwork, useBalance, useAccount, useContractRead, usePrepareContractWrite, useContractWrite, useSignTypedData, useWaitForTransaction } from 'wagmi';
 import { OevContext } from '../OevContext';
 import SignIn from './SignIn';
 import Welcome from './Welcome';
+import Heading from './Custom/Heading';
 
-import { Button, Heading, VStack, Box, Text } from "@chakra-ui/react";
+import { Button, VStack, Box, Text } from "@chakra-ui/react";
 import {
   NumberInput,
   NumberInputField,
@@ -148,20 +148,7 @@ const Deposit = () => {
     chain == null ? <SignIn></SignIn> :
     wallet === null || searcher == null ? <Welcome></Welcome> : 
     <VStack spacing={4} p={8} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
-      <Flex>
-        <Heading size={"lg"}>Add Collateral</Heading>
-        <Spacer />
-        <Grid
-  height="40"
-  width="40"
-  radius="9"
-  color="green"
-  ariaLabel="loading"
-  visible={isLoading}/>
-      </Flex>
-
-    <Text fontSize={"sm"}>Deposit TestUSDC as collateral to start bidding</Text>
-
+        <Heading isLoading={isLoading} description={"Deposit TestUSDC as collateral to start bidding"} header={"Add Collateral"} ></Heading>
     <Box width={"100%"} height="120px" bgColor={COLORS.main} borderRadius={"10"}>
       <VStack spacing={3} direction="row" align="left" m="1rem">
       <Flex>

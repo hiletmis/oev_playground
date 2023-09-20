@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Heading, VStack, Button, Text, Image, Flex, Spacer, Box, Stack } from '@chakra-ui/react';
+import { VStack, Button, Text, Image, Flex, Spacer, Box, Stack } from '@chakra-ui/react';
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
 import { ethers } from 'ethers';
 import { useContractWrite, useWaitForTransaction, useAccount, useNetwork, usePublicClient } from 'wagmi';
 import { ABI, CONTRACT_ADDRESS } from '../data/abi';
 import DataFeedList from './DataFeedList';
-import { Grid } from 'react-loader-spinner'
 import { computeDataFeedProxyWithOevAddress } from '@api3/contracts'; 
 import { OevContext } from '../OevContext';
 import { COLORS } from '../data/colors';
@@ -13,6 +12,9 @@ import SignIn from './SignIn';
 import Welcome from './Welcome';
 import CopyInfoRow from './Custom/CopyInfoRow';
 import PasteRow from './Custom/PasteRow';
+import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
+import Heading from './Custom/Heading';
+import ExecuteButton from './Custom/ExecuteButton';
 
 const Commit = () => {
   const { address, isConnected } = useAccount()
@@ -29,6 +31,7 @@ const Commit = () => {
   const [dataFeed, setDataFeed] = useState(null);
   const [chainId, setChainId] = useState(chain != null ? chain.id : 0);
   const [isAddressValid, setIsAddressValid] = useState(true);
+  const [isDataFeedListOpen, setIsDataFeedListOpen] = useState(false);
 
   const { setContextProxyAddress } = useContext(OevContext);
   const { contextDataFeed, setContextDataFeed, searcher } = useContext(OevContext);
@@ -53,6 +56,20 @@ const Commit = () => {
     hash: data?.hash,
   });
 
+  const deployProxy = () => {
+      if (contractDeployed || contractExists) {
+        setContractRegisteredAddress(true);
+      } else {
+        write?.();
+      }
+  }
+
+  const isDeployDisabled = () => {
+    return  (contractDeployed || contractExists)
+      ? (contractRegistered || !validateDataFeedId(dataFeedId) || !validateAddress(beneficiaryAddress))
+      : !dataFeedId || !validateAddress(beneficiaryAddress) || isLoading || (contractExists && validateDataFeedId(dataFeedId))
+  }
+
   const removeDataFeed = () => {
     setContractRegistered(false);
     setContractRegisteredAddress(true);
@@ -62,8 +79,7 @@ const Commit = () => {
     setDataFeedId('');
     setProxyAddress('');
   }
-
-
+ 
   useEffect(() => {
     if (isConnected) {
       setBeneficiaryAddress(address);
@@ -119,6 +135,7 @@ const Commit = () => {
   useEffect(() => {
     setDataFeed(dataFeed);
     setDataFeedId(dataFeed?.beaconId);
+    setIsDataFeedListOpen(false);
   }, [dataFeed])
 
   useEffect(() => {
@@ -189,46 +206,41 @@ const Commit = () => {
   return (
     chain == null ? <SignIn></SignIn> :
     searcher === null ? <Welcome></Welcome> : 
+    
 <VStack spacing={4} p={8} minWidth={"350px"} maxWidth={"700px"} alignItems={"left"} >
-      <Flex>
-      <Heading size={"lg"}>Deploy Proxy</Heading>
-        <Spacer />
-        <Grid
-  height="40"
-  width="40"
-  radius="9"
-  color="green"
-  ariaLabel="loading"
-  visible={isLoading}
-  />
-      </Flex>
+  <Heading isLoading={isLoading} description={""} header={"Deploy Proxy"} ></Heading>
 
-      <Box width={"100%"} height={contractExists || contractDeployed ? "410px" : "250px"} bgColor={COLORS.main} borderRadius={"10"}>
+      <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>
 
       <VStack spacing={3} direction="row" align="left" m="1rem">
         <PasteRow title={"Beneficiary Address"} text={beneficiaryAddress} color={isAddressValid ? "white" : "red.500"} bgColor={COLORS.app} setText={setBeneficiaryAddress}></PasteRow>
         <Text fontWeight={"bold"} fontSize={"md"}>Data Feed</Text>
-        <Box p= "3" width={"100%"} height={"70px"} borderRadius={"10"} bgColor={COLORS.app}  alignItems={"center"}>
-        <Flex className='box'>
+        <Box p= "3" width={"100%"}  borderRadius={"10"} bgColor={COLORS.app}  alignItems={"center"}>
+        <Flex alignItems={isDataFeedListOpen ? "top" : "center"} className='box'>
 
-        <Stack direction="column" spacing={"2"} width={"75%"}>
-              <Stack direction="row" spacing={"2"} >
-                <Stack visibility={!dataFeed ? "hidden" : "visible"} direction="row" spacing={"-2"}>
-                  <Image src={dataFeed === null ? "" : `/coins/${dataFeed.p1}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />
-                  <Image src={dataFeed === null ? "" : `/coins/${dataFeed.p2}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />
-                </Stack>
-                <Text fontSize="md" fontWeight="bold">{dataFeed === null ? "" : dataFeed.p1 + '/' + dataFeed.p2}</Text>
+        <Stack direction="column" spacing={"2"} width={"80%"}>
+          { isDataFeedListOpen ? <DataFeedList stateChanger={setDataFeed}/> :
+            <Stack direction="row" spacing={"2"} >
+              <Stack visibility={!dataFeed ? "hidden" : "visible"} direction="row" spacing={"-2"}>
+                <Image src={dataFeed === null ? "" : `/coins/${dataFeed.p1}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />
+                <Image src={dataFeed === null ? "" : `/coins/${dataFeed.p2}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />
               </Stack>
-              <Text width={"100%"} noOfLines={1} fontSize="xs">{dataFeed === null ? "" : dataFeed.beaconId}</Text>
+            <Text fontSize="md" fontWeight="bold">{dataFeed === null ? "" : dataFeed.p1 + '/' + dataFeed.p2}</Text>
             </Stack>
-
-          <Spacer />
-           {contractRegistered ? <Button onClick={ removeDataFeed }>X</Button> : <DataFeedList stateChanger={setDataFeed}/>} 
+          }
+          <Text width={"100%"} noOfLines={1} fontSize="xs">{dataFeed === null ? "" : dataFeed.beaconId}</Text>
+        </Stack>
+        <Spacer />
+          {contractRegistered 
+          ? <Button onClick={ removeDataFeed }>X</Button> 
+          : isDataFeedListOpen ? <TriangleUpIcon width={"40px"} height={"40px"} onClick={() => {setIsDataFeedListOpen(false)}}></TriangleUpIcon> : <TriangleDownIcon width={"40px"} height={"40px"} onClick={() => {setIsDataFeedListOpen(true)}}/>
+          }
         </Flex>
-          </Box>
+      </Box>
 
-        <VStack spacing={3} alignItems={"left"} visibility={(contractDeployed || contractExists) ? "visible" : "hidden"} >
+      { contractDeployed || contractExists ?
 
+        <VStack spacing={3} alignItems={"left"} >
         <CopyInfoRow header={"Proxy Address"} text={proxyAddress}></CopyInfoRow>
 
         <Flex>
@@ -244,35 +256,13 @@ const Commit = () => {
 
         </Flex>
         </VStack>
+        : null
+      }
+
         </VStack>
       </Box>
     
-      <Stack alignItems={"center"} >
-      <Button
-        borderColor="gray.500"
-        borderWidth="1px"
-        color="white"
-        size="md"
-        minWidth={"200px"}
-        visibility={contractRegistered ? "hidden" : "visible"}
-        isDisabled= { 
-          (contractDeployed || contractExists)
-          ? (contractRegistered || !validateDataFeedId(dataFeedId) || !validateAddress(beneficiaryAddress))
-          : !dataFeedId || !validateAddress(beneficiaryAddress) || isLoading || (contractExists && validateDataFeedId(dataFeedId))
-        }
-        onClick={() => {
-          if (contractDeployed || contractExists) {
-            setContractRegisteredAddress(true);
-          } else {
-            write?.();
-          }
-
-        }}
-      >
-      { ((contractExists || contractDeployed ) ? (isLoading ? 'Registering...' : 'Register Proxy') : isLoading ? 'Deploying...' : 'Deploy Proxy' )}
-      </Button>
-      </Stack>
-            
+      <ExecuteButton isDisabled={isDeployDisabled()} onClick={() => deployProxy()} text={ ((contractExists || contractDeployed ) ? (isLoading ? 'Registering...' : 'Register Proxy') : isLoading ? 'Deploying...' : 'Deploy Proxy' )}></ExecuteButton>            
   </VStack>
   );
 };
