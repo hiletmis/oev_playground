@@ -4,7 +4,6 @@ import { COLORS } from '../../data/colors';
 
 const Hero = ({title, text, setText, margin=0, color="white", bgColor=COLORS.main}) => { 
     
-
   const paste = () => {
     if (navigator.clipboard && navigator.clipboard.readText) {
       navigator.clipboard.readText().then(text => {setText(text)})

@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 
 import { Spacer, Stack, VStack, Text } from '@chakra-ui/react';
 import CustomButton from './Custom/Button';
@@ -10,12 +10,8 @@ import { COLORS } from '../data/colors';
 const Hero = () => {
   const context = useContext(OevContext);
   const level = parseInt(localStorage.getItem('level'));
- 
-  useEffect(() => {
-    console.log("collapsed", context.collapsed)
-  }, [context.collapsed]);
 
-return (
+  return (
        context.collapsed && context.overrideMenu ? null :
       <VStack bgColor={COLORS.main} marginRight={2} overflowY={"scroll"} direction="row" borderRadius="lg" spacing={2} p={2} minWidth={"270px"} width={"270px"} height={"100%"} alignItems={"left"} >
         <CustomButton isDisabled={false} link="/" caption="Home" />

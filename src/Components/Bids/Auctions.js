@@ -72,22 +72,17 @@ const Hero = () => {
             prepaymentDepositoryAddress: PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS,
             requestType: 'API3 OEV Relay, /bids/list',
         }
-
         setPayload(payload);
-
         const sorted = JSON.stringify(payload, Object.keys(payload).sort());
-
         if (request == null) {
             signMessage({ message: sorted });
             return
         }
-
         if (request.validUntil > Date.now()) {
             postMessage({ payload: request })
         } else {
             signMessage({ message: sorted });
         }
-
     }
      
   return (

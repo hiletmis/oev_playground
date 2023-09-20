@@ -12,7 +12,7 @@ const Hero = ({header, text, margin=0}) => {
             <Flex className='box'>
                 <Text noOfLines={1} fontSize={"md"}>{text}</Text>
                 <Spacer />
-                <Image cursor={"pointer"} onClick={copy(text)} src={`/copy.svg`} width={"30px"} height={"30px"} />
+                <Image cursor={"pointer"} onClick={() => copy(text)} src={`/copy.svg`} width={"30px"} height={"30px"} />
             </Flex>
         </Box>
     </VStack>

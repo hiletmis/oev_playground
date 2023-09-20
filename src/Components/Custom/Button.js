@@ -13,7 +13,7 @@ const Hero = ({isDisabled, link, caption, height="40px", bgColor, isCollapsed = 
           : <Button isDisabled={isDisabled} borderRadius={"10px"} bgColor={bgColor} color="white" size="sm" width={"100%"} height={height}>
               {caption}
           </Button>
-}
+        }
       </Flex>
 
     </Link>
