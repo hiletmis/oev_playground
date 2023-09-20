@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useEffect } from "react";
 
 import { Spacer, Stack, VStack, Text } from '@chakra-ui/react';
 import CustomButton from './Custom/Button';
@@ -7,21 +7,16 @@ import SearcherStatus from './SearcherStatus';
 
 import { COLORS } from '../data/colors';
 
-const Hero = ({override = false}) => {
+const Hero = () => {
   const context = useContext(OevContext);
   const level = parseInt(localStorage.getItem('level'));
-
-  const [width, setWidth] = useState(window.innerWidth);
-
+ 
   useEffect(() => {
-    const handleResize = () => setWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
-    context.setCollapsed(width < 900 ? true : false);
-  }, [context, width]);
-  
+    console.log("collapsed", context.collapsed)
+  }, [context.collapsed]);
 
 return (
-       context.collapsed && !override ? null :
+       context.collapsed && context.overrideMenu ? null :
       <VStack bgColor={COLORS.main} marginRight={2} overflowY={"scroll"} direction="row" borderRadius="lg" spacing={2} p={2} minWidth={"270px"} width={"270px"} height={"100%"} alignItems={"left"} >
         <CustomButton isDisabled={false} link="/" caption="Home" />
         {
