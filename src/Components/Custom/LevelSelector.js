@@ -8,7 +8,7 @@ const Hero = () => {
 
     const [condition, setCondition] = useState(null);
 
-    const {setLevel, level, setContextDataFeed, setContextProxyAddress} = useContext(OevContext);
+    const {setLevel, level, searcher, setContextDataFeed, setContextProxyAddress} = useContext(OevContext);
 
     const bgColor = () => {
         switch (condition) {
@@ -36,7 +36,7 @@ const Hero = () => {
             setCondition(String(level));
         }
 
-        if (level === 0) {
+        if (level === 0 && searcher) {
             const ETH_USD = {
                 p1:"ETH",
                 p2:"USD",
@@ -47,9 +47,11 @@ const Hero = () => {
             }
             setContextDataFeed([ETH_USD]);
             setContextProxyAddress(ETH_USD.proxyAddress);
-        } 
+        } else {
+            setContextProxyAddress(null);
+        }
 
-    }, [condition, level, setContextDataFeed, setContextProxyAddress]);
+    }, [condition, level, setContextDataFeed, setContextProxyAddress, searcher]);
 
     useEffect(() => {   
         const level = localStorage.getItem('level');

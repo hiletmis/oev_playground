@@ -33,7 +33,6 @@ const Hero = () => {
           <Stack>
           <CustomButton isDisabled={context.wallet === null} link="/searcher" caption="Deposit Collateral" />
           <CustomButton isDisabled={context.searcher === null} link="/proxy" caption="Deploy Data Feed Proxy" />
-          <CustomButton isDisabled={context.searcher === null || context.contextDataFeed.length === 0} link="/multicall" caption="Deploy Update Executor" />
           <CustomButton isDisabled={context.contextDataFeed.length === 0 || context.contextProxyAddress === null || context.multicall === null} link="/bid" caption="Place a Bid" />
           <CustomButton isDisabled={context.auction === null } link="/auctions" caption="Check Auction Status" />
           <CustomButton isDisabled={context.auction === null } link="/withdraw" caption="Withdraw" />

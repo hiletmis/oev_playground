@@ -8,20 +8,87 @@ export const API3SERVERV1 = (chainId) => {
 
 export const MULTICALL_FACTORY = (chainId) => {
 	switch (chainId) {
-		case 1155111: return "0xC8e9c9bE10f946d14027600C3A256CF603d7fA57";
-		case 80001: return "0x997aBd7089Bc01Fd6A667002F051922bFAcFaac3"
-		case 97: return "0x163dE2180bDe5a0DCE9Bc30d07eC55eC13C97E4a"
-		case 420: return "0xa584E4AEB157Eb892040B240F8843863ebad54A2"
-		case 4002: return "0xe2F522B02a7C4d5765144cB1dDf9DD67Ba1Cda52"
-		case 1287: return "0x4569b23CF0433FCCCFcdd92174a0E349F8F5576C"
-		case 421613: return "0x0C1255EA5C20930D5D4CFD38b945b52db5bdb109"
-		case 43313: return "0xf655108782D6c9dF6782EE03DC2Fa3304dd9f413"
-		case 1441: return "0xa584E4AEB157Eb892040B240F8843863ebad54A2"
-		case 10200: return "0x163dE2180bDe5a0DCE9Bc30d07eC55eC13C97E4a"
-		case 280: return "0x6648809Fb2452124351c8F801B809f388b114B72"
+		case 11155111: return "0x7c523879455EE4373024e931740F4664ded814e7";
+		case 80001: return "0x054dFeC361BA8a100eb6cdAB7a6B3cB0e96cec9C"
+		case 97: return "0x40D157b9EeCeAc36b7269AA7D108b5d238278d4e"
+		case 420: return "0x163dE2180bDe5a0DCE9Bc30d07eC55eC13C97E4a"
+		case 4002: return "0xcDF8B6402E9e93f676Bca2012517eb6Babc11B8B"
+		case 1287: return "0x40D157b9EeCeAc36b7269AA7D108b5d238278d4e"
+		case 421613: return "0xa584E4AEB157Eb892040B240F8843863ebad54A2"
+		case 43113: return "0x686622Af248a862Cd2bEBa1B0BfE413bd3A23eC8"
+		case 1442: return "0x163dE2180bDe5a0DCE9Bc30d07eC55eC13C97E4a"
+		case 10200: return "0xEfE491E3Db74E181a2baF47Dc3f2fa5d8F2BA9E4"
+		case 280: return "0xD3223a77BCad0EeB9910B4E374728B316d868A83"
 		default: return ""
 	}
 }
+
+export const MULTICALL_FACTORY_ABI = [
+	{
+		"inputs": [],
+		"name": "deployDeterministicMulticallV1",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "deployMulticall",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "caller",
+				"type": "address"
+			}
+		],
+		"name": "computeOevSearcherMulticallV1Address",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "multicallV1",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "caller",
+				"type": "address"
+			}
+		],
+		"name": "computeOevSearcherMulticallV1AddressZk",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "multicallV1",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
 
 
 export const API3SERVERV1_ABI = [

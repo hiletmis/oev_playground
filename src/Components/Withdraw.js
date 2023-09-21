@@ -19,7 +19,6 @@ const DeployMulticall = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [items, setItems] = useState([]);
-    const { multicall, setMulticall } = useContext(OevContext);
 
 
 const deployMulticall = async () => { 

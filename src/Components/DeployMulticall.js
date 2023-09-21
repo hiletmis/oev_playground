@@ -3,69 +3,91 @@ import { OevContext } from '../OevContext';
 import CopyInfoRow from './Custom/CopyInfoRow';
 import ExecuteButton from './Custom/ExecuteButton';
 import Heading from './Custom/Heading';
+import { MULTICALL_FACTORY_ABI, MULTICALL_FACTORY } from '../data/abi';
+import { useContractWrite, usePrepareContractWrite, useWaitForTransaction, useContractRead, useAccount, useNetwork, usePublicClient } from 'wagmi';
 
-import {
-  VStack, Box, Link
-} from "@chakra-ui/react";
+import { VStack, Box, Link } from "@chakra-ui/react";
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 
-import { ethers, ContractFactory } from "ethers";
-import { useAccount, useNetwork } from 'wagmi';
-
 import { COLORS } from '../data/colors';
-import OevSearcherMulticallV1 from "../Contracts/OevSearcherMulticallV1.json";
 
 const DeployMulticall = () => {
     const { address, isConnected } = useAccount()
-
-    const [isLoading, setIsLoading] = useState(false);
-    const [isSuccess, setIsSuccess] = useState(false);
-    const [items, setItems] = useState([]);
-    const { multicall, setMulticall } = useContext(OevContext);
     const { chain } = useNetwork()
+    const [chainId, setChainId] = useState(chain != null ? chain.id : 0);
+    const [isDeployable, setIsDeployable] = useState(false);
+    const [bytecodeCheck, setBytecodeCheck] = useState(false);
+ 
+    const publicClient = usePublicClient();
+  
+    const { multicall, setMulticall } = useContext(OevContext);
+ 
+    const { config } = usePrepareContractWrite({
+      address: MULTICALL_FACTORY(chainId),
+      abi: MULTICALL_FACTORY_ABI,
+      functionName: 'deployDeterministicMulticallV1', 
+      enabled: isDeployable,
+      args: [],
+    })
+  
+    const { data, write } = useContractWrite(config)
+  
+    const { isLoading, isSuccess } = useWaitForTransaction({
+      hash: data?.hash,
+    });
+   
+    const oevSearcherMulticallV1Address = useContractRead({
+          address: MULTICALL_FACTORY(chainId),
+          abi: MULTICALL_FACTORY_ABI,
+          functionName: 'computeOevSearcherMulticallV1AddressZk',
+          enabled: multicall == null,
+          args: [address],
+        }, 
+    )
 
-    useEffect(() => { 
-        if (isSuccess) {
-          localStorage.setItem('multicall', JSON.stringify(items));
-        }
-        }, [isSuccess, items]);
-    
     useEffect(() => {
-        const items = JSON.parse(localStorage.getItem('multicall'));
-        if (!items) return
-        const multicall = items.find(item => item.address === address && item.chain === chain.id) 
-        if (multicall) {setMulticall(multicall.multicall)} else setMulticall(null)
+      setChainId(chain != null ? chain.id : 0);
+    }, [chain]);
 
-        if (items) {
-        setItems(items);
-        }
-    }, [address, chain.id, setMulticall]);
+    useEffect(() => {
+      if (isSuccess) {
+        console.log("multicall", data)
+      }
+    }, [isSuccess, data]);
+
+
+    useEffect(() => {
+      if (bytecodeCheck) return
+      if (multicall != null) return
+      if (oevSearcherMulticallV1Address !== null) {  
+        if (oevSearcherMulticallV1Address.data == null) return
+        console.log("oevSearcherMulticallV1Address", oevSearcherMulticallV1Address.data)
+
+        publicClient.getBytecode({
+          address: oevSearcherMulticallV1Address.data,
+          blockTag: 'latest',
+        }).then((bytecode) => {
+          setBytecodeCheck(true)
+          setIsDeployable(bytecode == null)
+          console.log("bytecode", "updatable", bytecode == null)
+          if (bytecode != null) {
+            setBytecodeCheck(false)
+            setMulticall(oevSearcherMulticallV1Address.data)
+          }
+        }).catch((error) => {
+          setBytecodeCheck(false)
+        })
+      }
+    }, [bytecodeCheck, multicall, oevSearcherMulticallV1Address, publicClient, setMulticall]);
 
 const deployMulticall = async () => { 
     if (!isConnected) return
-    let provider = ((window.ethereum != null) ? new ethers.providers.Web3Provider(window.ethereum) : ethers.providers.getDefaultProvider());
-    if (provider.getSigner == null) return
-    setIsLoading(true)
-    const factory = new ContractFactory(OevSearcherMulticallV1.abi, OevSearcherMulticallV1.bytecode, provider.getSigner())
-
-    factory.connect(provider.getSigner()).deploy().then((contract) => {
-      contract.deployTransaction.wait().then((receipt) => {
-        setMulticall(contract.address)
-        items.push( { address: address, chain: chain.id, multicall: contract.address})
-        setIsLoading(false)
-        setIsSuccess(true)
-    }).catch((err) => {
-        setIsLoading(false)
-    })
-
-    }).catch((err) => {
-      console.log(err)
-    })
+    write?.()
 }
     
   return (
     <VStack spacing={4} p={8} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
-      <Heading isLoading={isLoading} header={"Deploy Multicall Contract"} description={"Deploy a multicall contract to update data feeds. Multicall contract address will be saved to your browser"}></Heading>
+      <Heading isLoading={isLoading} header={"Deploy Multicall Contract"} description={"Deploy a multicall contract to update data feeds. Multicall contracts are deterministic wallets. You will only need to deploy it once on each blockchain you want to make a bid. "}></Heading>
       <Box width={"100%"} height={"160px"} bgColor={COLORS.main} borderRadius={"10"}>
         <VStack spacing={3} direction="row" align="left" m="1rem">
           <CopyInfoRow header={"Multicall Contract"} text={multicall} />
@@ -74,7 +96,7 @@ const deployMulticall = async () => {
           </Link>
         </VStack>
       </Box>  
-      <ExecuteButton isDisabled={isLoading} onClick={() => deployMulticall()} text={ isLoading ? "Deploying" : "Deploy Multicall"}></ExecuteButton>
+      <ExecuteButton isDisabled={isLoading || !isDeployable } onClick={() => deployMulticall()} text={ isLoading ? "Deploying" : "Deploy Multicall"}></ExecuteButton>
     </VStack>
   );
 };

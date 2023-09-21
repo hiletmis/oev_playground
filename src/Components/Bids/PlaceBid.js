@@ -23,7 +23,6 @@ const Hero = () => {
     const { address } = useAccount()
 
     const [dataFeed, setDataFeed] = useState(null);
-    const [mullticallContract, setMulticallContract] = useState(address);
     const [ethAmount, setEthAmount] = useState("");
     const [ethBalance, setEthBalance] = useState(0);
     const [fulfillValue, setFulfillValue] = useState("");
@@ -32,16 +31,13 @@ const Hero = () => {
 
     const [payload, setPayload] = useState(null);
 
-    const { level, searcher, contextDataFeed, contextProxyAddress, multicall, auction, setAuction, bid, setBid } = useContext(OevContext);
+    const { level, searcher, contextDataFeed, contextProxyAddress, auction, setAuction, bid, setBid } = useContext(OevContext);
 
     useEffect(() => {
         if (contextDataFeed.length > 0) {
           setDataFeed(contextDataFeed[0]);
         }        
-        if (multicall !== null) {
-          setMulticallContract(multicall);
-        }
-      }, [contextDataFeed, dataFeed, multicall]);
+      }, [contextDataFeed, dataFeed]);
 
 
     const fetchETHBalance_ = useBalance({
@@ -118,7 +114,7 @@ const Hero = () => {
             dAppProxyChainId:chain.id,
             condition:condition,
             fulfillmentValue: ethers.utils.parseEther(fulfillValue).toString(),
-            updateExecutorAddress:mullticallContract
+            updateExecutorAddress:address
         }
 
         let payload = {
@@ -141,7 +137,7 @@ const Hero = () => {
 
   return (
     chain == null ? <SignIn></SignIn> :
-    ((contextProxyAddress === null || multicall === null) && (level === 2)) || (contextDataFeed.length === 0 && level===0) || searcher === null ? <Welcome></Welcome> : 
+    ((contextProxyAddress === null) && (level === 2)) || (contextDataFeed.length === 0 && level===0) || searcher === null ? <Welcome></Welcome> : 
         <VStack spacing={4} p={8} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
             <CustomHeading header={"Place a Bid"} description={"Places bids in anticipation of an OEV opportunity on a specific data feed."} isLoading={isLoading}></CustomHeading>
             <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>

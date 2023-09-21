@@ -3,7 +3,6 @@ import Header from './Components/Header';
 import DeployProxy from './Components/DeployProxy';
 import Prepayment from './Components/Prepayment';
 import Navigator from './Components/Navigator';
-import Multicall from './Components/Multicall';
 import PlaceBid from './Components/Bids/PlaceBid';
 import Auctions from './Components/Bids/Auctions';
 import Withdraw from './Components/Withdraw';
@@ -59,7 +58,7 @@ const [contextDataFeed, setContextDataFeed] = useState([]);
 const [auction, setAuction] = useState(null);
 const [searcher, setSearcher] = useState(null);
 const [contextProxyAddress, setContextProxyAddress] = useState(null);
-const [multicall, setMulticall] = useState(null);
+const [multicall, setMulticall] = useState(address);
 const [bid, setBid] = useState(null);
 const [auctionStatus, setAuctionStatus] = useState(null);
 const [collapsed, setCollapsed] = useState(false);
@@ -67,16 +66,13 @@ const [overrideMenu, setOverrideMenu] = useState(false);
 
 
 useEffect(() => {
-  setMulticall(null)
   setBid(null)
   setAuctionStatus(null)
   setContextDataFeed([])
-  setMulticall(null)
   setContextProxyAddress(null)
 }, [chain]);
 
 useEffect(() => {
-  setMulticall(null)
   setBid(null)
   setAuctionStatus(null)
   setWallet(null)
@@ -86,10 +82,6 @@ useEffect(() => {
   setContextProxyAddress(null)
   setBid(null)
 }, [address]);
-
-useEffect(() => {
-  setMulticall(null)
-}, [level]);
 
   return (
     <ChakraProvider theme={modifiedTheme}>
@@ -103,7 +95,6 @@ useEffect(() => {
                   <Route path="/" element={<Welcome />} />
                   <Route path="proxy" element={<DeployProxy />} />
                   <Route path="searcher" element={<Prepayment />} />
-                  <Route path="multicall" element={<Multicall />} />
                   <Route path="bid" element={<PlaceBid />} />
                   <Route path="auctions" element={<Auctions />} />
                   <Route path="withdraw" element={<Withdraw />} />
