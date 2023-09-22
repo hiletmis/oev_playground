@@ -1,11 +1,11 @@
 import React, {useState, useContext, useEffect} from "react";
-import { useAccount, useSignMessage, useNetwork, usePrepareContractWrite, useWaitForTransaction, useContractWrite} from "wagmi";
+import { useAccount, useSignMessage, useNetwork, usePrepareContractWrite, useContractEvent, useWaitForTransaction, useContractWrite, useContractRead} from "wagmi";
 import { OevContext } from '../../OevContext';
 import { Grid } from 'react-loader-spinner'
 
 import { Text, Box, Image, Stack, Flex, Spacer } from '@chakra-ui/react';
 import { COLORS } from '../../data/colors';
-import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS, API3SERVERV1, API3SERVERV1_ABI, UpdatedOevProxyBeaconSetWithSignedData } from "../../data/abi";
+import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS, API3SERVERV1, API3SERVERV1_ABI, UpdatedOevProxyBeaconSetWithSignedData, DATA_FEED_PROXY_ABI } from "../../data/abi";
 import { ethers } from "ethers";
 
 const Hero = ({item}) => { 
@@ -20,7 +20,9 @@ const Hero = ({item}) => {
   const [nativeCurrencyAmount, setNativeCurrencyAmount] = useState("");
   const [bidId, setBidId] = useState("");
   const [request , setRequest] = useState(null);
+  const [proxyAddress, setProxyAddress] = useState(null);
 
+  const [isDataFeedUpdated, setIsDataFeedUpdated] = useState(false);
   const [manuelUpdateParams, setManuelUpdateParams] = useState([]);
 
   const { auction, setAuction } = useContext(OevContext);
@@ -71,6 +73,15 @@ const Hero = ({item}) => {
     }
 })
 
+const UpdatedOevProxyBeaconWithSignedDataEvent = useContractEvent({
+  address: proxyAddress,
+  abi: DATA_FEED_PROXY_ABI,
+  eventName: 'UpdatedOevProxyBeaconWithSignedData',
+  listener(log) {
+    console.log(log)
+  },
+})
+
 const { config } = usePrepareContractWrite({
   address: API3SERVERV1(chain.id),
   abi: API3SERVERV1_ABI,
@@ -86,6 +97,40 @@ const { isLoading, isSuccess } = useWaitForTransaction({
   hash: data?.hash,
 });
 
+const readProxyAddressBefore = useContractRead({
+  address: proxyAddress,
+  abi: DATA_FEED_PROXY_ABI,
+  functionName: 'read',
+  args: [],
+  enabled: item.dataFeed.dataBeforeBid.length === 0,
+})
+
+useEffect(() => {
+  if (UpdatedOevProxyBeaconWithSignedDataEvent != null) {
+    console.log("UpdatedOevProxyBeaconWithSignedDataEvent", UpdatedOevProxyBeaconWithSignedDataEvent);
+  }
+}, [UpdatedOevProxyBeaconWithSignedDataEvent]);
+
+useEffect(() => {
+  if (readProxyAddressBefore.data != null && item.dataFeed.dataBeforeBid.length === 0) {
+    item.dataFeed.dataBeforeBid = readProxyAddressBefore.data
+  }
+}, [item, readProxyAddressBefore, setAuction]);
+
+const readProxyAddressAfter = useContractRead({
+  address: proxyAddress,
+  abi: DATA_FEED_PROXY_ABI,
+  functionName: 'read',
+  args: [],
+  enabled: isDataFeedUpdated && item.dataFeed.dataBeforeBid.length > 0,
+})
+
+useEffect(() => {
+  if (readProxyAddressAfter.data != null && isDataFeedUpdated) {
+    item.dataFeed.dataAfterBid = readProxyAddressAfter.data
+    setTimeout(() => setIsDataFeedUpdated(item.dataFeed.dataAfterBid !== item.dataFeed.dataBeforeBid), 5000);
+  }
+}, [item, isDataFeedUpdated, readProxyAddressAfter, setAuction]);
 
 const postMessage = async ({ payload, endpoint }) => {
     const response = await fetch('https://oev.api3dev.com/api/' + endpoint, {
@@ -97,16 +142,14 @@ const postMessage = async ({ payload, endpoint }) => {
     const data = await response.json()
 
     if (data != null) {
-
       switch (endpoint) {
         case "auctions/info":
-        setEncodedUpdateTransaction(data.encodedUpdateTransaction)
-        setNativeCurrencyAmount(data.nativeCurrencyAmount)
-        setBidAuction(data)
+          setEncodedUpdateTransaction(data.encodedUpdateTransaction)
+          setNativeCurrencyAmount(data.nativeCurrencyAmount)
+          setBidAuction(data)
         break
 
         case "bids/cancel":
-
         const newAuction = auction.map((item) => {
           let found = data.bids.find((bid) => bid === item.id);
           if (found != null) {
@@ -121,12 +164,17 @@ const postMessage = async ({ payload, endpoint }) => {
           setRequest(payload);
         if (data == null) return
         if (auction == null) setAuction([])
+        setProxyAddress(data.dAppProxyAddress)
         const refreshedAuction = auction.map((item) => {
           if (data.id === item.id) {
             if (item.auction != null && data.status === "WON") {
               item.auction.status = "IN PROGRESS"
               return item
             } 
+            if (data.status === "EXECUTED") {
+              setRequest(null)
+              setTimeout(() => setIsDataFeedUpdated(data.status === "EXECUTED"), 5000);
+            }
             item.auction = data
           }
           return item;
@@ -169,6 +217,21 @@ const refresh = () => {
   }
 }
 
+const formatFeedData = (data) => {
+  if (data == null) return
+  if (data.length === 0) return
+  if (data[0] == null) return
+  if (data[1] == null) return
+
+  const time = parseInt(data[1]) * 1000
+  let date = new Date(time)
+  const eth = ethers.utils.formatUnits(data[0], 18)
+
+  return {
+    value: eth,
+    timestamp: date.toLocaleString()
+  }
+}
 
 const updateDataFeed = (bid) => {
   const validUntil = new Date();
@@ -306,6 +369,24 @@ useEffect(() => {
       <Spacer />
       <Flex><Text width={"100%"} noOfLines={1} fontSize="xs">{item.fulfillValue}</Text></Flex>
       </Stack>
+      {
+        item.dataFeed.dataBeforeBid.length === 0 ? null :
+          <Stack direction="row" spacing={"2"}>
+          <Text width={"100%"} fontWeight={"bold"} noOfLines={1} fontSize="xs">Before Data Feed Update</Text>
+          <Spacer />
+          <Flex><Text width={"100%"} fontSize="xs">${formatFeedData(item.dataFeed.dataBeforeBid).value}</Text></Flex>
+          <Flex><Text width={"100%"} fontSize="xs">{formatFeedData(item.dataFeed.dataBeforeBid).timestamp}</Text></Flex>
+          </Stack>
+      }
+      {
+        item.dataFeed.dataAfterBid.length === 0 ? null :
+          <Stack direction="row" spacing={"2"}>
+          <Text width={"100%"} fontWeight={"bold"} noOfLines={1} fontSize="xs">After Data Feed Update</Text>
+          <Spacer />
+          <Flex><Text width={"100%"} fontSize="xs">${formatFeedData(item.dataFeed.dataAfterBid).value}</Text></Flex>
+          <Flex><Text width={"100%"} fontSize="xs">{formatFeedData(item.dataFeed.dataAfterBid).timestamp}</Text></Flex>
+          </Stack>
+      }
   </Stack>
   
   );

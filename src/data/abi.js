@@ -90,6 +90,7 @@ export const MULTICALL_FACTORY_ABI = [
 	}
 ]
 
+export const DATA_FEED_PROXY_ABI = [{"inputs":[{"internalType":"address","name":"_api3ServerV1","type":"address"},{"internalType":"bytes32","name":"_dataFeedId","type":"bytes32"},{"internalType":"address","name":"_oevBeneficiary","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[],"name":"api3ServerV1","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"dataFeedId","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"oevBeneficiary","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"read","outputs":[{"internalType":"int224","name":"value","type":"int224"},{"internalType":"uint32","name":"timestamp","type":"uint32"}],"stateMutability":"view","type":"function"}]
 
 export const API3SERVERV1_ABI = [
 	{

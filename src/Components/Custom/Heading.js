@@ -8,7 +8,7 @@ const Hero = ({isLoading, header, description}) => {
         <Flex>
             <Heading size={"lg"}>{header}</Heading> 
             <Spacer />
-            <Grid height="40" width="40" radius="9" color="green" ariaLabel="loading" visible={isLoading}/>
+            <Grid height="30px" width="30px" radius="9" color="green" ariaLabel="loading" visible={isLoading}/>
         </Flex>
         <Text fontSize={"sm"}>{description}</Text>
     </VStack>

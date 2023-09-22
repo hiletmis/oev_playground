@@ -58,7 +58,6 @@ const Hero = () => {
     }, [bid]);
 
     const { isLoading, signMessage } = useSignMessage({
-        message: "1",
         onSuccess: (signature) => {
             payload.signature = signature;
             postMessage({ payload: payload });
@@ -82,7 +81,7 @@ const Hero = () => {
 
             const bid = {
                 id: data.bids[0],
-                dataFeed: dataFeed,
+                dataFeed: { p1: dataFeed.p1, p2:dataFeed.p2, beaconId:dataFeed.beaconId, dataBeforeBid:[], dataAfterBid:[] },
                 bidAmount: ethAmount,
                 condition: condition,
                 fulfillValue: fulfillValue,
@@ -157,17 +156,17 @@ const Hero = () => {
 
             <VStack visibility={bid != null && showBidId ? "visible":"hidden"} p={4} shadow="md" borderWidth="px" flex="1" borderRadius={"10"} bgColor={COLORS.main} alignItems={"left"}>
                 
-            <Flex>
-                <Text fontWeight={"bold"} fontSize={"md"}>Bid</Text>
-                <Spacer />
+                <Flex>
+                    <Text fontWeight={"bold"} fontSize={"md"}>Bid</Text>
+                    <Spacer />
                 </Flex>
-                
+                    
                 {bid == null && !showBidId ? null :
                 <Box p={3} width={"100%"} bgColor={COLORS.app} borderRadius={"10"}>
                 <BidInfoRow item={bid}></BidInfoRow>
                 </Box>}
-
-            </VStack>
+    
+                </VStack>
 
 </VStack>    
   );
