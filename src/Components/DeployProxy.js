@@ -15,6 +15,8 @@ import PasteRow from './Custom/PasteRow';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 import Heading from './Custom/Heading';
 import ExecuteButton from './Custom/ExecuteButton';
+import { isWrongNetwork } from './Helpers/Utils';
+import WrongNetwork from './WrongNetwork';
 
 const Commit = () => {
   const { address, isConnected } = useAccount()
@@ -205,6 +207,7 @@ const Commit = () => {
 
   return (
     chain == null ? <SignIn></SignIn> :
+    isWrongNetwork(chain) ? <WrongNetwork></WrongNetwork> :
     searcher === null ? <Welcome></Welcome> : 
     
 <VStack spacing={4} p={8} minWidth={"350px"} maxWidth={"700px"} alignItems={"left"} >

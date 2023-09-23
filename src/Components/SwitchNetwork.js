@@ -11,7 +11,7 @@ const Hero = () => {
     const { chain } = useNetwork()
     const { switchNetwork, isLoading } = useSwitchNetwork()
     
-    const { searcher, wallet } = useContext(OevContext);
+    const { wallet } = useContext(OevContext);
 
     const switchChain = () => {
       if (isLoading) return
@@ -20,7 +20,7 @@ const Hero = () => {
 
   return (
     chain == null ? <SignIn></SignIn> :
-    wallet === null || searcher == null ? <Welcome></Welcome> : 
+    wallet === null ? <Welcome></Welcome> : 
   <VStack spacing={4} p={8} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
     <Flex>
       <Heading size={"lg"}>Switch Network</Heading>
@@ -35,7 +35,7 @@ const Hero = () => {
     <Flex>
     <Spacer />
 
-    <Image src={`/chainIcons/${chain == null ? 1 : chain.id}.svg`} width={"50px"} height={"50px"} />
+    <Image src={`/chainIcons/${chain == null ? 1 : chain.id}.svg`} fallbackSrc="/caution.svg" width={"50px"} height={"50px"} />
     <Spacer />
     <Image src={`/switch.svg`} width={"50px"} height={"50px"} />
     <Spacer />

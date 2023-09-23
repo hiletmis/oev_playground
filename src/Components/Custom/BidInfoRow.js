@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from "react";
-import { useAccount, useSignMessage, useNetwork, usePrepareContractWrite, useContractEvent, useWaitForTransaction, useContractWrite, useContractRead} from "wagmi";
+import { useAccount, useSignMessage, useNetwork, usePrepareContractWrite, useWaitForTransaction, useContractWrite, useContractRead} from "wagmi";
 import { OevContext } from '../../OevContext';
 import { Grid } from 'react-loader-spinner'
 
@@ -73,15 +73,6 @@ const Hero = ({item}) => {
     }
 })
 
-const UpdatedOevProxyBeaconWithSignedDataEvent = useContractEvent({
-  address: proxyAddress,
-  abi: DATA_FEED_PROXY_ABI,
-  eventName: 'UpdatedOevProxyBeaconWithSignedData',
-  listener(log) {
-    console.log(log)
-  },
-})
-
 const { config } = usePrepareContractWrite({
   address: API3SERVERV1(chain.id),
   abi: API3SERVERV1_ABI,
@@ -104,12 +95,6 @@ const readProxyAddressBefore = useContractRead({
   args: [],
   enabled: item.dataFeed.dataBeforeBid.length === 0,
 })
-
-useEffect(() => {
-  if (UpdatedOevProxyBeaconWithSignedDataEvent != null) {
-    console.log("UpdatedOevProxyBeaconWithSignedDataEvent", UpdatedOevProxyBeaconWithSignedDataEvent);
-  }
-}, [UpdatedOevProxyBeaconWithSignedDataEvent]);
 
 useEffect(() => {
   if (readProxyAddressBefore.data != null && item.dataFeed.dataBeforeBid.length === 0) {
@@ -279,7 +264,7 @@ const cancelBid = (bid) => {
 
     switch (auction.status) {
       case "PENDING":
-        refresh();
+        cancelBid();
         break;
       case "WON":
         updateDataFeed(auction);

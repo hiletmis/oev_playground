@@ -1470,7 +1470,7 @@ export const TOKEN_ABI = [
   { stateMutability: "payable", type: "receive" },
 ];
 
-export const PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS = "0x3961C79988F64Dda1EfB7cC72Ed9377A0535097D";
+export const PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS = "0xf616aDEbDD12E34BAce69f71d14818776Aa9Daf3";
 export const PREPAYMENT_DEPOSIT_ABI = [
 	{
 		"inputs": [

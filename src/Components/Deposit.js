@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { COLORS } from '../data/colors';
 import Faucet from './Faucet';
 import Popup from 'reactjs-popup';
 import { useNetwork, useBalance, useAccount, useContractRead, usePrepareContractWrite, useContractWrite, useSignTypedData, useWaitForTransaction } from 'wagmi';
-import { OevContext } from '../OevContext';
 import SignIn from './SignIn';
-import Welcome from './Welcome';
 import Heading from './Custom/Heading';
+import WrongNetwork from './WrongNetwork';
+import { isWrongNetwork } from "./Helpers/Utils";
+import ExecuteButton from "./Custom/ExecuteButton";
+import Withdraw from "./Withdraw";
 
 import { Button, VStack, Box, Text } from "@chakra-ui/react";
 import {
@@ -20,18 +22,14 @@ import { ethers } from "ethers";
 import { PREPAYMENT_DEPOSIT_ABI, PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS, TOKEN_ABI, TOKEN_CONTRACT_ADDRESS, SIGNTYPEDDATA } from "../data/abi";
   
 const Deposit = () => {
+  const { chain } = useNetwork()
   const { address } = useAccount()
 
   const [tokenAmount, setTokenAmount] = useState("");
   const [tokenBalance, setTokenBalance] = useState(0); 
-  const [collateral, setCollateral] = useState('');
   const [refreshBalance, setRefreshBalance] = useState(false);
   const [signErc2612PermitArgs, setSignErc2612PermitArgs] = useState({tokenAmount: 0, v: 0, r: "0x", s: "0x"});
   const [isSigned, setIsSigned] = useState(false);
-
-  const { searcher, wallet } = useContext(OevContext);
-
-  const { chain } = useNetwork()
 
   useEffect(() => {
     setRefreshBalance(true)
@@ -50,15 +48,6 @@ const Deposit = () => {
     }
   }, [balance]);
 
-  const collateralBalance = useContractRead({
-    address: PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS,
-    abi: PREPAYMENT_DEPOSIT_ABI,
-    functionName: 'userToWithdrawalLimit',
-    chainId: 11155111,
-    args: [address],
-    enabled: refreshBalance,
-  })
-
   const nonce = useContractRead({
     address: TOKEN_CONTRACT_ADDRESS,
     abi: TOKEN_ABI,
@@ -75,12 +64,6 @@ const Deposit = () => {
     chainId: 11155111,
   })
 
-  useEffect(() => {
-    if (collateralBalance.data) {  
-      setCollateral(parseInt(collateralBalance.data) / 1e6)
-    }
-  }, [collateralBalance]);
-
   const domain = {
     name: tokenName.data,
     version: '2',
@@ -88,7 +71,7 @@ const Deposit = () => {
     verifyingContract: TOKEN_CONTRACT_ADDRESS,
   }
 
-  const message = {
+  const typedDataMessage = {
     owner: address,
     spender: PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS,
     nonce: nonce.data,
@@ -100,7 +83,7 @@ const Deposit = () => {
       domain,
       types: SIGNTYPEDDATA,
       primaryType: 'Permit',
-      message,
+      message: typedDataMessage,
       onSuccess: (data) => {
         const { v, r, s } = ethers.utils.splitSignature(data);
         setSignErc2612PermitArgs({tokenAmount: parseFloat(tokenAmount) * 1e6, deadline: String(ethers.constants.MaxUint256), v, r, s})
@@ -146,10 +129,11 @@ const Deposit = () => {
 
   return (
     chain == null ? <SignIn></SignIn> :
-    wallet === null || searcher == null ? <Welcome></Welcome> : 
+    isWrongNetwork(chain) ? <WrongNetwork></WrongNetwork> :
     <VStack spacing={4} p={8} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
-        <Heading isLoading={isLoading} description={"Deposit TestUSDC as collateral to start bidding"} header={"Add Collateral"} ></Heading>
-    <Box width={"100%"} height="120px" bgColor={COLORS.main} borderRadius={"10"}>
+      <Withdraw></Withdraw>
+      <Heading isLoading={isLoading } description={"Deposit TestUSDC as collateral to start bidding"} header={"Add Collateral"} ></Heading>
+      <Box width={"100%"} height="120px" bgColor={COLORS.main} borderRadius={"10"}>
       <VStack spacing={3} direction="row" align="left" m="1rem">
       <Flex>
       <NumberInput  value={tokenAmount} step={1} min={0} size={"lg"} onChange={(valueString) => {
@@ -187,39 +171,13 @@ const Deposit = () => {
         </VStack>
         </Box>
 
-        <Box width={"100%"} height="60px" bgColor={COLORS.main} borderRadius={"10"}>
-        <VStack spacing={3} direction="row" align="left" m="1rem">
-
-        <Flex>
-        <Text 
-        fontWeight={"bold"} 
-        fontSize={"lg"}>
-          Collateral
-          </Text>
-        <Spacer />
-        <Image marginRight={"2"} src={'/coins/USD.webp'} width={"24px"} height={"24px"} />
-        <Text fontWeight={"bold"} fontSize={"lg"}>{collateral}</Text>
-        </Flex>
-
-        </VStack>
-        </Box>
-
-    
-      <Stack alignItems={"center"} >
-      <Button
-        borderColor="gray.500"
-        borderWidth="1px"
-        color="white"
-        size="md"
-        minWidth={"200px"}
+        <Stack alignItems={"center"} >
+        <ExecuteButton
         isDisabled={ isLoading || isLoadingTypedData || !tokenAmount || isNaN(parseFloat(tokenAmount)) || parseFloat(tokenBalance) < parseFloat(tokenAmount) || parseFloat(tokenAmount) <= 0}
-        onClick={() => {
-          signTypedData()
-        }}
-      >
-        { isLoadingTypedData ? "Signing..." : isLoading ? 'Depositing...' : 'Deposit'}
-      </Button>
-      </Stack>
+        onClick={() => {signTypedData()}}
+        text={ isLoadingTypedData ? "Signing..." : isLoading ? 'Depositing...' : 'Deposit'}
+        ></ExecuteButton>
+      </Stack>  
     </VStack>
   );
 };

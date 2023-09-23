@@ -67,7 +67,6 @@ useEffect(() => {
   }, [ethAmount]);
 
   useEffect(() => {
-    console.log(beaconData)
     if (beaconData) {
       const decodedValue = ethers.utils.defaultAbiCoder.decode(
         ["int256"],

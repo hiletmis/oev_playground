@@ -19,23 +19,21 @@ const Hero = () => {
          level === 0 
          ? 
          <Stack>
-         <CustomButton isDisabled={context.wallet === null} link="/searcher" caption="Deposit Collateral" />
+         <CustomButton isDisabled={context.wallet === null} link="/searcher" caption="Collateral" />
          <CustomButton isDisabled={context.searcher === null } link="/bid" caption="Place a Bid" />
          </Stack>
           : level === 1
           ?
           <Stack>
           <CustomButton isDisabled={context.searcher === null} link="/proxy" caption="Deploy Data Feed Proxy" />
-          <CustomButton isDisabled={context.searcher === null } link="/withdraw" caption="Withdraw" />
           </Stack>
           : level === 2
           ?
           <Stack>
-          <CustomButton isDisabled={context.wallet === null} link="/searcher" caption="Deposit Collateral" />
+          <CustomButton isDisabled={context.wallet === null} link="/searcher" caption="Collateral" />
           <CustomButton isDisabled={context.searcher === null} link="/proxy" caption="Deploy Data Feed Proxy" />
           <CustomButton isDisabled={context.contextDataFeed.length === 0 || context.contextProxyAddress === null || context.multicall === null} link="/bid" caption="Place a Bid" />
           <CustomButton isDisabled={context.auction === null } link="/auctions" caption="Check Auction Status" />
-          <CustomButton isDisabled={context.auction === null } link="/withdraw" caption="Withdraw" />
           </Stack>
           : level === 3
           ?
