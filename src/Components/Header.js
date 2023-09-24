@@ -3,6 +3,9 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { COLORS } from '../data/colors';
 import { OevContext } from '../OevContext';
 import { useContext, useEffect, useState } from 'react';
+import LeftPane from './LeftPane';
+
+import SlidingPane from "react-sliding-pane";
 
 const Header = () => {
 
@@ -11,9 +14,13 @@ const Header = () => {
 
   const handleResize = () => {
     if (width > 900) return
-    setOverrideMenu(true)
-    setCollapsed(!collapsed)
+    setState({ isPaneOpenLeft: true })
   }
+
+  const [state, setState] = useState({
+    isPaneOpen: false,
+    isPaneOpenLeft: false,
+  });
 
   useEffect(() => {
     const handleResize = () => setWidth(window.innerWidth);
@@ -26,6 +33,15 @@ const Header = () => {
 
   return (
     <Flex width={"100%"} bg={COLORS.app} boxShadow="lg" flexDirection={'column'}>
+      <SlidingPane
+        isOpen={state.isPaneOpenLeft}
+        from="left"
+        width="270px"
+        margin={"0px"}
+        onRequestClose={() => setState({ isPaneOpenLeft: false })}
+      >
+       <LeftPane/>
+      </SlidingPane>
       <Flex as="header" align="center" justify="space-between" p={4}>
           <Flex align="flex-start" cursor="pointer" gap={'12px'}>
             <Image onClick={() => handleResize()} src={collapsed || overrideMenu ? "/menu_w.svg" :  `/logo.svg`} width={"25px"} height={"25px"} />

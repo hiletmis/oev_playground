@@ -24,7 +24,7 @@ const Hero = ({header, text, margin="0", image=null, bgColor=COLORS.app, info=nu
                   </Flex>
 
                   <Box width={"100%"} p={3} bgColor={COLORS.app} borderRadius={"10"}>
-                    <Text fontSize={"md"}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, eget aliquam nisl nu</Text>
+                    <Text fontSize={"md"}>{info}</Text>
                     </Box>
                   </VStack>
               )}
