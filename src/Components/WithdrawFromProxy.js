@@ -103,8 +103,8 @@ const Hero = () => {
         <Stack direction="column" spacing={"2"}>
             <Stack direction="row" spacing={"2"}>
             <Stack direction="row" spacing={"-2"}>
-                <Image zIndex={2} src={`/coins/${dataFeed.p1}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />
-                <Image zIndex={1} src={`/coins/${dataFeed.p2}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />
+                <Image src={`/coins/${dataFeed.p1}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />
+                <Image src={`/coins/${dataFeed.p2}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />
             </Stack>
             <Text fontSize="md" fontWeight="bold">{dataFeed.p1 + '/' + dataFeed.p2}</Text>
             </Stack>

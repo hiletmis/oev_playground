@@ -318,8 +318,8 @@ useEffect(() => {
     <Stack direction="column"  spacing={"2"} width={"100%"}>
     <Stack direction="row" spacing={"2"}>
       <Stack direction="row" spacing={"-2"}>
-        <Image zIndex={2} src={`/coins/${item.dataFeed.p1}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />
-        <Image zIndex={1} src={`/coins/${item.dataFeed.p2}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />
+        <Image src={`/coins/${item.dataFeed.p1}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />
+        <Image src={`/coins/${item.dataFeed.p2}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />
       </Stack>
       <Text fontSize="md" fontWeight="bold">{item.dataFeed.p1 + '/' + item.dataFeed.p2}</Text>
         
