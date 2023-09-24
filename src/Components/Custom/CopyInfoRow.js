@@ -3,7 +3,7 @@ import { Image, Text, Box, Flex, Spacer, VStack } from '@chakra-ui/react';
 import { COLORS } from '../../data/colors';
 import { copy } from '../Helpers/Utils';
 
-const Hero = ({header, text, margin=0}) => { 
+const Hero = ({header, text, margin=0, copyEnabled=true}) => { 
  
   return (
     <VStack direction="row" align="left" m={margin}>
@@ -12,7 +12,10 @@ const Hero = ({header, text, margin=0}) => {
             <Flex className='box'>
                 <Text noOfLines={1} fontSize={"md"}>{text}</Text>
                 <Spacer />
-                <Image cursor={"pointer"} onClick={() => copy(text)} src={`/copy.svg`} width={"30px"} height={"30px"} />
+                {
+                  !copyEnabled ? null : <Image cursor={"pointer"} onClick={() => copy(text)} src={`/copy.svg`} width={"24px"} height={"24px"} />
+                }
+               
             </Flex>
         </Box>
     </VStack>

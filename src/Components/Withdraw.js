@@ -152,10 +152,8 @@ const Withdraw = () => {
   return (
     chain == null ? <SignIn></SignIn> :
     isWrongNetwork(chain) ? <WrongNetwork></WrongNetwork> :
+    searcher == null ? null :
     <VStack alignItems={"left"} >
-     {
-          searcher == null ? null :
-          <>
           <Flex alignItems={"center"}>
           <Heading isLoading={isLoadingRequest || isLoading} description={"You will need to wait 1-2 minutes before your requests confirmed"} header={"Deposited Collateral"} ></Heading>
           <Spacer />
@@ -165,7 +163,7 @@ const Withdraw = () => {
               <InfoBox header={"Available funds"} text={formatFunds(searcher.availableFunds)} ></InfoBox>
               { searcher.availableFunds === '0' ? null :
                 <Box width={"200px"} borderRadius={"10"} marginLeft={"2"} bgColor={COLORS.main}>
-                  <ExecuteButton minWidth="180px" height="60px" onClick={() => withdrawalRequest()} text={"Request Withdraw"} isLoading={isLoadingRequest}></ExecuteButton>
+                  <ExecuteButton minWidth="180px" height="35px" onClick={() => withdrawalRequest()} text={"Request Withdraw"} isLoading={isLoadingRequest}></ExecuteButton>
                 </Box>}
             </Flex>
 
@@ -174,7 +172,7 @@ const Withdraw = () => {
             <InfoBox header={"Withdrawable funds"} text={formatFunds(searcher.withdrawalReservedFunds)} ></InfoBox>
               { searcher.withdrawalReservedFunds === '0' ? null :
                 <Box width={"200px"} borderRadius={"10"} marginLeft={"2"} bgColor={COLORS.main}>
-                  <ExecuteButton minWidth="180px" height="60px" onClick={() => getWithdrawalList()} text={"Get Withdrawals"} isLoading={isLoadingRequest}></ExecuteButton>
+                  <ExecuteButton minWidth="180px" height="35px" onClick={() => getWithdrawalList()} text={"Get Withdrawals"} isLoading={isLoadingRequest}></ExecuteButton>
                 </Box>}
             </Flex>
               { withdrawals.length === 0 ? null :
@@ -209,10 +207,6 @@ const Withdraw = () => {
             </Flex>
             
             <Box width={"100%"} height="60px" borderRadius={"10"}></Box>
-          </>
-        }
-
-
     </VStack>
   );
 };

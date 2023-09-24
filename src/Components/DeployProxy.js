@@ -236,7 +236,7 @@ const Commit = () => {
         <Spacer />
           {contractRegistered 
           ? <Button onClick={ removeDataFeed }>X</Button> 
-          : isDataFeedListOpen ? <TriangleUpIcon width={"40px"} height={"40px"} onClick={() => {setIsDataFeedListOpen(false)}}></TriangleUpIcon> : <TriangleDownIcon width={"40px"} height={"40px"} onClick={() => {setIsDataFeedListOpen(true)}}/>
+          : isDataFeedListOpen ? <TriangleUpIcon width={"24px"} height={"24px"} onClick={() => {setIsDataFeedListOpen(false)}}></TriangleUpIcon> : <TriangleDownIcon width={"24px"} height={"24px"} onClick={() => {setIsDataFeedListOpen(true)}}/>
           }
         </Flex>
       </Box>

@@ -19,7 +19,7 @@ const Hero = ({title, text, setText, margin=0, color="white", bgColor=COLORS.mai
         <Flex alignItems={"center"}>
         <Text noOfLines={1} width={"100%"} color={color} fontSize={"md"}>{text}</Text>
         <Spacer />
-        <Image cursor={"pointer"} onClick={paste} src={`/paste.svg`} width={"30px"} height={"30px"} />
+        <Image cursor={"pointer"} onClick={paste} src={`/paste.svg`} width={"24px"} height={"24px"} />
         </Flex>
         </Box>
     </VStack>

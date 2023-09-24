@@ -5,8 +5,8 @@ import Prepayment from './Components/Prepayment';
 import Navigator from './Components/Navigator';
 import PlaceBid from './Components/Bids/PlaceBid';
 import Auctions from './Components/Bids/Auctions';
-import Withdraw from './Components/Withdraw';
 import Welcome from './Components/Welcome';
+import WithdrawFromProxy from './Components/WithdrawFromProxy';
 
 import GetConfiguration from './Components/Endpoints/GetConfiguration'
 import WithdrawalsRequest from './Components/Endpoints/WithdrawalsRequest'
@@ -97,7 +97,7 @@ useEffect(() => {
                   <Route path="searcher" element={<Prepayment />} />
                   <Route path="bid" element={<PlaceBid />} />
                   <Route path="auctions" element={<Auctions />} />
-                  <Route path="withdraw" element={<Withdraw />} />
+                  <Route path="withdraw" element={<WithdrawFromProxy />} />
                   <Route path="configuration" element={<GetConfiguration />} />
                   <Route path="withdrawals/request" element={<WithdrawalsRequest />} />
                   <Route path="withdrawals/list" element={<WithdrawalsList />} />

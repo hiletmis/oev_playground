@@ -17,7 +17,7 @@ const Hero = ({ethAmount, ethBalance, chain, setEthAmount, bgColor=COLORS.app}) 
   return (
     <VStack alignItems={"left"} >
         <Text fontWeight={"bold"} fontSize={"md"}>Bid Amount</Text>
-        <Box width={"100%"} height="120px" bgColor={bgColor} borderRadius={"10"}>
+        <Box width={"100%"}  bgColor={bgColor} borderRadius={"10"}>
             <VStack spacing={3} direction="row" align="left" m="1rem">
                 <Flex>
                     <NumberInput value={ethAmount} step={1} min={0} size={"lg"} onChange={(valueString) => setEthAmount(valueString)}>
@@ -32,14 +32,14 @@ const Hero = ({ethAmount, ethBalance, chain, setEthAmount, bgColor=COLORS.app}) 
                     <Text 
                     color={parseFloat(ethBalance) < parseFloat(ethAmount) ? "red.500" : "white"}
                     fontWeight={"bold"} 
-                    fontSize={"md"}>
+                    fontSize={"sm"}>
                     {parseFloat(ethBalance) < parseFloat(ethAmount)  ? "Insufficient Balance" : chain.nativeCurrency.name + " Balance"}
                     </Text>
                   }
 
                     <Spacer />
-                    <Image src={'/wallet.svg'} width={"40px"} height={"24px"} />
-                    <Text fontWeight={"bold"} fontSize={"md"}>{ethBalance}</Text>
+                    <Image src={'/wallet.svg'} width={"40px"} height={"20px"} />
+                    <Text fontSize={"sm"}>{ethBalance}</Text>
                 </Flex>
             </VStack>
         </Box>
