@@ -148,7 +148,7 @@ const Deposit = () => {
               <NumberInputField borderWidth={"0px"} focusBorderColor={"red.200"} placeholder="0.0" fontSize={"4xl"} inputMode="numeric"/><NumberInputStepper></NumberInputStepper>
             </NumberInput>
       <Spacer />
-      <Image src={`/coins/USD.webp`} width={"50px"} height={"50px"} />
+      <Image src={`/coins/USD.webp`} width={"40px"} height={"40px"} />
       </Flex>
 
         <Flex>

@@ -7,10 +7,9 @@ import { useContext } from "react";
 import {
     NumberInput,
     NumberInputField,
-    NumberInputStepper
   } from '@chakra-ui/react'
   
-const Hero = ({ethAmount, ethBalance, chain, setEthAmount, title="Bid Amount", bgColor=COLORS.app}) => {
+const Hero = ({ethAmount, ethBalance, chain, setEthAmount, title="Bid Amount", image, bgColor=COLORS.app}) => {
 
   const { collapsed } = useContext(OevContext);
 
@@ -21,10 +20,10 @@ const Hero = ({ethAmount, ethBalance, chain, setEthAmount, title="Bid Amount", b
             <VStack spacing={3} direction="row" align="left" m="1rem">
                 <Flex>
                     <NumberInput value={ethAmount} step={1} min={0} size={"lg"} onChange={(valueString) => setEthAmount(valueString)}>
-                    <NumberInputField borderWidth={"0px"} focusBorderColor={"red.200"} placeholder="0.0" fontSize={"4xl"} inputMode="decimal"/><NumberInputStepper></NumberInputStepper>
+                    <NumberInputField borderWidth={"0px"} focusBorderColor={"red.200"} placeholder="0.0" fontSize={"4xl"} inputMode="tel" />
                     </NumberInput>
                     <Spacer />
-                    <Image marginRight={2} src={'/chainIcons/' + chain.id + '.svg'} width={"40px"} height={"40px"} />
+                    <Image marginRight={2} src={image == null ?'/chainIcons/' + chain.id + '.svg' : image} width={"40px"} height={"40px"} />
                 </Flex>
                 <Flex>
                   {

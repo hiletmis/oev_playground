@@ -108,7 +108,6 @@ const Hero = () => {
             </Stack>
             <Text fontSize="md" fontWeight="bold">{dataFeed.p1 + '/' + dataFeed.p2}</Text>
             </Stack>
-            <Text width={"100%"} noOfLines={1} fontSize="xs">{dataFeed === null ? "" : dataFeed.beaconId}</Text>
             </Stack>
         </Flex>
         </Box>
