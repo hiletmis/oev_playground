@@ -43,7 +43,7 @@ const Hero = ({isCollapsed}) => {
 
     const getStatus = () => {
         const validUntil = new Date();
-        validUntil.setMinutes(validUntil.getMinutes() + 15);
+        validUntil.setMinutes(validUntil.getMinutes() + 30);
         setIsLoadingSign(true)
         let payload = {
             searcherAddress: address,

@@ -112,6 +112,11 @@ const Deposit = () => {
     }
   });
 
+  const trigger = () => {
+    setTxHash(null)
+    signTypedData()
+  }
+
   useEffect(() => {
     if (write == null || write === undefined) return
     if (isSigned) {
@@ -177,17 +182,20 @@ const Deposit = () => {
         </VStack>
         </Box>
 
-        { txHash == null ? null : <CopyInfoRow bgColor={COLORS.main} header={"Transaction Hash"} text={txHash} copyEnabled={true}></CopyInfoRow> } 
-            { txHash == null ? null : 
+          { txHash == null ? null :
+            <Flex direction="column" align="left">
+                <Box borderRadius={"10"} p={3} bgColor={COLORS.main}>
+                <CopyInfoRow header={"Transaction Hash"} text={txHash} copyEnabled={true}></CopyInfoRow>
                   <Link visibility={!txHash ? 'hidden': 'visible'} href={chain.blockExplorers.default.url + '/tx/' + txHash} isExternal>
-                  Show in explorer <ExternalLinkIcon mx='2px' />
-                </Link>
-        }
+                    Show in explorer <ExternalLinkIcon mx='2px' />
+                  </Link>
+                </Box>
+            </Flex> }
 
         <Stack alignItems={"center"} >
         <ExecuteButton
         isDisabled={ isLoading || isLoadingTypedData || !tokenAmount || isNaN(parseFloat(tokenAmount)) || parseFloat(tokenBalance) < parseFloat(tokenAmount) || parseFloat(tokenAmount) <= 0}
-        onClick={() => {signTypedData()}}
+        onClick={() => {trigger()}}
         text={ isLoadingTypedData ? "Signing..." : isLoading ? 'Depositing...' : 'Deposit'}
         ></ExecuteButton>
       </Stack>  

@@ -6,12 +6,12 @@ import { COLORS } from '../data/colors';
 import ExecuteButton from "./Custom/ExecuteButton";
 import { PostWithdrawalsRequest, PostWithdrawalsList, PostStatus, POST } from "./Helpers/Endpoints";
 import { isWrongNetwork } from "./Helpers/Utils";
-import InfoRow from "./Custom/InfoRow";
 import { OevContext } from '../OevContext';
 import InfoBox from "./Custom/InfoBox";
 import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS, PREPAYMENT_DEPOSIT_ABI } from "../data/abi";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import CopyInfoRow from "./Custom/CopyInfoRow";
+import { Grid, GridItem } from "@chakra-ui/react";
 
 import Heading from "./Custom/Heading";
 
@@ -157,62 +157,89 @@ const Withdraw = () => {
     isWrongNetwork(chain) ? <WrongNetwork></WrongNetwork> :
     searcher == null ? null :
     <VStack alignItems={"left"} >
-          <Heading isLoading={isLoadingRequest || isLoading} description={"You will need to wait 1-2 minutes before your requests confirmed"} header={"Deposited Collateral"} ></Heading>
+          <Heading isLoading={isLoadingRequest || isLoading} description={"You will need to wait 1-2 minutes before your requests confirmed. Please refresh searcher status to update your data."} header={"Deposited Collateral"} ></Heading>
 
-            <Flex direction="row" align="left">
-              <InfoBox header={"Available funds"} text={formatFunds(searcher.availableFunds)} ></InfoBox>
-              { searcher.availableFunds === '0' ? null :
-                <Box width={"200px"} borderRadius={"10"} marginLeft={"2"} bgColor={COLORS.main}>
-                  <ExecuteButton minWidth="180px" height="35px" onClick={() => withdrawalRequest()} text={"Request Withdraw"} isLoading={isLoadingRequest}></ExecuteButton>
-                </Box>}
+            <Flex direction="column" align="left">
+                <Box borderRadius={"10"} p={3} bgColor={COLORS.main}>
+                  <InfoBox header={"Available funds"} text={formatFunds(searcher.availableFunds)} ></InfoBox>
+                  {searcher.availableFunds === '0' ? null : <ExecuteButton isDisabled={searcher.availableFunds === '0'} minWidth="180px" height="35px" onClick={() => withdrawalRequest()} text={"Request Withdraw"} isLoading={isLoadingRequest}></ExecuteButton> }
+                </Box>
             </Flex>
 
             <VStack direction="column" align="left">
-            <Flex direction="row" align="left">
-            <InfoBox header={"Withdrawable funds"} text={formatFunds(searcher.withdrawalReservedFunds)} ></InfoBox>
-              { searcher.withdrawalReservedFunds === '0' ? null :
-                <Box width={"200px"} borderRadius={"10"} marginLeft={"2"} bgColor={COLORS.main}>
-                  <ExecuteButton minWidth="180px" height="35px" onClick={() => getWithdrawalList()} text={"Get Withdrawals"} isLoading={isLoadingRequest}></ExecuteButton>
-                </Box>}
+            <Flex direction="column" align="left">
+                <Box borderRadius={"10"}  p={3}  bgColor={COLORS.main}>
+                <InfoBox header={"Withdrawable funds"} text={formatFunds(searcher.withdrawalReservedFunds)} ></InfoBox>
+                <ExecuteButton minWidth="180px" height="35px" onClick={() => getWithdrawalList()} text={"Get Withdrawal Requests"} isLoading={isLoadingRequest}></ExecuteButton>
+                </Box>
             </Flex>
+
               { withdrawals.length === 0 ? null :
               <VStack p={2} borderRadius={"10px"} direction="row" align="left" bgColor={COLORS.main} m="0" >
-                <Flex p={2} direction="row" alignItems={"center"} justify={"space-between"} borderRadius={"10"} bgColor={COLORS.table}>
-                  <Text fontSize={"md"} fontWeight={"bold"}>Amount</Text>  
+
+                <InfoBox header={"Withdrawal Requests"} text={""} ></InfoBox>
+                <Text fontSize={"sm"}>Click on the PENDING requests to finalize withdrawals</Text>
+                <Grid align="center" bgColor={COLORS.table} templateColumns='repeat(3, 1fr)' gap={2}>
+                  <GridItem   w='100%'   >
+                    <Text fontSize={"md"} fontWeight={"bold"}>Amount</Text>  
+                  </GridItem>
+                  <GridItem w='100%'>
                   <Text fontSize={"md"} fontWeight={"bold"}>Expiration Date</Text>  
+                  </GridItem>
+                  <GridItem w='100%'>
                   <Text fontSize={"md"} fontWeight={"bold"}>Status</Text>
-                </Flex>
+                  </GridItem>
+                </Grid>
                 <VStack  align="left" maxHeight={"440px"} overflow={"scroll"}>
 
                 {
                   withdrawals.map((item, i) => {
                     return (
-                      <Flex p={2} cursor={"pointer"} onClick={() => {setArgs(item)}} direction="row" alignItems={"center"} justify={"space-between"} borderRadius={"10"} bgColor={COLORS.app}>
-                      <Text fontSize={"xs"}  >{formatFunds(item.amount)}</Text>  
-                        <Text fontSize={"xs"}>{new Date(parseInt(item.expirationTimestamp) * 1000 ).toLocaleString()}</Text>  
-                        <Text fontSize={"xs"}>{ new Date(parseInt(item.expirationTimestamp) * 1000) > Date.now() ? item.status : "EXPIRED" }</Text>
-                      </Flex>
+                       <Grid  align="center" onClick={() => {setArgs(item)}} cursor={"pointer"} bgColor={ item.status === "PENDING" ? "yellow.700" : i % 2 ? COLORS.app : COLORS.appDarker} templateColumns='repeat(3, 1fr)' gap={2}>
+                          <GridItem   w='100%'   >
+                          <Text fontSize={"sm"}  >{formatFunds(item.amount)}</Text>  
+                          </GridItem>
+                          <GridItem w='100%'>
+                          <Text fontSize={"sm"}>{new Date(parseInt(item.expirationTimestamp) * 1000 ).toLocaleString()}</Text>  
+                          </GridItem>
+                          <GridItem w='100%'>
+                          <Text fontSize={"sm"}>{ new Date(parseInt(item.expirationTimestamp) * 1000) > Date.now() ? item.status : "EXPIRED" }</Text>
+                          </GridItem>
+                        </Grid>
                     )
                   })
                 }
                 </VStack>
               </VStack>
               }
+
+              <Flex direction="column" align="left">
+                <Box borderRadius={"10"} p={3} bgColor={COLORS.main}>
+                <InfoBox info={"Total amount of funds reserved for won auctions"} header={"Bid reserved funds"} text={formatFunds(searcher.bidReservedFunds)} ></InfoBox>
+                </Box>
+              </Flex>
+              <Flex direction="column" align="left">
+                <Box borderRadius={"10"} p={3} bgColor={COLORS.main}>
+                <InfoBox header={"API3 fee funds"} text={formatFunds(searcher.api3FeeFunds)} ></InfoBox>
+                </Box>
+              </Flex>
+              <Flex direction="column" align="left">
+                <Box borderRadius={"10"} p={3} bgColor={COLORS.main}>
+                <InfoBox header={"Slashed funds"} text={formatFunds(searcher.slashedFunds)} ></InfoBox>
+                </Box>
+              </Flex>
+
             </VStack>
 
-            <Flex justify={"space-between"}>
-              <InfoRow header={"Bid reserved funds"} text={formatFunds(searcher.bidReservedFunds)} bgColor={COLORS.main} margin={"1"}></InfoRow>
-              <InfoRow header={"API3 fee funds"} text={formatFunds(searcher.api3FeeFunds)} bgColor={COLORS.main} margin={"1"}></InfoRow>
-              <InfoRow header={"Slashed funds"} text={formatFunds(searcher.slashedFunds)} bgColor={COLORS.main} margin={"1"}></InfoRow>
-            </Flex>
-            { txHash == null ? null : <CopyInfoRow bgColor={COLORS.main} header={"Transaction Hash"} text={txHash} copyEnabled={true}></CopyInfoRow> } 
-            { txHash == null ? null : 
+            { txHash == null ? null :
+            <Flex direction="column" align="left">
+                <Box borderRadius={"10"} p={3} bgColor={COLORS.main}>
+                <CopyInfoRow header={"Transaction Hash"} text={txHash} copyEnabled={true}></CopyInfoRow>
                   <Link visibility={!txHash ? 'hidden': 'visible'} href={chain.blockExplorers.default.url + '/tx/' + txHash} isExternal>
-                  Show in explorer <ExternalLinkIcon mx='2px' />
-                </Link>
-            }
-
-            
+                    Show in explorer <ExternalLinkIcon mx='2px' />
+                  </Link>
+                </Box>
+            </Flex> }
             <Box width={"100%"} height="60px" borderRadius={"10"}></Box>
     </VStack>
   );
