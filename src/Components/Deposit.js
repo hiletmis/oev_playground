@@ -9,8 +9,10 @@ import WrongNetwork from './WrongNetwork';
 import { isWrongNetwork } from "./Helpers/Utils";
 import ExecuteButton from "./Custom/ExecuteButton";
 import Withdraw from "./Withdraw";
+import CopyInfoRow from "./Custom/CopyInfoRow";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 
-import { Button, VStack, Box, Text } from "@chakra-ui/react";
+import { Button, VStack, Box, Text, Link } from "@chakra-ui/react";
 import {
   NumberInput,
   NumberInputField,
@@ -30,6 +32,7 @@ const Deposit = () => {
   const [refreshBalance, setRefreshBalance] = useState(false);
   const [signErc2612PermitArgs, setSignErc2612PermitArgs] = useState({tokenAmount: 0, v: 0, r: "0x", s: "0x"});
   const [isSigned, setIsSigned] = useState(false);
+  const [txHash, setTxHash] = useState(null);
 
   useEffect(() => {
     setRefreshBalance(true)
@@ -104,6 +107,9 @@ const Deposit = () => {
 
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
+    onSuccess: () => {
+        setTxHash(data.hash);
+    }
   });
 
   useEffect(() => {
@@ -150,14 +156,14 @@ const Deposit = () => {
         color={parseFloat(tokenBalance) < parseFloat(tokenAmount) ? "red.500" : "white"}
         fontWeight={"bold"} 
         visibility={tokenBalance === "0" ? "hidden" : "visible"}
-        fontSize={"lg"}>
+        fontSize={"sm"}>
           {parseFloat(tokenBalance) < parseFloat(tokenAmount)  ? "Insufficient Balance" : "Token Balance"}
           </Text>
         <Spacer />
-        <Image src={tokenBalance === "0" ? '/getToken.svg' : '/wallet.svg'} width={"40px"} height={"24px"} />
+        <Image src={tokenBalance === "0" ? '/getToken.svg' : '/wallet.svg'} width={"40px"} height={"20px"} />
         <Text onClick={() => {
           setTokenAmount(tokenBalance)
-        }} fontWeight={"bold"} fontSize={"lg"}>{tokenBalance === "0" 
+        }} fontSize={"sm"}>{tokenBalance === "0" 
         ? 
         <Popup
         trigger={<Button height={"30px"} width={"110px"} bgColor={"transparent"}>Get testUSDC</Button> }
@@ -165,11 +171,18 @@ const Deposit = () => {
         { close => (<Faucet stateChanger={close} refreshBalance={close}></Faucet>)  }
         </Popup>
         : tokenBalance}</Text>
-        <Image src={'/refresh.svg'} width={"40px"} height={"24px"} onClick={() => {setRefreshBalance(true)}} />
+        <Image cursor={"pointer"} src={'/refresh.svg'} width={"40px"} height={"20px"} onClick={() => {setRefreshBalance(true)}} />
         </Flex>
 
         </VStack>
         </Box>
+
+        { txHash == null ? null : <CopyInfoRow bgColor={COLORS.main} header={"Transaction Hash"} text={txHash} copyEnabled={true}></CopyInfoRow> } 
+            { txHash == null ? null : 
+                  <Link visibility={!txHash ? 'hidden': 'visible'} href={chain.blockExplorers.default.url + '/tx/' + txHash} isExternal>
+                  Show in explorer <ExternalLinkIcon mx='2px' />
+                </Link>
+        }
 
         <Stack alignItems={"center"} >
         <ExecuteButton

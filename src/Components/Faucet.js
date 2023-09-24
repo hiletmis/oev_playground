@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Grid } from 'react-loader-spinner'
 import NodaryFeed from './Helpers/GetFeed';
+import InfoBox from "./Custom/InfoBox";
+import ExecuteButton from "./Custom/ExecuteButton";
+import Heading from "./Custom/Heading";
+import BidAmount from "./Custom/BidAmount";
 
 import {
-  Button, Heading,
-  VStack, Text, Box, Flex, Spacer, Image
+  VStack, Box, Flex,
 } from "@chakra-ui/react";
-import {
-    NumberInput,
-    NumberInputField,
-    NumberInputStepper
-  } from '@chakra-ui/react'
-  import { CloseIcon } from '@chakra-ui/icons'
+
 import { ethers } from "ethers";
-import { useBalance, useAccount, usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi';
+import { useBalance, useAccount, usePrepareContractWrite, useContractWrite, useWaitForTransaction, useNetwork } from 'wagmi';
 
 import { TOKEN_ABI, TOKEN_CONTRACT_ADDRESS } from "../data/abi";
 
@@ -21,6 +18,7 @@ import { COLORS } from '../data/colors';
 
 const Hero = ({stateChanger}) => {
   const { address } = useAccount()
+  const { chain } = useNetwork()
 
   const [ethAmount, setEthAmount] = useState("");
   const [ethPrice, setEthPrice] = useState(null);
@@ -137,103 +135,24 @@ useEffect(() => {
   return (
     <VStack bgColor={"black"} spacing={4} p={2} borderRadius="lg" boxShadow="lg" minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
 
-    <VStack bgColor={COLORS.app} spacing={4} p={8} borderRadius="lg" boxShadow="lg" alignItems={"left"} >
-      <Flex>
-      <Heading size={"lg"}>TestUSDC Faucet</Heading>
-        <Spacer />
-        {isLoading
-        ?
-        <Grid
-        height="40"
-        width="40"
-        radius="9"
-        color="green"
-        ariaLabel="loading"
-        visible={isLoading}/>
-       :
-       <CloseIcon onClick={() => stateChanger()}/>}
-      </Flex>
+      <VStack bgColor={COLORS.app} spacing={4} p={8} borderRadius="lg" boxShadow="lg" alignItems={"left"} >
+        <Heading isLoading={isLoading} description={"Deposit Sepolia ETH to get testUSDC"} header={"TestUSDC Faucet"} ></Heading>
 
+        <Box width={"100%"} p={3} bgColor={COLORS.main} borderRadius={"10"}>
+          <BidAmount title="Exchange Amount" ethAmount={ethAmount} setEthAmount={setEthAmount} ethBalance={ethBalance} chain={chain} ></BidAmount>
+        </Box>
 
-    <Text fontSize={"sm"}>Deposit Sepolia ETH to get testUSDC</Text>
+        <InfoBox header={"TestUSDC will be minted"} text={parseFloat(calculateAmountValue())} image={'/coins/USD.webp'} ></InfoBox>
+        <InfoBox header={"Token Balance"} text={tokenBalance} image={'/coins/USD.webp'} ></InfoBox>
 
-    <Box width={"100%"} height="120px" bgColor={COLORS.main} borderRadius={"10"}>
-
-    <VStack spacing={3} direction="row" align="left" m="1rem">
-      <Flex>
-      <NumberInput value={ethAmount} step={1} min={0} size={"lg"} onChange={(valueString) => setEthAmount(valueString)}>
-              <NumberInputField borderWidth={"0px"} focusBorderColor={"red.200"} placeholder="0.0" fontSize={"4xl"} inputMode="numeric"/><NumberInputStepper></NumberInputStepper>
-            </NumberInput>
-      <Spacer />
-      <Image src={`/coins/ETH.webp`} width={"50px"} height={"50px"} />
-      </Flex>
-
-      <Flex>
-        <Text 
-        color={parseFloat(ethBalance) < parseFloat(ethAmount) ? "red.500" : "white"}
-        fontWeight={"bold"} 
-        fontSize={"lg"}>
-          {parseFloat(ethBalance) < parseFloat(ethAmount)  ? "Insufficient Balance" : "ETH Balance"}
-          </Text>
-        <Spacer />
-        <Image src={'/wallet.svg'} width={"40px"} height={"24px"} />
-        <Text fontWeight={"bold"} fontSize={"lg"}>{ethBalance}</Text>
+        <Flex>
+          <ExecuteButton text={ isLoading ? 'Minting...' : 'Mint'} 
+          onClick={mintTokens} 
+          isDisabled={isLoading || !ethAmount || !beaconData || isNaN(parseFloat(ethAmount)) || parseFloat(ethAmount) <= 0 || parseFloat(ethBalance) < parseFloat(ethAmount)}></ExecuteButton>
+          <ExecuteButton text={"Cancel"} onClick={() => stateChanger()}></ExecuteButton>
         </Flex>
+
       </VStack>
-    </Box>
-
-    <Box width={"100%"} height="60px" bgColor={COLORS.main} borderRadius={"10"}>
-        <VStack spacing={3} direction="row" align="left" m="1rem">
-
-        <Flex>
-        <Text 
-        fontWeight={"bold"} 
-        fontSize={"lg"}>
-          TestUSDC will be minted
-          </Text>
-        <Spacer />
-        <Image marginRight={"2"} src={'/coins/USD.webp'} width={"24px"} height={"24px"} />
-        <Text fontWeight={"bold"} fontSize={"lg"}>{parseFloat(calculateAmountValue())}</Text>
-        </Flex>
-
-
-        </VStack>
-        </Box>
-
-        <Box width={"100%"} height="60px" bgColor={COLORS.main} borderRadius={"10"}>
-        <VStack spacing={3} direction="row" align="left" m="1rem">
-
-        <Flex>
-        <Text 
-        fontWeight={"bold"} 
-        fontSize={"lg"}>
-          Token Balance
-          </Text>
-        <Spacer />
-        <Image marginRight={"2"} src={'/coins/USD.webp'} width={"24px"} height={"24px"} />
-        <Text fontWeight={"bold"} fontSize={"lg"}>{tokenBalance}</Text>
-        </Flex>
-
-
-        </VStack>
-        </Box>
-
-      <VStack spacing={4} w="100%">
-      <Button
-        borderColor="gray.500"
-        borderWidth="1px"
-        color="white"
-        size="md"
-        minWidth={"200px"}
-        isDisabled={isLoading || !ethAmount || isNaN(parseFloat(ethAmount)) || parseFloat(ethAmount) <= 0 || parseFloat(ethBalance) < parseFloat(ethAmount)}
-        onClick={mintTokens}
-      >
-      { isLoading ? 'Minting...' : 'Mint'}
-      </Button>
-    </VStack>
-
-
-    </VStack>
     </VStack>
   );
 };

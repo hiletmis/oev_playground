@@ -10,11 +10,13 @@ import InfoRow from "./Custom/InfoRow";
 import { OevContext } from '../OevContext';
 import InfoBox from "./Custom/InfoBox";
 import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS, PREPAYMENT_DEPOSIT_ABI } from "../data/abi";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
+import CopyInfoRow from "./Custom/CopyInfoRow";
 
 import Heading from "./Custom/Heading";
 
 import {
-  VStack, Box, Text, Flex, Spacer, Image
+  VStack, Box, Text, Flex, Link
 } from "@chakra-ui/react";
 
 const Withdraw = () => {
@@ -35,6 +37,7 @@ const Withdraw = () => {
   const [signature, setSignature] = useState("");
   const [withdrawalSigner, setWithdrawalSigner] = useState("");
   const [isWithdrawReady, setIsWithdrawReady] = useState(false);
+  const [txHash, setTxHash] = useState(null);
 
   const [requestList] = useState([]);
 
@@ -64,6 +67,11 @@ const Withdraw = () => {
 
   const { isLoading } = useWaitForTransaction({
     hash: data?.hash,
+    onSuccess: () => {
+
+      setIsWithdrawReady(false);
+        setTxHash(data.hash);
+    }
   });
 
   const setArgs = (params) => {
@@ -101,11 +109,6 @@ const Withdraw = () => {
   const getWithdrawalList = () => {
     setEndpoint("withdrawals/list")
     PostWithdrawalsList({address, setPayload, setMessage});
-  }
-
-  const refreshStatus = () => {
-    setEndpoint("status")
-    PostStatus({address, setPayload, setMessage});
   }
 
   useEffect(() => {
@@ -154,11 +157,8 @@ const Withdraw = () => {
     isWrongNetwork(chain) ? <WrongNetwork></WrongNetwork> :
     searcher == null ? null :
     <VStack alignItems={"left"} >
-          <Flex alignItems={"center"}>
           <Heading isLoading={isLoadingRequest || isLoading} description={"You will need to wait 1-2 minutes before your requests confirmed"} header={"Deposited Collateral"} ></Heading>
-          <Spacer />
-          <Image onClick={() => {refreshStatus()}} cursor={"pointer"} src={`/refresh.svg`} fallbackSrc="/caution.svg" width={"40px"} height={"40px"} />
-          </Flex>
+
             <Flex direction="row" align="left">
               <InfoBox header={"Available funds"} text={formatFunds(searcher.availableFunds)} ></InfoBox>
               { searcher.availableFunds === '0' ? null :
@@ -205,6 +205,13 @@ const Withdraw = () => {
               <InfoRow header={"API3 fee funds"} text={formatFunds(searcher.api3FeeFunds)} bgColor={COLORS.main} margin={"1"}></InfoRow>
               <InfoRow header={"Slashed funds"} text={formatFunds(searcher.slashedFunds)} bgColor={COLORS.main} margin={"1"}></InfoRow>
             </Flex>
+            { txHash == null ? null : <CopyInfoRow bgColor={COLORS.main} header={"Transaction Hash"} text={txHash} copyEnabled={true}></CopyInfoRow> } 
+            { txHash == null ? null : 
+                  <Link visibility={!txHash ? 'hidden': 'visible'} href={chain.blockExplorers.default.url + '/tx/' + txHash} isExternal>
+                  Show in explorer <ExternalLinkIcon mx='2px' />
+                </Link>
+            }
+
             
             <Box width={"100%"} height="60px" borderRadius={"10"}></Box>
     </VStack>

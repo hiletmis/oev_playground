@@ -92,7 +92,7 @@ const Hero = () => {
     isWrongNetwork(chain) ? <WrongNetwork></WrongNetwork> :
     contextProxyAddress == null ? <DeployProxy></DeployProxy> :
     dataFeed == null ? null:
-    <VStack spacing={4} p={8} alignItems={"left"} >
+    <VStack spacing={4} p={8} minWidth={"350px"} maxWidth={"700px"} alignItems={"left"} >
       <Heading isLoading={isLoading } description={"Withdraw the OEV proceedings from the proxy to the beneficiary."} header={"Withdraw"} ></Heading>
 
       <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>

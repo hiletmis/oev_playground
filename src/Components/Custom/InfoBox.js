@@ -16,7 +16,7 @@ const Hero = ({header, text, margin="2", image=null, bgColor=COLORS.app}) => {
           </Text>
         <Spacer />
         {
-            image == null ? null : <Image marginRight={"2"} src={image} width={"24px"} height={"24px"} />
+            image == null ? null : <Image marginRight={"2"} src={image} width={"20px"} height={"20px"} />
         }
         <Text fontSize={"sm"}>{text}</Text>
         </Flex>
