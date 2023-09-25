@@ -32,42 +32,51 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
 
 const projectId = String(process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID)
 
-const connectors = connectorsForWallets([
-  {
-    groupName: 'Other',
-    wallets: [
-      injectedWallet({ projectId, chains }),
-      walletConnectWallet({ projectId, chains }),
-      metaMaskWallet({ projectId, chains }),
-    ],
-  },
-]);
 
-const wagmiConfig = createConfig({
-  autoConnect: true,
-  persister: null,
-  connectors,
-  publicClient,
-  webSocketPublicClient,
-});
+try {
 
-ReactDOM.render(
-  <React.StrictMode>
-    <ChakraProvider>
-    <WagmiConfig config={wagmiConfig}>
-        <RainbowKitProvider
-          chains={chains}
-          coolMode
-          theme={lightTheme({
-            fontStack: 'system',
-            overlayBlur: 'large',
-            borderRadius: 'large',
-          })}
-        >
-          <App />
-        </RainbowKitProvider>
-      </WagmiConfig>
-    </ChakraProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+  const connectors = connectorsForWallets([
+    {
+      groupName: 'Other',
+      wallets: [
+        injectedWallet({ projectId, chains }),
+        walletConnectWallet({ projectId, chains }),
+        metaMaskWallet({ projectId, chains }),
+      ],
+    },
+  ]);
+  
+
+  const wagmiConfig = createConfig({
+    autoConnect: true,
+    persister: null,
+    connectors,
+    publicClient,
+    webSocketPublicClient,
+  });
+  
+  ReactDOM.render(
+    <React.StrictMode>
+      <ChakraProvider>
+      <WagmiConfig config={wagmiConfig}>
+          <RainbowKitProvider
+            chains={chains}
+            coolMode
+            theme={lightTheme({
+              fontStack: 'system',
+              overlayBlur: 'large',
+              borderRadius: 'large',
+            })}
+          >
+            <App />
+          </RainbowKitProvider>
+        </WagmiConfig>
+      </ChakraProvider>
+    </React.StrictMode>,
+    document.getElementById('root')
+  );
+  
+} catch (error) {
+  console.log(error);
+}
+
