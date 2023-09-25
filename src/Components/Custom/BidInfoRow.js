@@ -360,18 +360,18 @@ useEffect(() => {
 
       <Flex p={2} bgColor={COLORS.table} width={"100%"} borderRadius={"10"}>
         
-        <Flex p={2} wrap={"wrap"} bgColor={COLORS.app} borderRadius={"10"} width={"25%"} justify={"space-around"}>
+        <Stack p={2} align={"center"} bgColor={COLORS.app} borderRadius={"10"} minWidth={"30%"} justify={"space-around"}>
         <Text fontWeight={"bold"} fontSize={"sm"}>{"Status"}</Text>    
-        <Flex justify={"center"} alignItems={"center"} width={"100px"} minHeight={"30px"} paddingLeft={2} paddingRight={2} borderRadius={"10"} bgColor={item.auction == null ? "blue.500" : getColor(item.auction == null ? "" : item.auction.status)} >
+        <Flex justify={"center"} alignItems={"center"} width={"100px"} height={"40px"} paddingLeft={2} paddingRight={2} borderRadius={"10"} bgColor={item.auction == null ? "blue.500" : getColor(item.auction == null ? "" : item.auction.status)} >
           <Text align={"center"} fontWeight={"bold"} fontSize="xs">{item.auction == null ? "CHECK STATUS" : item.auction.status.replace("_", " ") }</Text>
         </Flex>            
-        </Flex>
+        </Stack>
 
-        <Flex p={2} wrap={"wrap"} bgColor={COLORS.app} borderRadius={"10"} width={"75%"}justify={"space-around"} >
+        <Flex p={2} wrap={"wrap"} bgColor={COLORS.app} borderRadius={"10"} maxWidth={"70%"}justify={"space-around"} >
         <Text fontWeight={"bold"} fontSize={"sm"}>{"Actions"}</Text>    
         <Flex wrap={"wrap"} p={2} width={"100%"} justify={"space-around"}>
           <MiniButton onClick={() => {execute("CHECK")}} text={"CHECK"} ></MiniButton>
-          <MiniButton isDisabled={item.auction == null ? true : item.auction.status !== "WON"} onClick={() => {execute("WON")}} text={"UPDATE DATA FEED"} ></MiniButton>
+          <MiniButton isDisabled={item.auction == null ? true : item.auction.status !== "WON"} onClick={() => {execute("WON")}} text={"UPDATE"} ></MiniButton>
           <MiniButton isDisabled={item.auction == null ? true : item.auction.status !== "PENDING"} onClick={() => {execute("CANCEL")}} text={"CANCEL"} ></MiniButton>
         </Flex>            
         </Flex>
