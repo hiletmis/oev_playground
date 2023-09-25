@@ -44,7 +44,7 @@ const SelectDataFeed = ({stateChanger}) => {
             }}>
                 <Stack direction="column" spacing={"2"}>
                   <Stack direction="row" spacing={"2"}>
-                    <Stack direction="row" spacing={"-2"}>
+                    <Stack direction="row" spacing={"1"}>
                       <Image src={`/coins/${item.image1 == null ? item.p1 : item.image1}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />
                       <Image src={`/coins/${item.image2 == null ? item.p2 : item.image2}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />
                     </Stack>

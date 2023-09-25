@@ -47,7 +47,6 @@ const Hero = () => {
   const { isLoading } = useWaitForTransaction({
     hash: data?.hash,
     onSuccess: () => {
-        console.log("Withdrawn");
         setIsWithdrawReady(false);
         setProxyHasBalance(false);
         setTxHash(data.hash);
@@ -102,7 +101,7 @@ const Hero = () => {
         <Flex className='box'>
         <Stack direction="column" spacing={"2"}>
             <Stack direction="row" spacing={"2"}>
-            <Stack direction="row" spacing={"-2"}>
+            <Stack direction="row" spacing={"1"}>
                 <Image src={`/coins/${dataFeed.p1}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />
                 <Image src={`/coins/${dataFeed.p2}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />
             </Stack>

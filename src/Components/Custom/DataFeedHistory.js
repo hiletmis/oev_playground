@@ -11,7 +11,7 @@ const Hero = ({dataFeed, data}) => {
         <Flex className='box'>
           <Stack direction="column" spacing={"2"} width={"100%"}>
               <Stack direction="row" spacing={"2"} >
-              <Stack visibility={!dataFeed ? "hidden" : "visible"} direction="row" spacing={"-2"}>
+              <Stack visibility={!dataFeed ? "hidden" : "visible"} direction="row" spacing={"1"}>
                   <Image src={dataFeed === null ? "" : `/coins/${dataFeed.p1}.webp`} fallbackSrc={`/coins/NA.webp`}  width={"24px"} height={"24px"} />
                   <Image src={dataFeed === null ? "" : `/coins/${dataFeed.p2}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />
               </Stack>
