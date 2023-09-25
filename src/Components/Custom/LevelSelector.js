@@ -44,8 +44,6 @@ const Hero = () => {
                 proxyAddress: "0x3056f26f54B92da28f65E162d456b284722096CE",
                 beaconId: "0x4385954e058fbe6b6a744f32a4f89d67aad099f8fb8b23e7ea8dd366ae88151d",
                 beneficiaryAddress: "0x48c634538e2755EF90c9fd1d3F489E193d4AC040",
-                dataBeforeBid: [],
-                dataAfterBid: []
             }
             setContextDataFeed([ETH_USD]);
             setContextProxyAddress(ETH_USD.proxyAddress);

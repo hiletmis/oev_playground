@@ -7,6 +7,8 @@ import { Text, Box, Image, Stack, Flex, Spacer } from '@chakra-ui/react';
 import { COLORS } from '../../data/colors';
 import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS, API3SERVERV1, API3SERVERV1_ABI, UpdatedOevProxyBeaconSetWithSignedData, DATA_FEED_PROXY_ABI } from "../../data/abi";
 import { ethers } from "ethers";
+import MiniButton from "./MiniButton";
+import InfoRow from "./InfoRow";
 
 const Hero = ({item}) => { 
   const { chain } = useNetwork()
@@ -16,16 +18,19 @@ const Hero = ({item}) => {
   const [isLoadingSign, setIsLoadingSign] = useState(false);
 
   const [bidAuction, setBidAuction] = useState(null);
+  const [dataFeedVal0, setDataFeedVal0] = useState(null);
+  const [dataFeedVal1, setDataFeedVal1] = useState(null);
   const [encodedUpdateTransaction, setEncodedUpdateTransaction] = useState("");
   const [nativeCurrencyAmount, setNativeCurrencyAmount] = useState("");
   const [bidId, setBidId] = useState("");
   const [request , setRequest] = useState(null);
   const [proxyAddress, setProxyAddress] = useState(null);
 
+  const [initalDataFeed, setInitalDataFeed] = useState(false);
   const [isDataFeedUpdated, setIsDataFeedUpdated] = useState(false);
   const [manuelUpdateParams, setManuelUpdateParams] = useState([]);
 
-  const { auction, setAuction } = useContext(OevContext);
+  const { auction, setAuction, bid } = useContext(OevContext);
 
   const getColor = (status) => {
     switch (status) {
@@ -88,34 +93,51 @@ const { isLoading, isSuccess } = useWaitForTransaction({
   hash: data?.hash,
 });
 
-const readProxyAddressBefore = useContractRead({
+const dataFeedValue = useContractRead({
   address: proxyAddress,
   abi: DATA_FEED_PROXY_ABI,
   functionName: 'read',
   args: [],
-  enabled: item.dataFeed.dataBeforeBid.length === 0,
+  enabled: (initalDataFeed) || (isDataFeedUpdated),
 })
 
-useEffect(() => {
-  if (readProxyAddressBefore.data != null && item.dataFeed.dataBeforeBid.length === 0) {
-    item.dataFeed.dataBeforeBid = readProxyAddressBefore.data
+const checkTimestamp = () => {
+  if (dataFeedValue.data == null) return
+  if (manuelUpdateParams.length !== 0) {
+    const bidTimestamp =  new Date(parseInt(manuelUpdateParams[3].toString()) * 1000)
+    console.log("bidTimestamp", bidTimestamp)
   }
-}, [item, readProxyAddressBefore, setAuction]);
 
-const readProxyAddressAfter = useContractRead({
-  address: proxyAddress,
-  abi: DATA_FEED_PROXY_ABI,
-  functionName: 'read',
-  args: [],
-  enabled: isDataFeedUpdated && item.dataFeed.dataBeforeBid.length > 0,
-})
+  const dataFeedTimestamp = new Date(dataFeedValue.data[1] * 1000);
+  console.log("dataFeedTimestamp", dataFeedTimestamp)
+}
 
 useEffect(() => {
-  if (readProxyAddressAfter.data != null && isDataFeedUpdated) {
-    item.dataFeed.dataAfterBid = readProxyAddressAfter.data
-    setTimeout(() => setIsDataFeedUpdated(item.dataFeed.dataAfterBid !== item.dataFeed.dataBeforeBid), 5000);
+  checkTimestamp()
+
+  if (dataFeedValue.data != null && !isDataFeedUpdated && initalDataFeed) {
+    console.log("new data feed v0", dataFeedValue.data)
+    setDataFeedVal0(dataFeedValue.data)
   }
-}, [item, isDataFeedUpdated, readProxyAddressAfter, setAuction]);
+}, [dataFeedValue, initalDataFeed, isDataFeedUpdated]);
+
+useEffect(() => {
+  if (dataFeedValue.data != null && isDataFeedUpdated) {
+    console.log("new data feed v1", dataFeedValue.data)
+    setDataFeedVal1(dataFeedValue.data)
+  }
+}, [isDataFeedUpdated, dataFeedValue]);
+
+useEffect(() => {
+  console.log("bid changed")
+  setIsDataFeedUpdated(false)
+  setInitalDataFeed(false)
+  setManuelUpdateParams([])
+  setDataFeedVal0({value: "...", timestamp: "..."})
+  setDataFeedVal1({value: "...", timestamp: "..."})
+
+  setRequest(null)
+}, [bid]);
 
 const postMessage = async ({ payload, endpoint }) => {
     const response = await fetch('https://oev.api3dev.com/api/' + endpoint, {
@@ -158,7 +180,7 @@ const postMessage = async ({ payload, endpoint }) => {
             } 
             if (data.status === "EXECUTED") {
               setRequest(null)
-              setTimeout(() => setIsDataFeedUpdated(data.status === "EXECUTED"), 5000);
+              setTimeout(() => setIsDataFeedUpdated(data.status === "EXECUTED"), 15000);
             }
             item.auction = data
           }
@@ -203,10 +225,10 @@ const refresh = () => {
 }
 
 const formatFeedData = (data) => {
-  if (data == null) return
-  if (data.length === 0) return
-  if (data[0] == null) return
-  if (data[1] == null) return
+  if (data == null) return {value: "...", timestamp: "..."}
+  if (data.length === 0) return {value: "...", timestamp: "..."}
+  if (data[0] == null) return {value: "...", timestamp: "..."}
+  if (data[1] == null) return {value: "...", timestamp: "..."}
 
   const time = parseInt(data[1]) * 1000
   let date = new Date(time)
@@ -241,9 +263,8 @@ const updateDataFeed = (bid) => {
 const cancelBid = (bid) => {
   const validUntil = new Date();
   validUntil.setMinutes(validUntil.getMinutes() + 5); 
-
   let payload = {
-      bids: [bid.id],
+      bids: [item.id],
       searcherAddress: address,
       validUntil: validUntil,
       prepaymentDepositoryChainId: 11155111,
@@ -257,23 +278,24 @@ const cancelBid = (bid) => {
   }
 
   const execute = (auction) => {
-    if (auction == null) {
-      refresh();
-      return;
-    }
 
-    switch (auction.status) {
-      case "PENDING":
+    switch (auction) {
+      case "CANCEL":
         cancelBid();
         break;
       case "WON":
-        updateDataFeed(auction);
+        setInitalDataFeed(true)
+        updateDataFeed(item.auction);
         break;
       case "IN PROGRESS":
-      case "NEED REFRESH":
         refresh();
         break;
+        case "CHECK":
+          refresh();
+          break;
       default:
+        refresh();
+
         break;
   }
 }
@@ -329,49 +351,41 @@ useEffect(() => {
       <Spacer />
       <Grid height="20" width="20" radius="9" color="green" ariaLabel="loading" visible={isLoading || isLoadingSign}/>
 
-      <Box onClick={() => {execute(item.auction)}} cursor={"pointer"} visibility={item.auction == null ? "visible" : (item.auction.status === "WON" || item.auction.status === "PENDING" || item.auction.status === "IN PROGRESS") ? "visible" : "hidden"} paddingLeft={2} paddingRight={2} borderRadius={"10"} bgColor={item.auction == null ? "black" : item.auction.status === "WON" ? "green.500" : "black"} height={5} >
-      <Text fontWeight={"bold"} fontSize="xs">{item.auction == null ? "CHECK" : item.auction.status === "WON" ? "UPDATE DATA FEED" : item.auction.status === "IN PROGRESS" ? "CHECK" : "CANCEL"}</Text>
-      </Box>
-
       <Box paddingLeft={2} paddingRight={2} borderRadius={"10"} bgColor={item.auction == null ? "blue.500" : getColor(item.auction == null ? "" : item.auction.status)} height={5} >
       <Text fontWeight={"bold"} fontSize="xs">{item.auction == null ? "..." : item.auction.status}</Text>
       </Box>
     </Stack>
 
-    <Stack direction="row" spacing={"2"}>
-    <Text width={"100%"} fontWeight={"bold"} noOfLines={1} fontSize="xs">Bid Amount</Text>
-      <Spacer />
-      <Flex><Text width={"100%"} noOfLines={1} fontSize="xs">{item.bidAmount}</Text></Flex>
-    </Stack>
-      <Stack direction="row" spacing={"2"}>
-      <Text width={"100%"} fontWeight={"bold"} noOfLines={1} fontSize="xs">Condition</Text>
-      <Spacer />
-      <Flex><Text width={"100%"} noOfLines={1} fontSize="xs">{item.condition}</Text></Flex>
-      </Stack>
+      <Flex float={"left"} wrap={"wrap"} direction={"row"} p={2} bgColor={COLORS.table} borderRadius={10} align={"center"}>
+      <InfoRow header={"Bid Amount"} text={item.bidAmount} bgColor={COLORS.main}/>
+      <InfoRow header={"Fullfilment Value"} text={(item.condition === 'LTE' ? "<" : ">") + item.fulfillValue} bgColor={COLORS.main}/>
+      </Flex>
 
-      <Stack direction="row" spacing={"2"}>
-      <Text width={"100%"} fontWeight={"bold"} noOfLines={1} fontSize="xs">Fullfilment Value</Text>
-      <Spacer />
-      <Flex><Text width={"100%"} noOfLines={1} fontSize="xs">{item.fulfillValue}</Text></Flex>
-      </Stack>
       {
-        item.dataFeed.dataBeforeBid.length === 0 ? null :
-          <Stack direction="row" spacing={"2"}>
-          <Text width={"100%"} fontWeight={"bold"} noOfLines={1} fontSize="xs">Before Data Feed Update</Text>
-          <Spacer />
-          <Flex><Text width={"100%"} fontSize="xs">${formatFeedData(item.dataFeed.dataBeforeBid).value}</Text></Flex>
-          <Flex><Text width={"100%"} fontSize="xs">{formatFeedData(item.dataFeed.dataBeforeBid).timestamp}</Text></Flex>
-          </Stack>
+        !initalDataFeed ? null :
+
+        <>
+
+            <Flex float={"left"} wrap={"wrap"} direction={"row"} p={2} bgColor={COLORS.table} borderRadius={10} align={"center"}>
+            <InfoRow header={"Current Feed Data"} text={formatFeedData(dataFeedVal0).value} bgColor={COLORS.main}/>
+            <InfoRow header={"Current Feed Timestamp"} text={formatFeedData(dataFeedVal0).timestamp} bgColor={COLORS.main}/>
+       
+
+            <InfoRow header={"Updated Feed Data "} text={formatFeedData(dataFeedVal1).value} bgColor={COLORS.main}/>
+            <InfoRow header={"Updated Feed Timestamp"} text={formatFeedData(dataFeedVal1).timestamp} bgColor={COLORS.main}/>
+            </Flex>
+
+
+        </>
       }
-      {
-        item.dataFeed.dataAfterBid.length === 0 ? null :
-          <Stack direction="row" spacing={"2"}>
-          <Text width={"100%"} fontWeight={"bold"} noOfLines={1} fontSize="xs">After Data Feed Update</Text>
-          <Spacer />
-          <Flex><Text width={"100%"} fontSize="xs">${formatFeedData(item.dataFeed.dataAfterBid).value}</Text></Flex>
-          <Flex><Text width={"100%"} fontSize="xs">{formatFeedData(item.dataFeed.dataAfterBid).timestamp}</Text></Flex>
-          </Stack>
-      }
+
+            <Flex>
+              <MiniButton onClick={() => {execute("CHECK")}} text={"CHECK"} ></MiniButton>
+              <MiniButton isDisabled={item.auction == null ? true : item.auction.status !== "WON"} onClick={() => {execute("WON")}} text={"UPDATE DATA FEED"} ></MiniButton>
+              <MiniButton isDisabled={item.auction == null ? true : item.auction.status !== "PENDING"} onClick={() => {execute("CANCEL")}} text={"CANCEL"} ></MiniButton>
+            </Flex>
+
+
   </Stack>
   
   );

@@ -16,9 +16,7 @@ const SelectDataFeed = ({stateChanger}) => {
     return nodaryFeeds.map((feed) => {
       const [p1, p2] = feed.name.split('/')
       const beaconId = computeFeedId(feed.name)
-      const dataBeforeBid = []
-      const dataAfterBid = []
-      return { p1,p2,beaconId, dataBeforeBid, dataAfterBid }
+      return { p1,p2,beaconId }
     })
   }
 
