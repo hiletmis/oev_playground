@@ -3,9 +3,10 @@ import { VStack, Box, Flex, Spacer, Text, Link } from '@chakra-ui/react';
 import { COLORS } from '../../data/colors';
 import { OevContext } from '../../OevContext';
 import LevelRadioButton from './LevelRadioButton';
+import { useNetwork } from "wagmi";
 
 const Hero = () => {
-
+    const { chain } = useNetwork()
     const [condition, setCondition] = useState(null);
 
     const {setLevel, level, searcher, setContextDataFeed, setContextProxyAddress} = useContext(OevContext);
@@ -40,18 +41,26 @@ const Hero = () => {
             const ETH_USD = {
                 p1:"ETH",
                 p2:"USD",
-                chainId: [421613, 43113, 97, 11155111, 4002, 10200, 1287, 420, 80001, 1442, 280],
+                chainId: [421613, 43113, 97, 11155111, 4002, 10200, 1287, 420, 80001, 1442],
                 proxyAddress: "0x3056f26f54B92da28f65E162d456b284722096CE",
                 beaconId: "0x4385954e058fbe6b6a744f32a4f89d67aad099f8fb8b23e7ea8dd366ae88151d",
                 beneficiaryAddress: "0x48c634538e2755EF90c9fd1d3F489E193d4AC040",
             }
-            setContextDataFeed([ETH_USD]);
-            setContextProxyAddress(ETH_USD.proxyAddress);
+            const ETH_USD_ZKSYNC = {
+                p1:"ETH",
+                p2:"USD",
+                chainId: [280],
+                proxyAddress: "0x8be49e908c71232eac09208E6845fD862E0f1F97",
+                beaconId: "0x4385954e058fbe6b6a744f32a4f89d67aad099f8fb8b23e7ea8dd366ae88151d",
+                beneficiaryAddress: "0x48c634538e2755EF90c9fd1d3F489E193d4AC040",
+            }
+            setContextDataFeed(chain === null ? [] : chain.id === 280 ? [ETH_USD_ZKSYNC] : [ETH_USD]);
+            setContextProxyAddress(chain === null ? null : chain.id === 280 ? ETH_USD_ZKSYNC.proxyAddress: ETH_USD.proxyAddress);
         } else {
             setContextProxyAddress(null);
         }
 
-    }, [condition, level, setContextDataFeed, setContextProxyAddress, searcher]);
+    }, [condition, level, setContextDataFeed, setContextProxyAddress, searcher, chain]);
 
     useEffect(() => {   
         const level = localStorage.getItem('level');

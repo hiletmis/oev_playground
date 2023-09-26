@@ -3,7 +3,7 @@ export const CONTRACT_ADDRESS = (chainId) => {
 };			
 
 export const API3SERVERV1 = (chainId) => {
-	return chainId === 280 ? '0xAC26e0F627569c04DAe1B1E039B62bb5d6760Fe8' : '0x3dEC619dc529363767dEe9E71d8dD1A5bc270D76';
+	return chainId === 280 ? '0x9104356BB320Ab72FffbDCfe979577fc78377821' : '0x3dEC619dc529363767dEe9E71d8dD1A5bc270D76';
 };	
 
 export const MULTICALL_FACTORY = (chainId) => {
