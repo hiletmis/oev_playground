@@ -7,11 +7,11 @@ import { COLORS } from '../../data/colors';
 import Heading from "./Heading";
 import ExecuteButton from "./ExecuteButton";
 
-const Hero = ({isCollapsed}) => {
+const Hero = () => {
     const {address, isConnected} = useAccount()
     const [payload, setPayload] = useState(null);
     const [info, setInfo] = useState("");
-    const [request , setRequest] = useState(null);
+    const [request, setRequest] = useState(null);
     const [isLoadingSign, setIsLoadingSign] = useState(false);
 
     const {searcher, setSearcher, setWallet } = useContext(OevContext);
@@ -27,6 +27,7 @@ const Hero = ({isCollapsed}) => {
         setWallet(address)
         setIsLoadingSign(false)
         if (response.status === 200) {
+            localStorage.setItem(address, JSON.stringify(payload));
             setSearcher(data)
         } else {
             setInfo("Appearently you are not registered as a searcher. Please deposit funds to prepayment depository contract to register as a searcher. After depositing funds, check your status again. After 5 confirmations your deposit will be confirmed. Usually it takes 1-2 minutes to fulfill the confirmations. You can use the testUSDC faucet to get test funds.")
@@ -41,9 +42,17 @@ const Hero = ({isCollapsed}) => {
     })
 
     const getStatus = () => {
-        const validUntil = new Date();
-        validUntil.setMinutes(validUntil.getMinutes() + 30);
         setIsLoadingSign(true)
+
+        if (request) {
+            if (new Date(request.validUntil) > Date.now()) {
+                postMessage({ payload: request, endpoint: "status" });
+            return;
+            }
+        }
+
+        const validUntil = new Date();
+        validUntil.setMinutes(validUntil.getMinutes() + 60);
         let payload = {
             searcherAddress: address,
             validUntil: validUntil,
@@ -68,8 +77,8 @@ const Hero = ({isCollapsed}) => {
     }
 
     useEffect(() => {
-        setRequest(null);
         setInfo("You need to be registered as a searcher to use OEV Relay playground. Please check if your wallet is a searcher account.");
+        setRequest(JSON.parse(localStorage.getItem(address)));
     }, [address]);
 
   return (

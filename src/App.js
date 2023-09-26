@@ -58,7 +58,6 @@ const [contextDataFeed, setContextDataFeed] = useState([]);
 const [auction, setAuction] = useState(null);
 const [searcher, setSearcher] = useState(null);
 const [contextProxyAddress, setContextProxyAddress] = useState(null);
-const [multicall, setMulticall] = useState(address);
 const [bid, setBid] = useState(null);
 const [auctionStatus, setAuctionStatus] = useState(null);
 const [collapsed, setCollapsed] = useState(false);
@@ -85,7 +84,7 @@ useEffect(() => {
 
   return (
     <ChakraProvider theme={modifiedTheme}>
-      <OevContext.Provider value={{ overrideMenu, setOverrideMenu, collapsed, setCollapsed, level, setLevel, wallet, setWallet, searcher, setSearcher, multicall, setMulticall, bid, setBid, contextProxyAddress, setContextProxyAddress, auction, setAuction, contextDataFeed, setContextDataFeed, auctionStatus, setAuctionStatus}}>
+      <OevContext.Provider value={{ overrideMenu, setOverrideMenu, collapsed, setCollapsed, level, setLevel, wallet, setWallet, searcher, setSearcher, bid, setBid, contextProxyAddress, setContextProxyAddress, auction, setAuction, contextDataFeed, setContextDataFeed, auctionStatus, setAuctionStatus}}>
         <Router>
             <Header/>
             <Flex h='calc(100vh - 80px)' spacing={0} p={2} boxShadow="lg" alignItems={"stretch"} flexDirection={'row'} >

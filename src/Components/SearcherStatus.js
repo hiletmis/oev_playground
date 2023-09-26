@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useState, useEffect } from "react";
 import { VStack, Heading, Flex, Spacer, Image, Box } from '@chakra-ui/react';
 import InfoRow from './Custom/InfoRow';
 import { OevContext } from '../OevContext';
@@ -9,7 +9,7 @@ import { Grid } from 'react-loader-spinner'
 const Hero = ({isCollapsed}) => {
     const {address, isConnected} = useAccount()
     const [payload, setPayload] = useState(null);
-    const [request , setRequest] = useState(null);
+    const [request, setRequest] = useState(null);
     const [isLoadingSign, setIsLoadingSign] = useState(false);
 
     const {searcher, setSearcher, setWallet } = useContext(OevContext);
@@ -26,6 +26,7 @@ const Hero = ({isCollapsed}) => {
         setIsLoadingSign(false)
 
         if (response.status === 200) {
+            localStorage.setItem(address, JSON.stringify(payload));
             setSearcher(data)
         } 
     }
@@ -38,9 +39,17 @@ const Hero = ({isCollapsed}) => {
     })
 
     const getStatus = () => {
-        const validUntil = new Date();
-        validUntil.setMinutes(validUntil.getMinutes() + 30);
         setIsLoadingSign(true)
+
+        if (request) {
+            if (new Date(request.validUntil) > Date.now()) {
+                postMessage({ payload: request, endpoint: "status" });
+            return;
+            }
+        }
+
+        const validUntil = new Date();
+        validUntil.setMinutes(validUntil.getMinutes() + 60);
         let payload = {
             searcherAddress: address,
             validUntil: validUntil,
@@ -67,6 +76,10 @@ const Hero = ({isCollapsed}) => {
     const formatFunds = (funds) => {
         return funds / 10 ** 6 + " USDC";
     }
+
+    useEffect(() => {
+        setRequest(JSON.parse(localStorage.getItem(address)));
+    }, [address]);
 
   return (
     isConnected === false ? null :
