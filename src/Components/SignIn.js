@@ -5,11 +5,11 @@ const Hero = () => {
   return (
     <VStack spacing={4} p={8} alignItems={"left"} >
       <Flex>
-        <Heading size={"lg"}>Sign In</Heading>
+        <Heading size={"lg"}>Connect Wallet</Heading>
         <Spacer />
         <Image src={`/caution.svg`} width={"30px"} height={"30px"} />
       </Flex>
-      <Text fontSize={"sm"}>Sign in to your Metamask wallet to continue.</Text>
+      <Text fontSize={"sm"}>Connect your wallet to continue.</Text>
     </VStack>
   );
 };

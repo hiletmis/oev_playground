@@ -195,7 +195,7 @@ const Withdraw = () => {
                 {
                   withdrawals.map((item, i) => {
                     return (
-                       <Grid  align="center" onClick={() => {setArgs(item)}} cursor={"pointer"} bgColor={ item.status === "PENDING" ? "yellow.700" : i % 2 ? COLORS.app : COLORS.appDarker} templateColumns='repeat(3, 1fr)' gap={2}>
+                       <Grid key={i} align="center" onClick={() => {setArgs(item)}} cursor={"pointer"} bgColor={ item.status === "PENDING" ? "yellow.700" : i % 2 ? COLORS.app : COLORS.appDarker} templateColumns='repeat(3, 1fr)' gap={2}>
                           <GridItem   w='100%'   >
                           <Text fontSize={"sm"}  >{formatFunds(item.amount)}</Text>  
                           </GridItem>

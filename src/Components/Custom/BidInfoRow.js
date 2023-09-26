@@ -362,7 +362,7 @@ useEffect(() => {
         
         <Stack p={2} align={"center"} bgColor={COLORS.app} borderRadius={"10"} minWidth={"30%"} justify={"space-around"}>
         <Text fontWeight={"bold"} fontSize={"sm"}>{"Status"}</Text>    
-        <Flex justify={"center"} alignItems={"center"} width={"100px"} height={"40px"} paddingLeft={2} paddingRight={2} borderRadius={"10"} bgColor={item.auction == null ? "blue.500" : getColor(item.auction == null ? "" : item.auction.status)} >
+        <Flex justify={"center"} alignItems={"center"} maxWidth={"100px"} height={"40px"} paddingLeft={2} paddingRight={2} borderRadius={"10"} bgColor={item.auction == null ? "blue.500" : getColor(item.auction == null ? "" : item.auction.status)} >
           <Text align={"center"} fontWeight={"bold"} fontSize="xs">{item.auction == null ? "CHECK STATUS" : item.auction.status.replace("_", " ") }</Text>
         </Flex>            
         </Stack>

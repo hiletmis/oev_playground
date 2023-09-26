@@ -1,14 +1,16 @@
-import React, {useContext, useState} from "react";
-import { VStack, Heading, Flex, Spacer, Image, Box } from '@chakra-ui/react';
-import InfoRow from './Custom/InfoRow';
-import { OevContext } from '../OevContext';
-import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS } from "../data/abi";
+import React, {useContext, useEffect, useState} from "react";
+import { VStack } from '@chakra-ui/react';
+import { OevContext } from '../../OevContext';
+import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS } from "../../data/abi";
 import { useAccount, useSignMessage } from "wagmi";
-import { Grid } from 'react-loader-spinner'
+import { COLORS } from '../../data/colors';
+import Heading from "./Heading";
+import ExecuteButton from "./ExecuteButton";
 
 const Hero = ({isCollapsed}) => {
     const {address, isConnected} = useAccount()
     const [payload, setPayload] = useState(null);
+    const [info, setInfo] = useState("");
     const [request , setRequest] = useState(null);
     const [isLoadingSign, setIsLoadingSign] = useState(false);
 
@@ -24,10 +26,11 @@ const Hero = ({isCollapsed}) => {
         const data = await response.json()
         setWallet(address)
         setIsLoadingSign(false)
-
         if (response.status === 200) {
             setSearcher(data)
-        } 
+        } else {
+            setInfo("Appearently you are not registered as a searcher. Please deposit funds to prepayment depository contract to register as a searcher. After depositing funds, check your status again. After 5 confirmations your deposit will be confirmed. Usually it takes 1-2 minutes to fulfill the confirmations. You can use the testUSDC faucet to get test funds.")
+        }
     }
 
     const { signMessage } = useSignMessage({
@@ -64,36 +67,18 @@ const Hero = ({isCollapsed}) => {
         }
     }
 
-    const formatFunds = (funds) => {
-        return funds / 10 ** 6 + " USDC";
-    }
+    useEffect(() => {
+        setRequest(null);
+        setInfo("You need to be registered as a searcher to use OEV Relay playground. Please check if your wallet is a searcher account.");
+    }, [address]);
 
   return (
     isConnected === false ? null :
-    searcher === null ? null :
-    isCollapsed ?
-    <Flex>
-    <Grid height="20" width="20" radius="9" color="green" ariaLabel="loading" visible={isLoadingSign}/>
-    <Image marginLeft={"2"} cursor={"pointer"} onClick={()=> {getStatus()}} src={'/refresh.svg'} fallback={'/caution.svg'} width={"20px"} height={"20px"} />
-    </Flex>
-    :
-    <VStack spacing={2} p={1} alignItems={"left"} >
-    <Flex>
-      <Heading size={"md"}>Searcher Status</Heading>
-      <Spacer />
-      <Grid height="20" width="20" radius="9" color="green" ariaLabel="loading" visible={isLoadingSign}/>
-      <Image marginLeft={"2"} cursor={"pointer"} onClick={()=> {getStatus()}} src={'/refresh.svg'} fallback={'/caution.svg'} width={"20px"} height={"20px"} />
-    </Flex>
-    <Box>
-        <InfoRow header={"Available Funds"} text={formatFunds(searcher.availableFunds)}></InfoRow>
-        <InfoRow header={"Withdrawal Reserved Funds"} text={formatFunds(searcher.withdrawalReservedFunds)}></InfoRow>
-        <InfoRow header={"Bid Reserved Funds"} text={formatFunds(searcher.bidReservedFunds)}></InfoRow>
-        <InfoRow header={"API3 Fee Funds"} text={formatFunds(searcher.api3FeeFunds)}></InfoRow>
-        <InfoRow header={"Slashed Funds"} text={formatFunds(searcher.slashedFunds)}></InfoRow>
-    </Box>
+    searcher !== null ? null : 
+    <VStack width={"100%"} bgColor={COLORS.caution} borderRadius={"10"} spacing={4} p={8} alignItems={"left"} >
+        <Heading size={"lg"} header={"Searcher status"} description={info} isLoading={isLoadingSign}/>
+        <ExecuteButton onClick={() => getStatus()} isLoading={isLoadingSign} text={"Check Status"} />
     </VStack>
-
-
   );
 };
 

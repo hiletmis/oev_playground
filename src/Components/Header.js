@@ -54,7 +54,7 @@ const Header = () => {
               smallScreen: "icon",
             }}
             accountStatus="address"
-            label="Sign in"
+            label="Connect Wallet"
             showBalance={{
               smallScreen: false,
               largeScreen: true,
