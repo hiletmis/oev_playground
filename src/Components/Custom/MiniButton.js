@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, VStack } from '@chakra-ui/react';
 
-const Hero = ({isDisabled, onClick, text, minWidth="100px", height="40px"}) => { 
+const Hero = ({isDisabled, onClick, text, minWidth="50px", height="40px" }) => { 
   return (
 <VStack spacing={2}>
       <Button
@@ -12,6 +12,7 @@ const Hero = ({isDisabled, onClick, text, minWidth="100px", height="40px"}) => {
         height={height}
         minWidth={minWidth}
         isDisabled={isDisabled} 
+        margin={1}
         onClick={() => {onClick()}}
       >
       {text}

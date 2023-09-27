@@ -3,7 +3,7 @@ import { useAccount, useSignMessage, useNetwork, usePrepareContractWrite, useWai
 import { OevContext } from '../../OevContext';
 import { Grid } from 'react-loader-spinner'
 
-import { Text, Box, Image, Stack, Flex, Spacer } from '@chakra-ui/react';
+import { Text, Box, Image, Stack, Flex, Spacer, VStack } from '@chakra-ui/react';
 import { COLORS } from '../../data/colors';
 import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS, API3SERVERV1, API3SERVERV1_ABI, UpdatedOevProxyBeaconSetWithSignedData, DATA_FEED_PROXY_ABI } from "../../data/abi";
 import { ethers } from "ethers";
@@ -364,18 +364,19 @@ useEffect(() => {
         </>
       }
 
-      <Flex p={2} spacing={"10"} bgColor={COLORS.table} width={"100%"} borderRadius={"10"}>
-         
-        <Flex wrap={"wrap"} p={2} width={"100%"} justify={"space-around"}>
-        <Flex justify={"center"} alignItems={"center"} minWidth={"100px"} height={"40px"} paddingLeft={2} paddingRight={2} borderRadius={"5"} bgColor={item.auction == null ? "blue.500" : getColor(item.auction == null ? "" : item.auction.status)} >
-          <Text align={"center"} fontWeight={"bold"} fontSize="xs">{item.auction == null ? "CHECK STATUS" : item.auction.status.replace("_", " ") }</Text>
-        </Flex>  
-          <MiniButton onClick={() => {execute("CHECK")}} text={"CHECK"} ></MiniButton>
+      <VStack p={2} spacing={"10"} bgColor={COLORS.table} width={"100%"} borderRadius={"10"}> 
+        <Flex wrap={"wrap"}  width={"100%"} alignItems={"center"} justify={"space-between"}>
+
+          <MiniButton isDisabled={item.auction == null ? false : (item.auction.status === "EXECUTED" || item.auction.status === "SLASHED"  || item.auction.status === "SEARCHER_CANCELED")}  onClick={() => {execute("CHECK")}} text={"CHECK"} ></MiniButton>
           <MiniButton isDisabled={item.auction == null ? true : item.auction.status !== "WON"} onClick={() => {execute("WON")}} text={"UPDATE"} ></MiniButton>
           <MiniButton isDisabled={item.auction == null ? true : item.auction.status !== "PENDING"} onClick={() => {execute("CANCEL")}} text={"CANCEL"} ></MiniButton>
-        </Flex>            
-     
-      </Flex>
+
+          <Spacer />
+          <Flex justify={"center"} alignItems={"center"} minWidth={"100px"} height={"40px"} paddingLeft={2} paddingRight={2} borderRadius={"5"} bgColor={item.auction == null ? "blue.500" : getColor(item.auction == null ? "" : item.auction.status)} >
+            <Text align={"center"} fontWeight={"bold"} fontSize="xs">{item.auction == null ? "CHECK STATUS" : item.auction.status.replace("_", " ") }</Text>
+          </Flex>  
+        </Flex>       
+      </VStack>
       <TransactionHash chain={chain} txHash={txHash}></TransactionHash>
   </Stack>
   
