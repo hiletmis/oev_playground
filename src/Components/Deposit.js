@@ -142,7 +142,7 @@ const Deposit = () => {
   return (
     chain == null ? <SignIn></SignIn> :
     isWrongNetwork(chain) ? <WrongNetwork></WrongNetwork> :
-    <VStack spacing={4} p={8} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
+    <VStack spacing={4} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
 
       <UserStatus />
       <Heading isLoading={isLoading } description={"Deposit TestUSDC as collateral to start bidding"} header={"Add Collateral"} ></Heading>

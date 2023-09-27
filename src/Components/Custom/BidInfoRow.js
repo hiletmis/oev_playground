@@ -166,7 +166,7 @@ const postMessage = async ({ payload, endpoint }) => {
         setProxyAddress(data.dAppProxyAddress)
         const refreshedAuction = auction.map((item) => {
           if (data.id === item.id) {
-            if (item.auction != null && data.status === "WON") {
+            if (item.auction != null && data.status === "WON" && initalDataFeed) {
               item.auction.status = "PROCESSING"
               return item
             } 
@@ -333,7 +333,7 @@ useEffect(() => {
 
   return (
     item == null ? <></> :
-    <Stack direction="column"  spacing={"2"} width={"100%"}>
+    <Stack direction="column" spacing={"2"} width={"100%"}>
     <Stack direction="row" spacing={"2"}>
       <Stack direction="row" spacing={"1"}>
         <Image src={`/coins/${item.dataFeed.p1}.webp`} fallbackSrc={`/coins/NA.webp`} width={"24px"} height={"24px"} />

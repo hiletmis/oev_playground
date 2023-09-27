@@ -80,7 +80,7 @@ const Hero = () => {
 
   return (
     chain == null ? <SignIn></SignIn> :
-    <VStack spacing={4} p={8} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
+    <VStack spacing={4} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
         <CustomHeading header={"POST /bids/cancel"} description={"Cancels bids. If the bid is already fulfilled, it cannot be cancelled. If no bids are specified, all of the searcher's bids will be cancelled."} isLoading={isLoading}></CustomHeading>
 
         <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>

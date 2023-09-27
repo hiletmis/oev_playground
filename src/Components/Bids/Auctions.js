@@ -88,7 +88,7 @@ const Hero = () => {
   return (
     chain == null ? <SignIn></SignIn> :
     auction == null ? <Welcome></Welcome> : 
-    <VStack spacing={4} p={8} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
+    <VStack spacing={4} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
     <CustomHeading header={"Check Active Auctions"} description={"Returns information about a specific auction based on the auction's id. Consistently checking will keep you informed about the fulfillment or cancellation of your bid."} isLoading={isLoading || isBusy}></CustomHeading>
 
         <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>

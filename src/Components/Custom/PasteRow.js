@@ -5,16 +5,11 @@ import { COLORS } from '../../data/colors';
 const Hero = ({title, text, setText, margin=0, color="white", bgColor=COLORS.main}) => { 
     
   const paste = () => {
-    try {
-      if (navigator.clipboard && navigator.clipboard.readText) {
-        navigator.clipboard.readText().then(text => {setText(text)})
-      } else {
-        alert("Clipboard API not available");
-      }
-    } catch (error) {
-      alert("Failed to read clipboard contents: ", error);
-    }
-
+    if (navigator.clipboard && navigator.clipboard.readText) {
+      navigator.clipboard.readText().then(text => {setText(text)}).catch(err => {console.error('Failed to read clipboard contents: ', err)});
+    } else {
+      alert("Clipboard API not available");
+    } 
   }
 
   return (

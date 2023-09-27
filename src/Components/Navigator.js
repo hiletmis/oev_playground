@@ -6,10 +6,7 @@ import LeftPane from './LeftPane';
 
 const Hero = () => {
   const context = useContext(OevContext);
-
-  return (
-       context.collapsed ? null :<><LeftPane/></>
-);
+  return (context.collapsed ? null :<><LeftPane/></>);
 };
 
 export default Hero;

@@ -62,6 +62,8 @@ const [bid, setBid] = useState(null);
 const [auctionStatus, setAuctionStatus] = useState(null);
 const [collapsed, setCollapsed] = useState(false);
 const [overrideMenu, setOverrideMenu] = useState(false);
+const [width, setWidth] = useState(window.innerWidth);
+const [padding, setPadding] = useState(8);
 
 
 useEffect(() => {
@@ -82,6 +84,13 @@ useEffect(() => {
   setBid(null)
 }, [address]);
 
+useEffect(() => {
+  const handleResize = () => setWidth(window.innerWidth);
+  window.addEventListener("resize", handleResize);
+  setPadding(width < 900 ? 2 : 8);
+
+}, [overrideMenu, width]);
+
   return (
     <ChakraProvider theme={modifiedTheme}>
       <OevContext.Provider value={{ overrideMenu, setOverrideMenu, collapsed, setCollapsed, level, setLevel, wallet, setWallet, searcher, setSearcher, bid, setBid, contextProxyAddress, setContextProxyAddress, auction, setAuction, contextDataFeed, setContextDataFeed, auctionStatus, setAuctionStatus}}>
@@ -89,7 +98,7 @@ useEffect(() => {
             <Header/>
             <Flex h='calc(100vh - 80px)' spacing={0} p={2} boxShadow="lg" alignItems={"stretch"} flexDirection={'row'} >
             <Navigator />
-              <VStack bgColor={COLORS.app} overflow={"scroll"} borderRadius="lg" boxShadow="lg" width={"100%"} alignItems={"left"} >
+              <VStack p={padding} overflow={"scroll"} borderRadius="lg" width={"100%"} alignItems={"left"} >
                 <Routes>
                   <Route path="/" element={<Welcome />} />
                   <Route path="proxy" element={<DeployProxy />} />

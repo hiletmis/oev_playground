@@ -21,7 +21,7 @@ const Hero = () => {
   return (
     chain == null ? <SignIn></SignIn> :
     wallet === null ? <Welcome></Welcome> : 
-  <VStack spacing={4} p={8} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
+  <VStack spacing={4} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
     <Flex>
       <Heading size={"lg"}>Switch Network</Heading>
       <Spacer />

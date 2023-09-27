@@ -32,7 +32,7 @@ const Hero = () => {
 
 
   return (
-    <VStack spacing={4} p={8} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
+    <VStack spacing={4} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
         <CustomHeading header={"GET /configuration"} description={"Returns the present values of settings that are determined by relay operators for every distinct OEV proxy. It is essential for searchers to frequently observe these values to ensure compliance with the OEV relay guidelines."} isLoading={isLoading}></CustomHeading>
 
         <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>

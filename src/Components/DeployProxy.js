@@ -210,7 +210,7 @@ const Commit = () => {
     isWrongNetwork(chain) ? <WrongNetwork></WrongNetwork> :
     searcher === null ? <Welcome></Welcome> : 
     
-<VStack spacing={4} p={8} minWidth={"350px"} maxWidth={"700px"} alignItems={"left"} >
+<VStack spacing={4} minWidth={"350px"} maxWidth={"700px"} alignItems={"left"} >
   <Heading isLoading={isLoading} description={""} header={"Deploy Proxy"} ></Heading>
 
       <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>
