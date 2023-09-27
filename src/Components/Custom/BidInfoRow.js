@@ -364,24 +364,16 @@ useEffect(() => {
         </>
       }
 
-      <Flex p={2} bgColor={COLORS.table} width={"100%"} borderRadius={"10"}>
-        
-        <Stack p={2} align={"center"} bgColor={COLORS.app} borderRadius={"10"} minWidth={"30%"} justify={"space-around"}>
-        <Text fontWeight={"bold"} fontSize={"sm"}>{"Status"}</Text>    
-        <Flex justify={"center"} alignItems={"center"} maxWidth={"100px"} height={"40px"} paddingLeft={2} paddingRight={2} borderRadius={"10"} bgColor={item.auction == null ? "blue.500" : getColor(item.auction == null ? "" : item.auction.status)} >
-          <Text align={"center"} fontWeight={"bold"} fontSize="xs">{item.auction == null ? "CHECK STATUS" : item.auction.status.replace("_", " ") }</Text>
-        </Flex>            
-        </Stack>
-
-        <Flex p={2} wrap={"wrap"} bgColor={COLORS.app} borderRadius={"10"} maxWidth={"70%"}justify={"space-around"} >
-        <Text fontWeight={"bold"} fontSize={"sm"}>{"Actions"}</Text>    
+      <Flex p={2} spacing={"10"} bgColor={COLORS.table} width={"100%"} borderRadius={"10"}>
+         
         <Flex wrap={"wrap"} p={2} width={"100%"} justify={"space-around"}>
+        <Flex justify={"center"} alignItems={"center"} minWidth={"100px"} height={"40px"} paddingLeft={2} paddingRight={2} borderRadius={"5"} bgColor={item.auction == null ? "blue.500" : getColor(item.auction == null ? "" : item.auction.status)} >
+          <Text align={"center"} fontWeight={"bold"} fontSize="xs">{item.auction == null ? "CHECK STATUS" : item.auction.status.replace("_", " ") }</Text>
+        </Flex>  
           <MiniButton onClick={() => {execute("CHECK")}} text={"CHECK"} ></MiniButton>
           <MiniButton isDisabled={item.auction == null ? true : item.auction.status !== "WON"} onClick={() => {execute("WON")}} text={"UPDATE"} ></MiniButton>
           <MiniButton isDisabled={item.auction == null ? true : item.auction.status !== "PENDING"} onClick={() => {execute("CANCEL")}} text={"CANCEL"} ></MiniButton>
         </Flex>            
-        </Flex>
-
      
       </Flex>
       <TransactionHash chain={chain} txHash={txHash}></TransactionHash>
