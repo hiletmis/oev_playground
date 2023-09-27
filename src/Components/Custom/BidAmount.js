@@ -14,6 +14,7 @@ const Hero = ({ethAmount, ethBalance, chain, setEthAmount, title="Bid Amount", i
   const { collapsed } = useContext(OevContext);
 
   return (
+    chain == null ? null :
     <VStack alignItems={"left"} >
         <Text fontWeight={"bold"} fontSize={"md"}>{title}</Text>
         <Box width={"100%"}  bgColor={bgColor} borderRadius={"10"}>

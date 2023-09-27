@@ -30,6 +30,7 @@ const Hero = () => {
     const [fulfillValue, setFulfillValue] = useState("");
     const [condition, setCondition] = useState(null);
     const [showBidId, setShowBidId] = useState(false);
+    const [chainId, setChainId] = useState(chain != null ? chain.id : 0);
 
     const [payload, setPayload] = useState(null);
 
@@ -112,7 +113,7 @@ const Hero = () => {
         const bid = { 
             bidAmount: ethers.utils.parseEther(ethAmount).toString(),
             dAppProxyAddress:contextProxyAddress,
-            dAppProxyChainId:chain.id,
+            dAppProxyChainId:chainId,
             condition:condition,
             fulfillmentValue: ethers.utils.parseEther(fulfillValue).toString(),
             updateExecutorAddress:address
@@ -136,6 +137,10 @@ const Hero = () => {
         signMessage({ message: merged });
     }
 
+    useEffect(() => {
+        setChainId(chain != null ? chain.id : 0);
+      }, [chain]);
+            
   return (
     chain == null ? <SignIn></SignIn> :
     ((contextProxyAddress === null) && (level === 2)) || (contextDataFeed.length === 0 && level===0) || searcher === null ? <Welcome></Welcome> : 

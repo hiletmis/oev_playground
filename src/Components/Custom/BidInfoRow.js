@@ -26,6 +26,7 @@ const Hero = ({item}) => {
   const [bidId, setBidId] = useState("");
   const [request , setRequest] = useState(null);
   const [proxyAddress, setProxyAddress] = useState(null);
+  const [chainId, setChainId] = useState(chain != null ? chain.id : 0);
 
   const [initalDataFeed, setInitalDataFeed] = useState(false);
   const [isDataFeedUpdated, setIsDataFeedUpdated] = useState(false);
@@ -81,7 +82,7 @@ const Hero = ({item}) => {
 })
 
 const { config } = usePrepareContractWrite({
-  address: API3SERVERV1(chain.id),
+  address: API3SERVERV1(chainId),
   abi: API3SERVERV1_ABI,
   functionName: 'updateOevProxyDataFeedWithSignedData',
   enabled: bidAuction != null && manuelUpdateParams.length === 6,
@@ -325,6 +326,10 @@ useEffect(() => {
   }
 
 }, [address, bidAuction, encodedUpdateTransaction, write]);
+
+useEffect(() => {
+  setChainId(chain != null ? chain.id : 0);
+}, [chain]);
 
   return (
     item == null ? <></> :
