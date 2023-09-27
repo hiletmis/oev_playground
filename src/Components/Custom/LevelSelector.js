@@ -54,8 +54,10 @@ const Hero = () => {
                 beaconId: "0x4385954e058fbe6b6a744f32a4f89d67aad099f8fb8b23e7ea8dd366ae88151d",
                 beneficiaryAddress: "0x48c634538e2755EF90c9fd1d3F489E193d4AC040",
             }
-            setContextDataFeed(chain === null ? [] : chain.id === 280 ? [ETH_USD_ZKSYNC] : [ETH_USD]);
-            setContextProxyAddress(chain === null ? null : chain.id === 280 ? ETH_USD_ZKSYNC.proxyAddress: ETH_USD.proxyAddress);
+
+            if (chain == null) return  
+            setContextDataFeed(chain.id === 280 ? [ETH_USD_ZKSYNC] : [ETH_USD]);
+            setContextProxyAddress(chain.id === 280 ? ETH_USD_ZKSYNC.proxyAddress: ETH_USD.proxyAddress);
         } else {
             setContextProxyAddress(null);
         }

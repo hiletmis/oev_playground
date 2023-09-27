@@ -9,11 +9,10 @@ import WrongNetwork from './WrongNetwork';
 import { isWrongNetwork } from "./Helpers/Utils";
 import ExecuteButton from "./Custom/ExecuteButton";
 import Withdraw from "./Withdraw";
-import CopyInfoRow from "./Custom/CopyInfoRow";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
+import TransactionHash from "./Custom/TransactionHash";
 import UserStatus from "./Custom/UserStatus";
 
-import { Button, VStack, Box, Text, Link } from "@chakra-ui/react";
+import { Button, VStack, Box, Text } from "@chakra-ui/react";
 import {
   NumberInput,
   NumberInputField,
@@ -108,6 +107,7 @@ const Deposit = () => {
 
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
+    confirmations: 1,
     onSuccess: () => {
         setTxHash(data.hash);
     }
@@ -184,15 +184,7 @@ const Deposit = () => {
         </VStack>
         </Box>
 
-          { txHash == null ? null :
-            <Flex direction="column" align="left">
-                <Box borderRadius={"10"} p={3} bgColor={COLORS.main}>
-                <CopyInfoRow header={"Transaction Hash"} text={txHash} copyEnabled={true}></CopyInfoRow>
-                  <Link visibility={!txHash ? 'hidden': 'visible'} href={chain.blockExplorers.default.url + '/tx/' + txHash} isExternal>
-                    Show in explorer <ExternalLinkIcon mx='2px' />
-                  </Link>
-                </Box>
-            </Flex> }
+        <TransactionHash chain={chain} txHash={txHash}></TransactionHash>
 
         <Stack alignItems={"center"} >
         <ExecuteButton

@@ -9,6 +9,7 @@ import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS, API3SERVERV1, API3SERVERV1_ABI, Up
 import { ethers } from "ethers";
 import MiniButton from "./MiniButton";
 import InfoRow from "./InfoRow";
+import TransactionHash from "./TransactionHash";
 
 const Hero = ({item}) => { 
   const { chain } = useNetwork()
@@ -29,6 +30,7 @@ const Hero = ({item}) => {
   const [initalDataFeed, setInitalDataFeed] = useState(false);
   const [isDataFeedUpdated, setIsDataFeedUpdated] = useState(false);
   const [manuelUpdateParams, setManuelUpdateParams] = useState([]);
+  const [txHash, setTxHash] = useState(null);
 
   const { auction, setAuction, bid } = useContext(OevContext);
 
@@ -48,7 +50,7 @@ const Hero = ({item}) => {
         return "blue.500";
       case "FRONT-RUN":
         return "orange.500";
-      case "IN PROGRESS":
+      case "PROCESSING":
         return "blue.500";
       default:
         return "blue.500";
@@ -91,6 +93,10 @@ const { data, write } = useContractWrite(config)
 
 const { isLoading, isSuccess } = useWaitForTransaction({
   hash: data?.hash,
+  confirmations: 1,
+  onSuccess: () => {
+    setTxHash(data.hash);
+}
 });
 
 const dataFeedValue = useContractRead({
@@ -120,7 +126,7 @@ useEffect(() => {
   setManuelUpdateParams([])
   setDataFeedVal0({value: "...", timestamp: "..."})
   setDataFeedVal1({value: "...", timestamp: "..."})
-
+  setTxHash(null)
   setRequest(null)
 }, [bid]);
 
@@ -160,12 +166,12 @@ const postMessage = async ({ payload, endpoint }) => {
         const refreshedAuction = auction.map((item) => {
           if (data.id === item.id) {
             if (item.auction != null && data.status === "WON") {
-              item.auction.status = "IN PROGRESS"
+              item.auction.status = "PROCESSING"
               return item
             } 
             if (data.status === "EXECUTED") {
               setRequest(null)
-              setTimeout(() => setIsDataFeedUpdated(data.status === "EXECUTED"), 5000);
+              setTimeout(() => setIsDataFeedUpdated(data.status === "EXECUTED"), 1000);
             }
             item.auction = data
           }
@@ -272,7 +278,7 @@ const cancelBid = (bid) => {
         setInitalDataFeed(true)
         updateDataFeed(item.auction);
         break;
-      case "IN PROGRESS":
+      case "PROCESSING":
         refresh();
         break;
         case "CHECK":
@@ -291,7 +297,7 @@ useEffect(() => {
   if (isSuccess) {
     const newAuction = auction.map((item) => {
       if (item.id === bidId) {
-        item.auction.status = "IN PROGRESS"
+        item.auction.status = "PROCESSING"
       }
       return item;
   });
@@ -375,11 +381,10 @@ useEffect(() => {
           <MiniButton isDisabled={item.auction == null ? true : item.auction.status !== "PENDING"} onClick={() => {execute("CANCEL")}} text={"CANCEL"} ></MiniButton>
         </Flex>            
         </Flex>
+
      
       </Flex>
-
-
-
+      <TransactionHash chain={chain} txHash={txHash}></TransactionHash>
   </Stack>
   
   );

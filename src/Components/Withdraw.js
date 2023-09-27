@@ -9,14 +9,13 @@ import { isWrongNetwork } from "./Helpers/Utils";
 import { OevContext } from '../OevContext';
 import InfoBox from "./Custom/InfoBox";
 import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS, PREPAYMENT_DEPOSIT_ABI } from "../data/abi";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
-import CopyInfoRow from "./Custom/CopyInfoRow";
+import TransactionHash from "./Custom/TransactionHash";
 import { Grid, GridItem } from "@chakra-ui/react";
 
 import Heading from "./Custom/Heading";
 
 import {
-  VStack, Box, Text, Flex, Link
+  VStack, Box, Text, Flex
 } from "@chakra-ui/react";
 
 const Withdraw = () => {
@@ -231,15 +230,8 @@ const Withdraw = () => {
 
             </VStack>
 
-            { txHash == null ? null :
-            <Flex direction="column" align="left">
-                <Box borderRadius={"10"} p={3} bgColor={COLORS.main}>
-                <CopyInfoRow header={"Transaction Hash"} text={txHash} copyEnabled={true}></CopyInfoRow>
-                  <Link visibility={!txHash ? 'hidden': 'visible'} href={chain.blockExplorers.default.url + '/tx/' + txHash} isExternal>
-                    Show in explorer <ExternalLinkIcon mx='2px' />
-                  </Link>
-                </Box>
-            </Flex> }
+            <TransactionHash chain={chain} txHash={txHash}></TransactionHash>
+
             <Box width={"100%"} height="60px" borderRadius={"10"}></Box>
     </VStack>
   );

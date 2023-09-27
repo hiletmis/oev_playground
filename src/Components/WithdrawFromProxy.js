@@ -1,5 +1,5 @@
-import { VStack, Flex, Stack, Text, Image, Box, Link } from '@chakra-ui/react';
-import { ExternalLinkIcon } from '@chakra-ui/icons'
+import { VStack, Flex, Stack, Text, Image, Box } from '@chakra-ui/react';
+import TransactionHash from './Custom/TransactionHash';
 import { useNetwork, usePrepareContractWrite, useContractWrite, useWaitForTransaction, useContractRead } from 'wagmi';
 import { isWrongNetwork } from "./Helpers/Utils";
 import SignIn from "./SignIn";
@@ -112,12 +112,8 @@ const Hero = () => {
         </Box>
         <CopyInfoRow header={"Proxy Address"} text={contextProxyAddress}></CopyInfoRow>
         <CopyInfoRow header={"Proxy Balance"} text={balance} copyEnabled={false}></CopyInfoRow>
-        { txHash == null ? null : <CopyInfoRow header={"Transaction Hash"} text={txHash} copyEnabled={true}></CopyInfoRow> } 
-        { txHash == null ? null : 
-                  <Link visibility={!txHash ? 'hidden': 'visible'} href={chain.blockExplorers.default.url + '/tx/' + txHash} isExternal>
-                  Show in explorer <ExternalLinkIcon mx='2px' />
-                </Link>
-        }
+        <TransactionHash chain={chain} txHash={txHash}></TransactionHash>
+
 
         </VStack>
         </Box>
