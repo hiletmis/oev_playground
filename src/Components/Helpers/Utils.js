@@ -1,9 +1,14 @@
 export const copy = (text) => {
+  try {
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text)
     } else {
       alert("Clipboard API not available");
     }
+  } catch (error) {
+    alert("Failed to write clipboard contents: ", error);
+  }
+
   }
 
   export const isWrongNetwork = (chain) => {
