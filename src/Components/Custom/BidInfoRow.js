@@ -377,8 +377,8 @@ useEffect(() => {
           <MiniButton isDisabled={item.auction == null ? true : item.auction.status !== "PENDING"} onClick={() => {execute("CANCEL")}} text={"CANCEL"} ></MiniButton>
 
           <Spacer />
-          <Flex justify={"center"} alignItems={"center"} minWidth={"100px"} height={"40px"} paddingLeft={2} paddingRight={2} borderRadius={"5"} bgColor={item.auction == null ? "blue.500" : getColor(item.auction == null ? "" : item.auction.status)} >
-            <Text align={"center"} fontWeight={"bold"} fontSize="xs">{item.auction == null ? "CHECK STATUS" : item.auction.status.replace("_", " ") }</Text>
+          <Flex justify={"center"} alignItems={"center"} minWidth={"80px"} height={"40px"} paddingLeft={2} paddingRight={2} borderRadius={"5"} bgColor={item.auction == null ? "blue.500" : getColor(item.auction == null ? "" : item.auction.status)} >
+            <Text align={"center"} fontWeight={"bold"} fontSize="xs">{item.auction == null ? "BID PLACED" : item.auction.status.replace("_", " ") }</Text>
           </Flex>  
         </Flex>       
       </VStack>

@@ -13,6 +13,7 @@ import ExecuteButton from "../Custom/ExecuteButton";
 import BidInfoRow from "../Custom/BidInfoRow";
 import { isAvailableFunds } from "../Helpers/Utils";
 import PleaseDepositCollateral from "../PleaseDepositCollateral";
+import ErrorRow from "../Custom/ErrorRow";
 
 import {
     VStack, Box, Text, Flex, Spacer
@@ -31,6 +32,7 @@ const Hero = () => {
     const [condition, setCondition] = useState(null);
     const [showBidId, setShowBidId] = useState(false);
     const [chainId, setChainId] = useState(chain != null ? chain.id : 0);
+    const [error, setError] = useState(null);
 
     const [payload, setPayload] = useState(null);
 
@@ -73,39 +75,43 @@ const Hero = () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         })
+
         const data = await response.json()
+        if (data == null) return
 
-        if (data != null) {
-            if (data.bids == null) return
-            if (data.bids.length === 0) {
-                console.log("Bid was not placed");
-                return;
-            }
+        if (data.bids == null) return
 
-            const bid = {
-                id: data.bids[0],
-                dataFeed: dataFeed,
-                bidAmount: ethAmount,
-                condition: condition,
-                fulfillValue: fulfillValue,
-                chain: chain.name
-            }
-
-            setBid(bid);
-            setShowBidId(true);
-
-            if (auction != null) {
-                let newAuctions = auction.reverse()
-                newAuctions.push(bid);
-                setAuction(newAuctions.reverse());
-            } else {
-                setAuction([bid]);
-            }   
+        if (!response.ok) {
+            const error = data.bids[0].error;
+            setBid(null);
+            setError(error);
+            return;
         }
+
+        const bid = {
+            id: data.bids[0],
+            dataFeed: dataFeed,
+            bidAmount: ethAmount,
+            condition: condition,
+            fulfillValue: fulfillValue,
+            chain: chain.name
+        }
+
+        setBid(bid);
+        setShowBidId(true);
+
+        if (auction != null) {
+            let newAuctions = auction.reverse()
+            newAuctions.push(bid);
+            setAuction(newAuctions.reverse());
+        } else {
+            setAuction([bid]);
+        } 
     }
 
     const signPayload = () => {
         setShowBidId(false);
+        setError(null);
 
         const validUntil = new Date();
         validUntil.setMinutes(validUntil.getMinutes() + 5); 
@@ -159,9 +165,8 @@ const Hero = () => {
                     onClick={signPayload}>
                 </ExecuteButton>
             </VStack>
-
             </Box>
-
+            <ErrorRow header={"An Error Occured"} text={error}></ErrorRow>
             <VStack visibility={bid != null && showBidId ? "visible":"hidden"} p={4} shadow="md" borderWidth="px" flex="1" borderRadius={"10"} bgColor={COLORS.main} alignItems={"left"}>
                 <Flex>
                     <Text fontWeight={"bold"} fontSize={"md"}>Bid</Text>
