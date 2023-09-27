@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from "react";
-import { useAccount, useSignMessage, useNetwork, usePrepareContractWrite, useWaitForTransaction, useContractWrite, useContractRead} from "wagmi";
+import { useAccount, useSignMessage, useNetwork, usePrepareContractWrite, useWaitForTransaction, useContractWrite, useContractRead, useBlockNumber } from "wagmi";
 import { OevContext } from '../../OevContext';
 import { Grid } from 'react-loader-spinner'
 
@@ -58,6 +58,28 @@ const Hero = ({item}) => {
     }
   }
 
+  const checkBidStatus = () => {
+    if (!isDataFeedUpdated) return
+    if (request == null) return
+    if (auction == null) return
+    if (auction.length === 0) return
+    if (auction[0] == null) return
+    if (auction[0].auction == null) return
+    if (auction[0].auction.status === "WON") return
+    if (auction[0].auction.status === "EXECUTED") return
+    if (auction[0].auction.status === "SLASHED") return
+    if (auction[0].auction.status === "SEARCHER_CANCELED") return
+    if (auction[0].auction.status === "FRONT-RUN") return
+    refresh();
+  }
+ 
+  useBlockNumber({
+    watch: true,
+    onBlock() {
+      checkBidStatus()
+    },
+  })
+
   const { signMessage } = useSignMessage({
     onError: (error) => {
       setIsLoadingSign(false);
@@ -97,6 +119,7 @@ const { isLoading, isSuccess } = useWaitForTransaction({
   confirmations: 1,
   onSuccess: () => {
     setTxHash(data.hash);
+    setIsDataFeedUpdated(true);
 }
 });
 
@@ -117,6 +140,7 @@ useEffect(() => {
 
 useEffect(() => {
   if (dataFeedValue.data != null && isDataFeedUpdated) {
+    if (dataFeedValue.data === dataFeedVal0.value) return
     setDataFeedVal1(dataFeedValue.data)
   }
 }, [isDataFeedUpdated, dataFeedValue, dataFeedVal0.value]);
