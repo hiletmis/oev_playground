@@ -1,9 +1,8 @@
-import React from "react";
-import { Box, Flex, Link, Stack } from '@chakra-ui/react';
+import { Box, Flex, Link, Spacer, Stack, Text } from '@chakra-ui/react';
 import { COLORS } from '../../data/colors';
 import { ExternalLinkIcon, CheckCircleIcon } from "@chakra-ui/icons";
 
-const Hero = ({chain, txHash}) => {
+const Hero = ({chain, txHash, confirmations}) => {
 
   const truncateLink = (link) => {
     if (link.length > 20) {
@@ -27,6 +26,10 @@ const Hero = ({chain, txHash}) => {
       <CheckCircleIcon/>
       <Link visibility={!txHash ? 'hidden': 'visible'} href={chain.blockExplorers.default.url + '/tx/' + txHash} isExternal>
         Show in explorer {truncateLink(txHash)}</Link>
+        <Spacer />
+        <Box paddingLeft={2} paddingRight={2} borderRadius={"10"} bgColor={"green.700"} height={5} alignItems={"center"} >
+      <Text fontSize="xs" fontWeight={"bold"}>Confirmations: {confirmations}</Text>
+      </Box>
       <ExternalLinkIcon onClick={() => openLink(chain.blockExplorers.default.url + '/tx/' + txHash)} />
       </Stack>
 

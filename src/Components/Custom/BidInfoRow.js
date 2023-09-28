@@ -10,6 +10,7 @@ import { ethers } from "ethers";
 import MiniButton from "./MiniButton";
 import InfoRow from "./InfoRow";
 import TransactionHash from "./TransactionHash";
+import ErrorRow from "./ErrorRow";
 
 const Hero = ({item}) => { 
   const { chain } = useNetwork()
@@ -27,11 +28,13 @@ const Hero = ({item}) => {
   const [request , setRequest] = useState(null);
   const [proxyAddress, setProxyAddress] = useState(null);
   const [chainId, setChainId] = useState(chain != null ? chain.id : 0);
+  const [confirmations, setConfirmations] = useState(0);
 
   const [initalDataFeed, setInitalDataFeed] = useState(false);
   const [isDataFeedUpdated, setIsDataFeedUpdated] = useState(false);
   const [manuelUpdateParams, setManuelUpdateParams] = useState([]);
   const [txHash, setTxHash] = useState(null);
+  const [error, setError] = useState(null);
 
   const { auction, setAuction, bid } = useContext(OevContext);
 
@@ -77,6 +80,7 @@ const Hero = ({item}) => {
     watch: true,
     onBlock() {
       checkBidStatus()
+      setConfirmations(confirmations + 1)
     },
   })
 
@@ -103,24 +107,34 @@ const Hero = ({item}) => {
     }
 })
 
-const { config } = usePrepareContractWrite({
+
+const { data, write } = useContractWrite({
   address: API3SERVERV1(chainId),
   abi: API3SERVERV1_ABI,
   functionName: 'updateOevProxyDataFeedWithSignedData',
   enabled: bidAuction != null && manuelUpdateParams.length === 6,
   args: manuelUpdateParams,
   value: nativeCurrencyAmount,
+  onSuccess: (data) => {
+    setError(null);
+    setInitalDataFeed(true)
+  },
+  onError: (error) => {
+    setError(error.message);
+    setTxHash(null);
+    setIsDataFeedUpdated(false);
+  }
 })
-
-const { data, write } = useContractWrite(config)
 
 const { isLoading, isSuccess } = useWaitForTransaction({
   hash: data?.hash,
   confirmations: 1,
+  enabled: write != null,
   onSuccess: () => {
+    setConfirmations(1)
     setTxHash(data.hash);
     setIsDataFeedUpdated(true);
-}
+  }
 });
 
 const dataFeedValue = useContractRead({
@@ -153,6 +167,7 @@ useEffect(() => {
   setDataFeedVal1({value: "...", timestamp: "..."})
   setTxHash(null)
   setRequest(null)
+  setError(null)
 }, [bid]);
 
 const postMessage = async ({ payload, endpoint }) => {
@@ -300,7 +315,6 @@ const cancelBid = (bid) => {
         cancelBid();
         break;
       case "WON":
-        setInitalDataFeed(true)
         updateDataFeed(item.auction);
         break;
       case "PROCESSING":
@@ -406,7 +420,8 @@ useEffect(() => {
           </Flex>  
         </Flex>       
       </VStack>
-      <TransactionHash chain={chain} txHash={txHash}></TransactionHash>
+      <ErrorRow header={"An Error Occured"} text={error}></ErrorRow>
+      <TransactionHash chain={chain} txHash={txHash} confirmations={confirmations}></TransactionHash>
   </Stack>
   
   );
