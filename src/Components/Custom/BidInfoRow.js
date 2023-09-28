@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from "react";
-import { useAccount, useSignMessage, useNetwork, usePrepareContractWrite, useWaitForTransaction, useContractWrite, useContractRead, useBlockNumber } from "wagmi";
+import { useAccount, useSignMessage, useNetwork, useWaitForTransaction, useContractWrite, useContractRead, useBlockNumber } from "wagmi";
 import { OevContext } from '../../OevContext';
 import { Grid } from 'react-loader-spinner'
 

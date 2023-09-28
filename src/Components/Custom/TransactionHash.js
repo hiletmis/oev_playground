@@ -27,9 +27,13 @@ const Hero = ({chain, txHash, confirmations}) => {
       <Link visibility={!txHash ? 'hidden': 'visible'} href={chain.blockExplorers.default.url + '/tx/' + txHash} isExternal>
         Show in explorer {truncateLink(txHash)}</Link>
         <Spacer />
+      {
+        confirmations == null ? null :
         <Box paddingLeft={2} paddingRight={2} borderRadius={"10"} bgColor={"green.700"} height={5} alignItems={"center"} >
-      <Text fontSize="xs" fontWeight={"bold"}>Confirmations: {confirmations}</Text>
-      </Box>
+          <Text fontSize="xs" fontWeight={"bold"}>Confirmations: {confirmations}</Text>
+        </Box>
+
+      }
       <ExternalLinkIcon onClick={() => openLink(chain.blockExplorers.default.url + '/tx/' + txHash)} />
       </Stack>
 
