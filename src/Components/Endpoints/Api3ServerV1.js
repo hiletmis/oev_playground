@@ -19,14 +19,14 @@ import {
 
 
 const Hero = () => {
-  const {address} = useAccount()
+  const { address } = useAccount()
   const { chain } = useNetwork()
 
   const [encodedUpdateTransaction, setEncodedUpdateTransaction] = useState("");
   const [oevProxy, setOevProxy] = useState("");
   const [manuelUpdateParams, setManuelUpdateParams] = useState([]);
   const [chainId, setChainId] = useState(chain != null ? chain.id : 0);
-  const [nativeCurrencyAmount, setNativeCurrencyAmount] = useState(0);
+  const [nativeCurrencyAmount, setNativeCurrencyAmount] = useState("");
 
   const [txHash, setTxHash] = useState(null);
   const [error, setError] = useState(null);
@@ -131,7 +131,6 @@ useEffect(() => {
     )
     setManuelUpdateParams([values.oevProxy, values.dataFeedId, values.updateId, values.timestamp, values.data, values.packedOevUpdateSignatures])
   } catch (error) {
-    console.log(error)
     setEncodedUpdateTransaction("")
   }
 
@@ -140,7 +139,6 @@ useEffect(() => {
 
 useEffect(() => {
   if (manuelUpdateParams.length === 0) return
-  console.log(manuelUpdateParams)
 }, [manuelUpdateParams]);
 
 useEffect(() => {

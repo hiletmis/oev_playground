@@ -1,13 +1,14 @@
 import { useEffect, useState} from "react";
 import SignIn from '../SignIn';
-import { useNetwork, useSignMessage, useAccount, useBalance } from "wagmi";
+import { useNetwork, useContractWrite, useWaitForTransaction } from "wagmi";
 import { COLORS } from '../../data/colors';
 import InfoRow from "../Custom/InfoRow";
 import ExecuteButton from "../Custom/ExecuteButton";
-import { PostBidsCancel, POST } from "../Helpers/Endpoints";
-import BidInfoParams from "../Custom/BidInfoParams";
-import BidAmount from "../Custom/BidAmount";
+import PasteRow from "../Custom/PasteRow";
+import { PREPAYMENT_DEPOSIT_ABI, PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS } from "../../data/abi";
 
+import TransactionHash from "../Custom/TransactionHash";
+import ErrorRow from "../Custom/ErrorRow";
 
 import CustomHeading from "../Custom/Heading";
 
@@ -17,96 +18,158 @@ import {
 
 
 const Hero = () => {
-  const {address} = useAccount()
   const { chain } = useNetwork()
 
-  const [request , setRequest] = useState(null);
-  const [payload, setPayload] = useState(null);
-  const [message, setMessage] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [response, setResponse] = useState(null);
+  const [amount, setAmount] = useState("");
+  const [expirationTimestamp, setExpirationTimestamp] = useState("");
+  const [withdrawalSigner, setWithdrawalSigner] = useState("");
+  const [signature, setSignature] = useState("");
+
+  const [args, setArgs] = useState([]);
+
+  const [txHash, setTxHash] = useState(null);
   const [error, setError] = useState(null);
-  const [ethAmount, setEthAmount] = useState("")
-  const [ethBalance, setEthBalance] = useState(0);
 
 
-  const [bidId, setBidId] = useState("");
+  const [user, setUser] = useState("");
+  const [tokenAmount, setTokenAmount] = useState("");
+  const [deadline, setDeadline] = useState("");
+  const [v, setV] = useState("");
+  const [r, setR] = useState("");
+  const [s, setS] = useState("");
 
-  const { signMessage } = useSignMessage({
-    onSuccess: (signature) => {
-        payload.signature = signature;
-        setRequest(payload);
-        setPayload(null);
-        setMessage(null);
-        handleClick(payload)
+  const [argsDeposit, setArgsDeposit] = useState([]);
+
+  const [txHashDeposit, setTxHashDeposit] = useState(null);
+  const [errorDeposit, setErrorDeposit] = useState(null);
+
+
+
+  const { data, write } = useContractWrite({
+    address: PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS,
+    abi: PREPAYMENT_DEPOSIT_ABI,
+    functionName: 'withdraw',
+    enabled: args.length === 4,
+    args: args,
+    onSuccess: (data) => {
+      setError(null);
     },
     onError: (error) => {
-      setIsLoading(false);
+      setError(error.message);
+    }
+  })
+  
+  const { isLoading } = useWaitForTransaction({
+    hash: data?.hash,
+    confirmations: 1,
+    enabled: write != null,
+    onSuccess: () => {
+      setTxHash(data?.hash);
+      setError(null);
+    }
+  });
+
+  useEffect(() => {
+    setArgs([amount, expirationTimestamp, withdrawalSigner, signature]);
+  }, [amount, expirationTimestamp, withdrawalSigner, signature]);
+
+
+  const { data: dataDeposit, write: writeDeposit } = useContractWrite({
+    address: PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS,
+    abi: PREPAYMENT_DEPOSIT_ABI,
+    functionName: 'applyPermitAndDeposit',
+    chainId: 11155111,
+    enabled: argsDeposit.length === 6,
+    args: argsDeposit,
+    onSuccess: (data) => {
+      setErrorDeposit(null);
     },
+    onError: (error) => {
+      setErrorDeposit(error.message);
+    }
   })
 
-  const fetchETHBalance_ = useBalance({
-    address: address,
-  })
+  const { isLoading: isLoadingDeposit } = useWaitForTransaction({
+    hash: dataDeposit?.hash,
+    confirmations: 1,
+    onSuccess: () => {
+      setTxHashDeposit(dataDeposit.hash);
+      setErrorDeposit(null);
+    }
+  });
 
-  const handleClick = (params) => {
-    POST({ payload: params, endpoint:"bids/cancel", setResponse, setError});
+  useEffect(() => {
+    setArgsDeposit([user, tokenAmount, deadline, v, r, s]);
+  }, [user, tokenAmount, deadline, v, r, s]);
+
+ 
+
+  const deposit = () => {
+    writeDeposit?.()
   }
 
-  const bidsCancel = () => {
-    setIsLoading(true);
-    if (request != null) {
-      handleClick(request)
-      return
-    }
-    if (bidId === "") {
-      alert("Please enter a bid ID")
-      setIsLoading(false);
-      return
-    }
-    PostBidsCancel({address, bid:bidId, setPayload, setMessage});
+  const withdraw = () => {
+    write();
   }
 
-  useEffect(() => {
-    setIsLoading(false);
-  }, [response, error]);
-
-  useEffect(() => {
-    setRequest(null);
-  }, [bidId]);
-
-  useEffect(() => {
-    if (payload == null) return;
-    if (message == null) return;
-    if (signMessage == null) return;
-
-    signMessage({message: message});
-  }, [payload, message, signMessage]);
-
-  useEffect(() => {
-    if (fetchETHBalance_.data != null) {
-      setEthBalance(fetchETHBalance_.data.formatted)
-    }
-}, [fetchETHBalance_]);
 
   return (
     chain == null ? <SignIn></SignIn> :
     <VStack spacing={4} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
-        <CustomHeading header={"Prepayment Depository"} description={"Searchers utilize PrepaymentDepository contract to deposit and/or withdraw collateral"} isLoading={isLoading}></CustomHeading>
+        <CustomHeading header={"Prepayment Depository"} description={"Searchers utilize PrepaymentDepository contract to deposit and/or withdraw collateral"} isLoading={isLoading || isLoadingDeposit}></CustomHeading>
 
         <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>
           <VStack spacing={3} direction="row" align="left" m="1rem">
               <InfoRow bgColor="orange.500" header={"Function"} text={"applyPermitAndDeposit"}></InfoRow>
-              <BidInfoParams id={bidId} setBidId={setBidId} paramName={"Encoded Update Transaction"}></BidInfoParams>
-              <ExecuteButton isDisabled={isLoading} onClick={() => bidsCancel()} text={"EXECUTE"} ></ExecuteButton>
+
+              <Box p={3} width={"100%"} bgColor={COLORS.app} borderRadius={"10"}>
+                <PasteRow text={user} setText={setUser} title={"User"}></PasteRow>
+              </Box>
+              <Box p={3} width={"100%"} bgColor={COLORS.app} borderRadius={"10"}>
+                <PasteRow text={tokenAmount} setText={setTokenAmount} title={"Amount"}></PasteRow>
+              </Box>
+              <Box p={3} width={"100%"} bgColor={COLORS.app} borderRadius={"10"}>
+                <PasteRow text={deadline} setText={setDeadline} title={"Deadline"}></PasteRow>
+              </Box>
+              <Box p={3} width={"100%"} bgColor={COLORS.app} borderRadius={"10"}>
+                <PasteRow text={v} setText={setV} title={"v"}></PasteRow>
+              </Box>
+              <Box p={3} width={"100%"} bgColor={COLORS.app} borderRadius={"10"}>
+                <PasteRow text={r} setText={setR} title={"r"}></PasteRow>
+              </Box>
+              <Box p={3} width={"100%"} bgColor={COLORS.app} borderRadius={"10"}>
+                <PasteRow text={s} setText={setS} title={"s"}></PasteRow>
+              </Box>
+
+              <ErrorRow header={"An Error Occured"} text={errorDeposit}></ErrorRow>
+              <TransactionHash chain={chain} txHash={txHashDeposit}></TransactionHash>
+              <ExecuteButton isDisabled={isLoadingDeposit} onClick={() => deposit()} text={"EXECUTE"} ></ExecuteButton>
           </VStack>
         </Box>
 
         <Box width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>
           <VStack spacing={3} direction="row" align="left" m="1rem">
               <InfoRow bgColor="orange.500" header={"Function"} text={"withdraw"}></InfoRow>
-              <BidInfoParams id={bidId} setBidId={setBidId} paramName={"Oev Proxy"}></BidInfoParams>
-              <ExecuteButton isDisabled={isLoading} onClick={() => bidsCancel()} text={"EXECUTE"} ></ExecuteButton>
+
+              <Box p={3} width={"100%"} bgColor={COLORS.app} borderRadius={"10"}>
+                <PasteRow text={amount} setText={setAmount} title={"Amount"}></PasteRow>
+              </Box>
+
+              <Box p={3} width={"100%"} bgColor={COLORS.app} borderRadius={"10"}>
+                <PasteRow text={expirationTimestamp} setText={setExpirationTimestamp} title={"Expiration Timestamp"}></PasteRow>
+              </Box>
+
+              <Box p={3} width={"100%"} bgColor={COLORS.app} borderRadius={"10"}>
+                <PasteRow text={withdrawalSigner} setText={setWithdrawalSigner} title={"Withdrawal Signer"}></PasteRow>
+              </Box>
+
+              <Box p={3} width={"100%"} bgColor={COLORS.app} borderRadius={"10"}>
+                <PasteRow text={signature} setText={setSignature} title={"Signature"}></PasteRow>
+              </Box>
+
+              <ErrorRow header={"An Error Occured"} text={error}></ErrorRow>
+              <TransactionHash chain={chain} txHash={txHash}></TransactionHash>
+              <ExecuteButton isDisabled={isLoading} onClick={() => withdraw()} text={"EXECUTE"} ></ExecuteButton>
           </VStack>
         </Box>
     </VStack>
