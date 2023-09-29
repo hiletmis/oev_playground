@@ -18,6 +18,8 @@ import BidsPlace from './Components/Endpoints/BidsPlace'
 import BidsCancel from './Components/Endpoints/BidsCancel'
 import AuctionsInfo from './Components/Endpoints/AuctionsInfo'
 import AuctionsList from './Components/Endpoints/AuctionsList'
+import Api3ServerV1 from './Components/Endpoints/Api3ServerV1'
+import PrepaymentDepository from './Components/Endpoints/PrepaymentDepository'
 
 import { COLORS } from './data/colors';
 import { OevContext } from './OevContext';
@@ -116,6 +118,8 @@ useEffect(() => {
                   <Route path="bids/cancel" element={<BidsCancel />} />
                   <Route path="auctions/info" element={<AuctionsInfo />} />
                   <Route path="auctions/list" element={<AuctionsList />} />
+                  <Route path="api3serverv1" element={<Api3ServerV1 />} />
+                  <Route path="prepayment/depository" element={<PrepaymentDepository />} />
                 </Routes>
               </VStack>
             </Flex>

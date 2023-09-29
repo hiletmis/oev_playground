@@ -31,6 +31,7 @@ const Hero = ({stateChanger}) => {
   const [refreshBalance, setRefreshBalance] = useState(false);
   const [isMinting, setIsMinting] = useState(false);
   const [beaconData, setBeaconData] = useState(null);
+  const [isFetching, setIsFetching] = useState(false);
 
 const fetchETHBalance_ = useBalance({
   address: address,
@@ -60,11 +61,13 @@ useEffect(() => {
     if (!ethAmount || isNaN(parseFloat(ethAmount))) return;
     if (ethAmount <= 0) return;
     if (ethAmount) {
+      setIsFetching(true)
       NodaryFeed({ dataFeedId: "0x4385954e058fbe6b6a744f32a4f89d67aad099f8fb8b23e7ea8dd366ae88151d", setBeaconData: setBeaconData})
     }
   }, [ethAmount]);
 
   useEffect(() => {
+    setIsFetching(false)
     if (beaconData) {
       const decodedValue = ethers.utils.defaultAbiCoder.decode(
         ["int256"],
@@ -136,7 +139,7 @@ useEffect(() => {
     <VStack bgColor={COLORS.main} spacing={4} p={2} borderRadius="lg" boxShadow="lg" minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
 
       <VStack bgColor={COLORS.app} spacing={4} p={4} borderRadius="lg" boxShadow="lg" alignItems={"left"} >
-        <Heading isLoading={isLoading} description={"Deposit Sepolia ETH to get testUSDC"} header={"TestUSDC Faucet"} ></Heading>
+        <Heading isLoading={isLoading || isFetching } description={"Deposit Sepolia ETH to get testUSDC"} header={"TestUSDC Faucet"} ></Heading>
 
         <Box width={"100%"} p={3} bgColor={COLORS.main} borderRadius={"10"}>
           <BidAmount title="Exchange Amount" ethAmount={ethAmount} setEthAmount={setEthAmount} ethBalance={ethBalance} chain={chain} ></BidAmount>

@@ -50,6 +50,10 @@ const Hero = () => {
           <CustomButton bgColor={"green.500"} height="30px" isDisabled={false } link="/bids/cancel" caption="POST /bids/cancel" />
           <CustomButton bgColor={"green.500"} height="30px" isDisabled={false } link="/auctions/info" caption="POST /auctions/info" />
           <CustomButton bgColor={"green.500"} height="30px" isDisabled={false } link="/auctions/list" caption="POST /auctions/list" />
+          { context.collapsed ? null : <Text fontWeight={"bold"} fontSize={"md"}>Contracts</Text>} 
+          <CustomButton bgColor={"blue.500"} height="30px" isDisabled={false } link="/api3serverv1" caption="Api3ServerV1" />
+          <CustomButton bgColor={"blue.500"} height="30px" isDisabled={false } link="/prepayment/depository" caption="PrepaymentDepository" />
+
           </Stack>
           : null
         }

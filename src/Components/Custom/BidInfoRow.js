@@ -28,7 +28,6 @@ const Hero = ({item}) => {
   const [request , setRequest] = useState(null);
   const [proxyAddress, setProxyAddress] = useState(null);
   const [chainId, setChainId] = useState(chain != null ? chain.id : 0);
-  const [confirmations, setConfirmations] = useState(0);
 
   const [initalDataFeed, setInitalDataFeed] = useState(false);
   const [isDataFeedUpdated, setIsDataFeedUpdated] = useState(false);
@@ -80,7 +79,6 @@ const Hero = ({item}) => {
     watch: true,
     onBlock() {
       checkBidStatus()
-      setConfirmations(confirmations + 1)
     },
   })
 
@@ -131,7 +129,6 @@ const { isLoading, isSuccess } = useWaitForTransaction({
   confirmations: 1,
   enabled: write != null,
   onSuccess: () => {
-    setConfirmations(1)
     setTxHash(data.hash);
     setIsDataFeedUpdated(true);
   }
@@ -421,7 +418,7 @@ useEffect(() => {
         </Flex>       
       </VStack>
       <ErrorRow header={"An Error Occured"} text={error}></ErrorRow>
-      <TransactionHash chain={chain} txHash={txHash} confirmations={confirmations}></TransactionHash>
+      <TransactionHash chain={chain} txHash={txHash}></TransactionHash>
   </Stack>
   
   );

@@ -1,8 +1,13 @@
 import { Box, Flex, Link, Spacer, Stack, Text } from '@chakra-ui/react';
 import { COLORS } from '../../data/colors';
 import { ExternalLinkIcon, CheckCircleIcon } from "@chakra-ui/icons";
+import { useBlockNumber, useTransaction } from 'wagmi';
+import { useState } from 'react';
 
-const Hero = ({chain, txHash, confirmations}) => {
+const Hero = ({chain, txHash}) => {
+
+  const [confirmations, setConfirmations] = useState("");
+  const [transactionBlock, setTransactionBlock] = useState(0);
 
   const truncateLink = (link) => {
     if (link.length > 20) {
@@ -15,6 +20,21 @@ const Hero = ({chain, txHash, confirmations}) => {
   const openLink = (link) => {
     window.open(link);
   }
+
+  useTransaction({
+    enabled: txHash != null && transactionBlock === 0,
+    hash: txHash,
+    onSuccess: (data) => {
+      setTransactionBlock(data.blockNumber);
+    },
+  })
+
+  useBlockNumber({
+    watch: true,
+    onBlock(block) {
+      setConfirmations((block - transactionBlock).toString());
+    },
+  })
 
   return (
     chain == null ? null :
