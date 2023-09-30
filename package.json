@@ -1,11 +1,14 @@
 {
   "private": true,
   "dependencies": {
+    "@api3/airnode-protocol-v1": "^2.10.0",
     "@api3/contracts": "^0.11.0",
     "@chakra-ui/icons": "^2.1.0",
     "@chakra-ui/react": "^2.6.0",
     "@emotion/react": "^11.10.8",
     "@emotion/styled": "^11.10.8",
+    "@nodary/contracts": "^0.3.0",
+    "@nodary/testnet-usdc": "^0.1.1",
     "@nodary/utilities": "^0.7.1",
     "@rainbow-me/rainbowkit": "^1.0.11",
     "@testing-library/jest-dom": "^5.16.5",
