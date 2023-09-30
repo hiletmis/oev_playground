@@ -2,7 +2,7 @@ import { Box, Flex, Link, Spacer, Stack, Text } from '@chakra-ui/react';
 import { COLORS } from '../../data/colors';
 import { ExternalLinkIcon, CheckCircleIcon } from "@chakra-ui/icons";
 import { useBlockNumber, useTransaction } from 'wagmi';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const Hero = ({chain, txHash}) => {
 
@@ -35,6 +35,13 @@ const Hero = ({chain, txHash}) => {
       setConfirmations((block - transactionBlock).toString());
     },
   })
+
+  useEffect(() => {
+    if (txHash != null) {
+      setConfirmations("");
+      setTransactionBlock(0);
+    }
+  }, [txHash]);
 
   return (
     chain == null ? null :
