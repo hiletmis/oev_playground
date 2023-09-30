@@ -9,6 +9,7 @@ import { PREPAYMENT_DEPOSIT_ABI, PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS } from "../
 
 import TransactionHash from "../Custom/TransactionHash";
 import ErrorRow from "../Custom/ErrorRow";
+import SwitchNetwork from "../SwitchNetwork";
 
 import CustomHeading from "../Custom/Heading";
 
@@ -25,11 +26,12 @@ const Hero = () => {
   const [withdrawalSigner, setWithdrawalSigner] = useState("");
   const [signature, setSignature] = useState("");
 
+  const [isSepolia, setIsSepolia] = useState(0)
+
   const [args, setArgs] = useState([]);
 
   const [txHash, setTxHash] = useState(null);
   const [error, setError] = useState(null);
-
 
   const [user, setUser] = useState("");
   const [tokenAmount, setTokenAmount] = useState("");
@@ -112,9 +114,14 @@ const Hero = () => {
     write();
   }
 
+  useEffect(() => {
+    setIsSepolia(chain == null ? 0 : chain.id === 11155111)
+}, [chain]);
+
 
   return (
     chain == null ? <SignIn></SignIn> :
+    !isSepolia ? <SwitchNetwork></SwitchNetwork> :
     <VStack spacing={4} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
         <CustomHeading header={"Prepayment Depository"} description={"Searchers utilize PrepaymentDepository contract to deposit and/or withdraw collateral"} isLoading={isLoading || isLoadingDeposit}></CustomHeading>
 
