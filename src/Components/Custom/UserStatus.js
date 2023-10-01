@@ -30,7 +30,7 @@ const Hero = () => {
             localStorage.setItem(address, JSON.stringify(payload));
             setSearcher(data)
         } else {
-            setInfo("Appearently you are not registered as a searcher. Please deposit funds to prepayment depository contract to register as a searcher. After depositing funds, check your status again. After 5 confirmations your deposit will be confirmed. Usually it takes 1-2 minutes to fulfill the confirmations. You can use the testUSDC faucet to get test funds.")
+            setInfo("Appearently you are not registered as a searcher. Please deposit funds to prepayment depository contract to register as a searcher. After depositing funds, check your status again. After 5 confirmations your deposit will be confirmed. Usually it takes 1-2 minutes to fulfill the confirmations. You can use the TestnetUSDC faucet to get test funds.")
         }
     }
 

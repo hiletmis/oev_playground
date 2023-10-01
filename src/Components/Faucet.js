@@ -139,13 +139,13 @@ useEffect(() => {
     <VStack bgColor={COLORS.main} spacing={4} p={2} borderRadius="lg" boxShadow="lg" minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
 
       <VStack bgColor={COLORS.app} spacing={4} p={4} borderRadius="lg" boxShadow="lg" alignItems={"left"} >
-        <Heading isLoading={isLoading || isFetching } description={"Deposit Sepolia ETH to get testUSDC"} header={"TestUSDC Faucet"} ></Heading>
+        <Heading isLoading={isLoading || isFetching } description={"Deposit Sepolia ETH to get TestnetUSDC"} header={"TestnetUSDC Faucet"} ></Heading>
 
         <Box width={"100%"} p={3} bgColor={COLORS.main} borderRadius={"10"}>
           <BidAmount title="Exchange Amount" ethAmount={ethAmount} setEthAmount={setEthAmount} ethBalance={ethBalance} chain={chain} ></BidAmount>
         </Box>
 
-        <InfoBox margin={2} header={"TestUSDC will be minted"} text={parseFloat(calculateAmountValue())} image={'/coins/USD.webp'} ></InfoBox>
+        <InfoBox margin={2} header={"TestnetUSDC will be minted"} text={parseFloat(calculateAmountValue())} image={'/coins/USD.webp'} ></InfoBox>
         <InfoBox margin={2} header={"Token Balance"} text={tokenBalance} image={'/coins/USD.webp'} ></InfoBox>
 
         <Flex>

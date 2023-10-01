@@ -145,7 +145,7 @@ const Deposit = () => {
     <VStack spacing={4} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
 
       <UserStatus />
-      <Heading isLoading={isLoading } description={"Deposit TestUSDC as collateral to start bidding"} header={"Add Collateral"} ></Heading>
+      <Heading isLoading={isLoading } description={"Deposit TestnetUSDC as collateral to start bidding"} header={"Add Collateral"} ></Heading>
       <Box width={"100%"} height="120px" bgColor={COLORS.main} borderRadius={"10"}>
       <VStack spacing={3} direction="row" align="left" m="1rem">
       <Flex>
@@ -173,7 +173,7 @@ const Deposit = () => {
         }} fontSize={"sm"}>{tokenBalance === "0" 
         ? 
         <Popup
-        trigger={<Button height={"30px"} width={"110px"} bgColor={"transparent"}>Get testUSDC</Button> }
+        trigger={<Button height={"30px"} width={"110px"} bgColor={"transparent"}>Get TestnetUSDC</Button> }
         modal>
         { close => (<Faucet stateChanger={close} refreshBalance={close}></Faucet>)  }
         </Popup>

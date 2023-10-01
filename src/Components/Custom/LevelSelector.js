@@ -109,7 +109,7 @@ const Hero = () => {
                         {condition === '0' ?
                         <VStack alignItems={"left"} spacing={"3"}>
                             <Text fontSize={"md"}>Start by clicking the "Deposit Collateral" button. You will be asked to sign a message to deposit collateral to the OEV Relay. After the transaction is confirmed, you will be able to place bids on data feeds. Usually it takes 2-3 minutes before deposit is confirmed.</Text>
-                            <Text fontSize={"md"}>Deposit contract is deployed on Sepolia Ethereum testnet. You will need testUSDC token to deposit collateral. You can get testUSDC from the testUSDC faucet in deposit section.</Text>
+                            <Text fontSize={"md"}>Deposit contract is deployed on Sepolia Ethereum testnet. You will need TestnetUSDC token to deposit collateral. You can get TestnetUSDC from the TestnetUSDC faucet in deposit section.</Text>
                             <Text fontSize={"md"}>Making deposit will allow you to place bids on all available chains and available data feeds.</Text>
                             <Text fontSize={"md"}>After depositing collateral, you can place bids on data feeds. Select from available data feeds, enter your bid conditions and click the "Bid" button to place a bid. You will be asked to sign a message to place a bid. After the transaction is confirmed, you will be able to check your bid status.</Text>
                             <Text fontSize={"md"}><b>Bid statuses can be as follows:</b></Text>
