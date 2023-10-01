@@ -2,7 +2,7 @@ import React, {useContext, useState, useEffect } from "react";
 import { VStack, Heading, Flex, Spacer, Image, Box } from '@chakra-ui/react';
 import InfoRow from './Custom/InfoRow';
 import { OevContext } from '../OevContext';
-import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS } from "../data/abi";
+import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS } from "../data/getContracts";
 import { useAccount, useSignMessage } from "wagmi";
 import { Grid } from 'react-loader-spinner'
 

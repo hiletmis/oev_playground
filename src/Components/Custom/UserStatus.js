@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
 import { VStack } from '@chakra-ui/react';
 import { OevContext } from '../../OevContext';
-import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS } from "../../data/abi";
+import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS } from "../../data/getContracts";
 import { useAccount, useSignMessage } from "wagmi";
 import { COLORS } from '../../data/colors';
 import Heading from "./Heading";

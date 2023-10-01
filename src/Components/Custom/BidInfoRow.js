@@ -5,7 +5,8 @@ import { Grid } from 'react-loader-spinner'
 
 import { Text, Box, Image, Stack, Flex, Spacer, VStack } from '@chakra-ui/react';
 import { COLORS } from '../../data/colors';
-import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS, API3SERVERV1, API3SERVERV1_ABI, UpdatedOevProxyBeaconSetWithSignedData, DATA_FEED_PROXY_ABI } from "../../data/abi";
+import { API3SERVERV1_ABI, UpdatedOevProxyBeaconSetWithSignedData, DATA_FEED_PROXY_ABI } from "../../data/abi";
+import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS, API3SERVERV1 } from "../../data/getContracts";
 import { ethers } from "ethers";
 import MiniButton from "./MiniButton";
 import InfoRow from "./InfoRow";

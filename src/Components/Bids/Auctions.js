@@ -7,7 +7,7 @@ import { COLORS } from '../../data/colors';
 import ScrollableFeed from 'react-scrollable-feed'
 import BidInfoRow from "../Custom/BidInfoRow";
 import CustomHeading from "../Custom/Heading";
-import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS } from "../../data/abi";
+import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS } from "../../data/getContracts";
 
 import {
     VStack, Text, Box, Spacer, Image, Flex

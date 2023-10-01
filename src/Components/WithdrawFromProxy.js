@@ -10,7 +10,8 @@ import { OevContext } from '../OevContext';
 import { useContext, useState, useEffect } from "react";
 import CopyInfoRow from "./Custom/CopyInfoRow";
 import ExecuteButton from "./Custom/ExecuteButton";
-import { API3SERVERV1, API3SERVERV1_ABI } from "../data/abi";
+import { API3SERVERV1_ABI } from "../data/abi";
+import { API3SERVERV1 } from "../data/getContracts";
 import { ethers } from 'ethers';
 import DeployProxy from './DeployProxy';
 

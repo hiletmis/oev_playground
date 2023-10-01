@@ -12,7 +12,8 @@ import {
 import { ethers } from "ethers";
 import { useBalance, useAccount, usePrepareContractWrite, useContractWrite, useWaitForTransaction, useNetwork } from 'wagmi';
 
-import { TOKEN_ABI, TOKEN_CONTRACT_ADDRESS } from "../data/abi";
+import { TOKEN_ABI } from "../data/abi";
+import { TOKEN_CONTRACT_ADDRESS } from "../data/getContracts";
 
 import { COLORS } from '../data/colors';
 

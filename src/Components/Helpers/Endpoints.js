@@ -1,4 +1,4 @@
-import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS } from "../../data/abi";
+import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS } from "../../data/getContracts";
 
 export const GetConfiguration = ({setResponse, setError}) => {
     fetch("https://oev.api3dev.com/api/configuration")

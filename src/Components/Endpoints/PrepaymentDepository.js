@@ -5,7 +5,8 @@ import { COLORS } from '../../data/colors';
 import InfoRow from "../Custom/InfoRow";
 import ExecuteButton from "../Custom/ExecuteButton";
 import PasteRow from "../Custom/PasteRow";
-import { PREPAYMENT_DEPOSIT_ABI, PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS } from "../../data/abi";
+import { PREPAYMENT_DEPOSIT_ABI } from "../../data/abi";
+import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS } from "../../data/getContracts";
 
 import TransactionHash from "../Custom/TransactionHash";
 import ErrorRow from "../Custom/ErrorRow";

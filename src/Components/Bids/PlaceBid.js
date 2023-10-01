@@ -19,7 +19,7 @@ import {
     VStack, Box, Text, Flex, Spacer
   } from "@chakra-ui/react";
 
-  import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS } from "../../data/abi";
+  import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS } from "../../data/getContracts";
 
 const Hero = () => {
     const { chain } = useNetwork()

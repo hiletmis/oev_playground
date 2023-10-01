@@ -1,15 +1,4 @@
-import { references } from "@nodary/contracts";
-import {references as testnetUsdc} from "@nodary/testnet-usdc";
-import * as airnodeProtocolV1 from '@api3/airnode-protocol-v1';
-
-export const CONTRACT_ADDRESS = (chainId) => {
-	return airnodeProtocolV1.references["ProxyFactory"][chainId];
-};			
-
-export const API3SERVERV1 = (chainId) => {
-	return airnodeProtocolV1.references["Api3ServerV1"][chainId];
-};	
-
+	
 export const DATA_FEED_PROXY_ABI = [{"inputs":[{"internalType":"address","name":"_api3ServerV1","type":"address"},{"internalType":"bytes32","name":"_dataFeedId","type":"bytes32"},{"internalType":"address","name":"_oevBeneficiary","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[],"name":"api3ServerV1","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"dataFeedId","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"oevBeneficiary","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"read","outputs":[{"internalType":"int224","name":"value","type":"int224"},{"internalType":"uint32","name":"timestamp","type":"uint32"}],"stateMutability":"view","type":"function"}]
 
 export const API3SERVERV1_ABI = [
@@ -1139,7 +1128,6 @@ export const ABI = [
 ];
 
 export const TOKEN_NAME = "TestnetUSDC";
-export const TOKEN_CONTRACT_ADDRESS = testnetUsdc.TestnetUsdc[11155111]
 export const TOKEN_ABI = [
   { inputs: [], stateMutability: "nonpayable", type: "constructor" },
   { inputs: [], name: "InvalidShortString", type: "error" },
@@ -1390,7 +1378,6 @@ export const TOKEN_ABI = [
   { stateMutability: "payable", type: "receive" },
 ];
 
-export const PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS = references["PrepaymentDepository"][11155111];
 export const PREPAYMENT_DEPOSIT_ABI = [
 	{
 		"inputs": [

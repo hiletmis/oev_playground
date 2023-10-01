@@ -8,7 +8,8 @@ import { PostWithdrawalsRequest, PostWithdrawalsList, PostStatus, POST } from ".
 import { isWrongNetwork } from "./Helpers/Utils";
 import { OevContext } from '../OevContext';
 import InfoBox from "./Custom/InfoBox";
-import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS, PREPAYMENT_DEPOSIT_ABI } from "../data/abi";
+import { PREPAYMENT_DEPOSIT_ABI } from "../data/abi";
+import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS } from "../data/getContracts";
 import TransactionHash from "./Custom/TransactionHash";
 import { Grid, GridItem } from "@chakra-ui/react";
 

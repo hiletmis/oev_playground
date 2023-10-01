@@ -3,7 +3,8 @@ import { VStack, Button, Text, Image, Flex, Spacer, Box, Stack } from '@chakra-u
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
 import { ethers } from 'ethers';
 import { useContractWrite, useWaitForTransaction, useAccount, useNetwork, usePublicClient } from 'wagmi';
-import { ABI, CONTRACT_ADDRESS } from '../data/abi';
+import { PROXY_FACTORY_CONTRACT_ADDRESS } from '../data/getContracts';
+import { ABI } from '../data/abi';
 import DataFeedList from './DataFeedList';
 import { computeDataFeedProxyWithOevAddress } from '@api3/contracts'; 
 import { OevContext } from '../OevContext';
@@ -40,7 +41,7 @@ const Commit = () => {
 
   const { data, write } = useContractWrite({
     mode: 'recklesslyUnprepared',
-    address: CONTRACT_ADDRESS(chainId),
+    address: PROXY_FACTORY_CONTRACT_ADDRESS(chainId),
     abi: ABI,
     functionName: 'deployDataFeedProxyWithOev',
     args: [

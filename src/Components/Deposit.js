@@ -21,7 +21,8 @@ import {
 } from '@chakra-ui/react'
 
 import { ethers } from "ethers";
-import { PREPAYMENT_DEPOSIT_ABI, PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS, TOKEN_ABI, TOKEN_CONTRACT_ADDRESS, SIGNTYPEDDATA } from "../data/abi";
+import { PREPAYMENT_DEPOSIT_ABI, TOKEN_ABI, SIGNTYPEDDATA } from "../data/abi";
+import { PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS, TOKEN_CONTRACT_ADDRESS } from "../data/getContracts";
   
 const Deposit = () => {
   const { chain } = useNetwork()
