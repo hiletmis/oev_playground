@@ -18,3 +18,32 @@ export const copy = (text) => {
     return true
   }
 
+  export const saveToLocalStorage = (key, value) => {
+
+    if (typeof window === 'undefined') {
+      return null;
+    }
+  
+    try {
+      const serializedState = JSON.stringify(value);
+      window.localStorage.setItem(key, serializedState);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  export const loadFromLocalStorage = (key) => {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+  
+    try {
+      const serializedState = window.localStorage.getItem(key);
+      if (serializedState === null) return undefined;
+      return JSON.parse(serializedState);
+    } catch (err) {
+      console.log(err);
+      return undefined;
+    }
+  }
+

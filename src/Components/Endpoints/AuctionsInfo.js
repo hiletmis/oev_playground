@@ -6,6 +6,8 @@ import InfoRow from "../Custom/InfoRow";
 import ExecuteButton from "../Custom/ExecuteButton";
 import { PostAuctionsInfo, POST } from "../Helpers/Endpoints";
 import BidInfoParams from "../Custom/BidInfoParams";
+import { Flex, Spacer, Image } from "@chakra-ui/react";
+import { saveToLocalStorage } from "../Helpers/Utils";
 
 import CustomHeading from "../Custom/Heading";
 
@@ -94,7 +96,11 @@ const Hero = () => {
         {response == null ? null :
                 <Box cursor={"pointer"} width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>
                 <VStack spacing={3} direction="row" align="left" m="1rem">
-                  <Text fontWeight={"bold"} fontSize={"sm"}>Response</Text>   
+                  <Flex className='box'>
+                  <Text fontWeight={"bold"} fontSize={"sm"}>Response</Text>  
+                    <Spacer />
+                    <Image marginLeft={"3"} cursor={"pointer"} onClick={() => saveToLocalStorage("auctionInfo", response)} src={`/export.svg`} width={"24px"} height={"24px"} />
+                  </Flex> 
                   <JsonTree readOnly={true} data={response} />             
                 </VStack>
                 </Box>

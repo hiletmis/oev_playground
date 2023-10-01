@@ -13,6 +13,7 @@ import ErrorRow from "../Custom/ErrorRow";
 import SwitchNetwork from "../SwitchNetwork";
 
 import CustomHeading from "../Custom/Heading";
+import { loadFromLocalStorage, saveToLocalStorage } from "../Helpers/Utils";
 
 import {
   VStack, Box
@@ -119,6 +120,23 @@ const Hero = () => {
     setIsSepolia(chain == null ? 0 : chain.id === 11155111)
 }, [chain]);
 
+useEffect(() => {
+  const auction = loadFromLocalStorage("withdrawInfo")
+
+  if (auction == null) return
+
+  if (auction.amount === "") return;
+  if (auction.expirationTimestamp === "") return;
+  if (auction.signer === "") return;
+  if (auction.signature === "") return;
+
+  setAmount(auction.amount)
+  setExpirationTimestamp(auction.expirationTimestamp)
+  setWithdrawalSigner(auction.signer)
+  setSignature(auction.signature)
+  saveToLocalStorage("withdrawInfo", null)
+
+}, []);
 
   return (
     chain == null ? <SignIn></SignIn> :

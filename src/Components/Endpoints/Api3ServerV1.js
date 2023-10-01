@@ -17,6 +17,7 @@ import CustomHeading from "../Custom/Heading";
 import {
   VStack, Box, Text
 } from "@chakra-ui/react";
+import { loadFromLocalStorage, saveToLocalStorage } from "../Helpers/Utils";
 
 
 const Hero = () => {
@@ -113,7 +114,6 @@ const { isLoading: isLoadingOevProxy } = useWaitForTransaction({
   }
 });
 
-
 const withdrawOevProxy = () => {
   setErrorOevProxy(null);
   if (oevProxy === "") {
@@ -137,6 +137,20 @@ useEffect(() => {
 
 }, [address, encodedUpdateTransaction]);
 
+
+useEffect(() => {
+  const auction = loadFromLocalStorage("auctionInfo")
+
+  if (auction == null) return
+
+  if (auction.encodedUpdateTransaction === "") return;
+  if (auction.nativeCurrencyAmount === "") return;
+
+  setEncodedUpdateTransaction(auction.encodedUpdateTransaction)
+  setNativeCurrencyAmount(auction.nativeCurrencyAmount)
+  saveToLocalStorage("auctionInfo", null)
+
+}, []);
 
 useEffect(() => {
   if (manuelUpdateParams.length === 0) return

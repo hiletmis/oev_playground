@@ -5,6 +5,8 @@ import { COLORS } from '../../data/colors';
 import InfoRow from "../Custom/InfoRow";
 import ExecuteButton from "../Custom/ExecuteButton";
 import { PostWithdrawalsList, POST } from "../Helpers/Endpoints";
+import { Flex, Spacer, Image } from "@chakra-ui/react";
+import { saveToLocalStorage } from "../Helpers/Utils";
 
 import CustomHeading from "../Custom/Heading";
 
@@ -27,6 +29,8 @@ const Hero = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
+
+  const [lastRequest, setLastRequest] = useState({});
 
   const { signMessage } = useSignMessage({
     onSuccess: (signature) => {
@@ -56,6 +60,11 @@ const Hero = () => {
 
   useEffect(() => {
     setIsLoading(false);
+
+    if (response == null) return;
+    if (response.withdrawals == null) return;
+    console.log(response.withdrawals[response.withdrawals.length - 1])
+    setLastRequest(response.withdrawals[response.withdrawals.length - 1]);
   }, [response, error]);
 
 
@@ -82,7 +91,11 @@ const Hero = () => {
         {response == null ? null :
                 <Box cursor={"pointer"} width={"100%"} bgColor={COLORS.main} borderRadius={"10"}>
                 <VStack spacing={3} direction="row" align="left" m="1rem">
-                  <Text fontWeight={"bold"} fontSize={"sm"}>Response</Text>   
+                <Flex className='box'>
+                  <Text fontWeight={"bold"} fontSize={"sm"}>Response</Text>  
+                    <Spacer />
+                    <Image marginLeft={"3"} cursor={"pointer"} onClick={() => saveToLocalStorage("withdrawInfo", lastRequest)} src={`/export.svg`} width={"24px"} height={"24px"} />
+                  </Flex>  
                   <JsonTree readOnly={true} data={response} />             
                 </VStack>
                 </Box>

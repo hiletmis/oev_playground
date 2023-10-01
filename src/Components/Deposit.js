@@ -174,7 +174,7 @@ const Deposit = () => {
         }} fontSize={"sm"}>{tokenBalance === "0" 
         ? 
         <Popup
-        trigger={<Button height={"30px"} width={"110px"} bgColor={"transparent"}>Get TestnetUSDC</Button> }
+        trigger={<Button height={"30px"} width={"130px"} bgColor={"transparent"}>Get TestnetUSDC</Button> }
         modal>
         { close => (<Faucet stateChanger={close} refreshBalance={close}></Faucet>)  }
         </Popup>
