@@ -776,7 +776,7 @@ export const UpdatedOevProxyBeaconSetWithSignedData = [
 	}
   ]
 
-export const ABI = [
+export const PROXY_FACTORY_ABI = [
 	{
 		inputs: [
 			{
