@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { COLORS } from '../data/colors';
-import Faucet from './Faucet';
-import Popup from 'reactjs-popup';
-import { useNetwork, useBalance, useAccount, useContractRead, usePrepareContractWrite, useContractWrite, useSignTypedData, useWaitForTransaction } from 'wagmi';
+import { useNetwork, useAccount, useContractRead, usePrepareContractWrite, useContractWrite, useSignTypedData, useWaitForTransaction } from 'wagmi';
 import SignIn from './SignIn';
 import Heading from './Custom/Heading';
 import WrongNetwork from './WrongNetwork';
@@ -11,14 +8,9 @@ import ExecuteButton from "./Custom/ExecuteButton";
 import Withdraw from "./Withdraw";
 import TransactionHash from "./Custom/TransactionHash";
 import UserStatus from "./Custom/UserStatus";
+import AddCollateral from "./Custom/AddCollateral";
 
-import { Button, VStack, Box, Text } from "@chakra-ui/react";
-import {
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Flex, Spacer, Image, Stack
-} from '@chakra-ui/react'
+import { VStack, Stack } from "@chakra-ui/react";
 
 import { ethers } from "ethers";
 import { PREPAYMENT_DEPOSIT_ABI, TOKEN_ABI, SIGNTYPEDDATA } from "../data/abi";
@@ -30,27 +22,9 @@ const Deposit = () => {
 
   const [tokenAmount, setTokenAmount] = useState("");
   const [tokenBalance, setTokenBalance] = useState(0); 
-  const [refreshBalance, setRefreshBalance] = useState(false);
   const [signErc2612PermitArgs, setSignErc2612PermitArgs] = useState({tokenAmount: 0, v: 0, r: "0x", s: "0x"});
   const [isSigned, setIsSigned] = useState(false);
   const [txHash, setTxHash] = useState(null);
-
-  useEffect(() => {
-    setRefreshBalance(true)
-  }, [chain]);
-
-  const balance = useBalance({
-    address: address,
-    token: TOKEN_CONTRACT_ADDRESS,
-    chainId: 11155111,
-    enabled: refreshBalance,
-  })
-
-  useEffect(() => {
-    if (balance.data != null) {
-      setTokenBalance(balance?.data.formatted)
-    }
-  }, [balance]);
 
   const nonce = useContractRead({
     address: TOKEN_CONTRACT_ADDRESS,
@@ -58,7 +32,6 @@ const Deposit = () => {
     functionName: 'nonces',
     chainId: 11155111,
     args: [address],
-    enabled: refreshBalance,
   })
 
   const tokenName = useContractRead({
@@ -106,7 +79,7 @@ const Deposit = () => {
 
   const { data, write } = useContractWrite(config)
 
-  const { isLoading, isSuccess } = useWaitForTransaction({
+  const { isLoading } = useWaitForTransaction({
     hash: data?.hash,
     confirmations: 1,
     onSuccess: () => {
@@ -126,19 +99,6 @@ const Deposit = () => {
       write?.()
     }
   }, [isSigned, write]);
- 
-  useEffect(() => {
-    if (isSuccess) {
-      setRefreshBalance(true)
-      setTokenAmount("");
-    }
-  }, [isSuccess]);
-  
-  useEffect(() => {
-    if (refreshBalance) {
-      setRefreshBalance(false)
-    }
-  }, [refreshBalance]);
 
   return (
     chain == null ? <SignIn></SignIn> :
@@ -147,44 +107,7 @@ const Deposit = () => {
 
       <UserStatus />
       <Heading isLoading={isLoading } description={"Deposit TestnetUSDC as collateral to start bidding"} header={"Add Collateral"} ></Heading>
-      <Box width={"100%"} height="120px" bgColor={COLORS.main} borderRadius={"10"}>
-      <VStack spacing={3} direction="row" align="left" m="1rem">
-      <Flex>
-      <NumberInput  value={tokenAmount} step={1} min={0} size={"lg"} onChange={(valueString) => {
-        setTokenAmount(valueString)
-        }}>
-              <NumberInputField borderWidth={"0px"} focusBorderColor={"red.200"} placeholder="0.0" fontSize={"4xl"} inputMode="numeric"/><NumberInputStepper></NumberInputStepper>
-            </NumberInput>
-      <Spacer />
-      <Image src={`/coins/USD.webp`} width={"40px"} height={"40px"} />
-      </Flex>
-
-        <Flex>
-        <Text 
-        color={parseFloat(tokenBalance) < parseFloat(tokenAmount) ? "red.500" : "white"}
-        fontWeight={"bold"} 
-        visibility={tokenBalance === "0" ? "hidden" : "visible"}
-        fontSize={"sm"}>
-          {parseFloat(tokenBalance) < parseFloat(tokenAmount)  ? "Insufficient Balance" : "Token Balance"}
-          </Text>
-        <Spacer />
-        <Image src={tokenBalance === "0" ? '/getToken.svg' : '/wallet.svg'} width={"40px"} height={"20px"} />
-        <Text onClick={() => {
-          setTokenAmount(tokenBalance)
-        }} fontSize={"sm"}>{tokenBalance === "0" 
-        ? 
-        <Popup
-        trigger={<Button height={"30px"} width={"130px"} bgColor={"transparent"}>Get TestnetUSDC</Button> }
-        modal>
-        { close => (<Faucet stateChanger={close} refreshBalance={close}></Faucet>)  }
-        </Popup>
-        : tokenBalance}</Text>
-        <Image cursor={"pointer"} src={'/refresh.svg'} width={"40px"} height={"20px"} onClick={() => {setRefreshBalance(true)}} />
-        </Flex>
-
-        </VStack>
-        </Box>
-
+        <AddCollateral tokenAmount={tokenAmount} setTokenAmount={setTokenAmount} tokenBalance={tokenBalance} setTokenBalance={setTokenBalance}></AddCollateral>
         <TransactionHash chain={chain} txHash={txHash}></TransactionHash>
 
         <Stack alignItems={"center"} >

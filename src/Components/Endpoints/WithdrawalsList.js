@@ -7,6 +7,7 @@ import ExecuteButton from "../Custom/ExecuteButton";
 import { PostWithdrawalsList, POST } from "../Helpers/Endpoints";
 import { Flex, Spacer, Image } from "@chakra-ui/react";
 import { saveToLocalStorage } from "../Helpers/Utils";
+import { useNavigate } from "react-router-dom";
 
 import CustomHeading from "../Custom/Heading";
 
@@ -31,6 +32,8 @@ const Hero = () => {
   const [error, setError] = useState(null);
 
   const [lastRequest, setLastRequest] = useState({});
+
+  const navigate = useNavigate();
 
   const { signMessage } = useSignMessage({
     onSuccess: (signature) => {
@@ -63,7 +66,6 @@ const Hero = () => {
 
     if (response == null) return;
     if (response.withdrawals == null) return;
-    console.log(response.withdrawals[response.withdrawals.length - 1])
     setLastRequest(response.withdrawals[response.withdrawals.length - 1]);
   }, [response, error]);
 
@@ -76,6 +78,10 @@ const Hero = () => {
     signMessage({message: message});
   }, [payload, message, signMessage]);
 
+  const handleExport = () => {
+    saveToLocalStorage("withdrawInfo", lastRequest)
+    navigate("/prepayment/depository")
+  }
 
   return (
     chain == null ? <SignIn></SignIn> :
@@ -94,7 +100,7 @@ const Hero = () => {
                 <Flex className='box'>
                   <Text fontWeight={"bold"} fontSize={"sm"}>Response</Text>  
                     <Spacer />
-                    <Image marginLeft={"3"} cursor={"pointer"} onClick={() => saveToLocalStorage("withdrawInfo", lastRequest)} src={`/export.svg`} width={"24px"} height={"24px"} />
+                    <Image marginLeft={"3"} cursor={"pointer"} onClick={() => handleExport()} src={`/export.svg`} width={"24px"} height={"24px"} />
                   </Flex>  
                   <JsonTree readOnly={true} data={response} />             
                 </VStack>

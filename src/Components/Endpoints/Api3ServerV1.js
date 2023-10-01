@@ -11,11 +11,12 @@ import { ethers } from "ethers";
 import TransactionHash from "../Custom/TransactionHash";
 import ErrorRow from "../Custom/ErrorRow";
 import CopyInfoRow from "../Custom/CopyInfoRow";
+import SimpleList from "../Custom/SimpleList";
 
 import CustomHeading from "../Custom/Heading";
 
 import {
-  VStack, Box, Text
+  VStack, Box
 } from "@chakra-ui/react";
 import { loadFromLocalStorage, saveToLocalStorage } from "../Helpers/Utils";
 
@@ -175,28 +176,10 @@ useEffect(() => {
               <Box p={3} width={"100%"} bgColor={COLORS.app} borderRadius={"10"}>
                 <PasteRow setText={setEncodedUpdateTransaction} text={encodedUpdateTransaction} title={"Encoded Update Transaction"}></PasteRow>
               </Box>
-
-              {
-                manuelUpdateParams.length === 0 ? null :
-
-                <Box p={3} width={"100%"} bgColor={COLORS.app} borderRadius={"10"}>
-
-                {
-                  manuelUpdateParams.map((param, index) => {
-                    return (
-                      <Box p={1} width={"100%"} borderRadius={"10"}>
-                      <Text fontWeight={"bold"} fontSize={"sm"} >{updateParamsTitles[index]}</Text>
-                      <Text fontSize={"sm"} >{param.toString()}</Text>
-                      </Box>
-                    )
-                  })
-                }              
-                </Box>
-              }
-
+              <SimpleList listTitle={"Update Params"} list={manuelUpdateParams} titles={updateParamsTitles}></SimpleList>
               <ErrorRow header={"An Error Occured"} text={error}></ErrorRow>
               <TransactionHash chain={chain} txHash={txHash}></TransactionHash>
-              <ExecuteButton isDisabled={isLoading} onClick={() => updateDataFeed()} text={"EXECUTE"} ></ExecuteButton>
+              <ExecuteButton isDisabled={isLoading} onClick={() => updateDataFeed()} text={"UPDATE DATA FEED"} ></ExecuteButton>
           </VStack>
         </Box>
 
@@ -212,7 +195,7 @@ useEffect(() => {
                 <CopyInfoRow header={"Proxy Balance"} text={availableToWithdraw} copyEnabled={false}></CopyInfoRow>
               }
               <TransactionHash chain={chain} txHash={txHashOevProxy}></TransactionHash>
-              <ExecuteButton isDisabled={isLoadingOevProxy} onClick={() => withdrawOevProxy()} text={"EXECUTE"} ></ExecuteButton>
+              <ExecuteButton isDisabled={isLoadingOevProxy} onClick={() => withdrawOevProxy()} text={"WITHDRAW"} ></ExecuteButton>
           </VStack>
         </Box>
     </VStack>

@@ -8,6 +8,7 @@ import { PostAuctionsInfo, POST } from "../Helpers/Endpoints";
 import BidInfoParams from "../Custom/BidInfoParams";
 import { Flex, Spacer, Image } from "@chakra-ui/react";
 import { saveToLocalStorage } from "../Helpers/Utils";
+import { useNavigate } from "react-router-dom";
 
 import CustomHeading from "../Custom/Heading";
 
@@ -24,6 +25,8 @@ const Hero = () => {
   const {address} = useAccount()
 
   const { chain } = useNetwork()
+
+  const navigate = useNavigate();
 
   const [request , setRequest] = useState(null);
   const [payload, setPayload] = useState(null);
@@ -81,6 +84,11 @@ const Hero = () => {
     signMessage({message: message});
   }, [payload, message, signMessage]);
 
+  const handleExport = () => {
+    saveToLocalStorage("auctionInfo", response)
+    navigate("/api3serverv1")
+  }
+
   return (
     chain == null ? <SignIn></SignIn> :
     <VStack spacing={4} minWidth={"350px"} maxWidth={"700px"}  alignItems={"left"} >
@@ -99,7 +107,7 @@ const Hero = () => {
                   <Flex className='box'>
                   <Text fontWeight={"bold"} fontSize={"sm"}>Response</Text>  
                     <Spacer />
-                    <Image marginLeft={"3"} cursor={"pointer"} onClick={() => saveToLocalStorage("auctionInfo", response)} src={`/export.svg`} width={"24px"} height={"24px"} />
+                    <Image marginLeft={"3"} cursor={"pointer"} onClick={() => handleExport()} src={`/export.svg`} width={"24px"} height={"24px"} />
                   </Flex> 
                   <JsonTree readOnly={true} data={response} />             
                 </VStack>

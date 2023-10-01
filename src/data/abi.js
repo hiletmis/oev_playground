@@ -1127,7 +1127,6 @@ export const PROXY_FACTORY_ABI = [
 	}
 ];
 
-export const TOKEN_NAME = "TestnetUSDC";
 export const TOKEN_ABI = [
   { inputs: [], stateMutability: "nonpayable", type: "constructor" },
   { inputs: [], name: "InvalidShortString", type: "error" },
