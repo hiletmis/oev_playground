@@ -134,6 +134,7 @@ const Hero = () => {
     setErrorDeposit(null)
 
     try {
+      if (nonce.data == null) return
       setSignArgs([address, PREPAYMENT_DEPOSIT_CONTRACT_ADDRESS, nonce.data, tokenAmount !== "" ? parseFloat(tokenAmount) * 1e6 : 0, String(ethers.constants.MaxUint256)])  
     } catch (error) {
       console.log(error)
